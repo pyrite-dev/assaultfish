@@ -7,6 +7,8 @@
 
 #include <fishsoup.h>
 
+#include <af_config.h>
+
 #ifdef AF_SERVER
 #include <af_server.h>
 #endif

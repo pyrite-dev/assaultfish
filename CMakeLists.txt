@@ -15,8 +15,8 @@ file(GLOB CLIENT_SRC client/*.c)
 add_executable(af_server ${SERVER_SRC})
 add_executable(af_client ${CLIENT_SRC})
 
-target_include_directories(af_server PRIVATE include)
-target_include_directories(af_client PRIVATE include)
+target_include_directories(af_server PRIVATE include ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(af_client PRIVATE include ${CMAKE_CURRENT_BINARY_DIR})
 
 target_compile_definitions(af_server PRIVATE AF_SERVER)
 target_compile_definitions(af_client PRIVATE AF_CLIENT)
@@ -24,9 +24,16 @@ target_compile_definitions(af_client PRIVATE AF_CLIENT)
 target_link_libraries(af_server PRIVATE fishsoup)
 target_link_libraries(af_client PRIVATE fishsoup Mw glad)
 
+configure_file(include/af_config.h.in af_config.h)
+
 install(
 	TARGETS af_server af_client
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(
+	FILES logo.png
+	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/assaultfish
 )
