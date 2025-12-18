@@ -3,4 +3,4 @@
 	url = ../libfishsoup
 [submodule "external/milsko"]
 	path = external/milsko
-	url = ../../pyrite-dev/milsko
+	url = https://gitea.nishi.boats/pyrite-dev/milsko
