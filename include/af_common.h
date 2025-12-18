@@ -20,7 +20,7 @@
 /* should be broadcasted! otherwise other user wouldn't know */
 typedef struct af_pkt_join {
 	unsigned char length;
-	char* name;
+	char*	      name;
 } af_pkt_join_t;
 
 #endif
