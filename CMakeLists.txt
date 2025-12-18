@@ -14,9 +14,9 @@ file(GLOB CLIENT_SRC client/*.c)
 add_executable(af_server ${SERVER_SRC})
 add_executable(af_client ${CLIENT_SRC})
 
-target_link_libraries(af_server PRIVATE fishsoup)
+target_link_libraries(af_server PRIVATE fishsoup Mw)
 
-target_link_libraries(af_client PRIVATE fishsoup)
+target_link_libraries(af_client PRIVATE fishsoup Mw)
 
 install(
 	TARGETS af_server af_client
