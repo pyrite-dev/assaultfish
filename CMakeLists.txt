@@ -5,7 +5,8 @@ include(GNUInstallDirs)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-add_subdirectory(libfishsoup)
+add_subdirectory(external/libfishsoup)
+add_subdirectory(external/milsko)
 
 file(GLOB SERVER_SRC server/*.c)
 file(GLOB CLIENT_SRC client/*.c)

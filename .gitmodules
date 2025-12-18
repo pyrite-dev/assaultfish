@@ -1,3 +1,6 @@
-[submodule "libfishsoup"]
-	path = libfishsoup
+[submodule "external/libfishsoup"]
+	path = external/libfishsoup
 	url = ../libfishsoup
+[submodule "external/milsko"]
+	path = external/milsko
+	url = ../../pyrite-dev/milsko
