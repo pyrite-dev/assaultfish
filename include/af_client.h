@@ -37,6 +37,7 @@ extern double	  gl_cam_z;
 void gl_init(void);
 void gl_render(void);
 void gl_resize(int width, int height);
+void gl_scene_change(void);
 
 /* gl_font.c */
 void gl_font_init(void);
@@ -49,11 +50,6 @@ void gl_main_changed(void);
 void gl_main_init(void);
 void gl_main_draw(void);
 
-/* gl_connecting.c */
-void gl_connecting_changed(void);
-void gl_connecting_init(void);
-void gl_connecting_draw(void);
-
 /* net.c */
 void net_connect(const char* username, const char* hostname, int port);
 void net_poll(void);
@@ -62,7 +58,7 @@ void net_poll(void);
 MwWidget ui_notice(int width, int height);
 void	 ui_notice_destroy(MwWidget widget);
 void	 ui_init(void);
-void	 ui_scene(void);
+void	 ui_scene_change(void);
 MwWidget ui_message(const char* message);
 
 #endif

@@ -114,7 +114,7 @@ MwWidget ui_message(const char* message) {
 	return wnd;
 }
 
-void ui_scene(void) {
+void ui_scene_change(void) {
 	if(gl_scene == AF_SCENE_MAIN) {
 		ui_login();
 	}

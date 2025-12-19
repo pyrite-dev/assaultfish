@@ -36,8 +36,8 @@ static void* gl_load(const char* name) {
 void scene_change(int scene) {
 	gl_scene = scene;
 
-	gl_scenes[gl_scene].changed();
-	ui_scene();
+	gl_scene_change();
+	ui_scene_change();
 }
 
 int main(int argc, char** argv) {
