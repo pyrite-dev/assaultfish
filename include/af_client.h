@@ -5,16 +5,43 @@
 #include <Mw/Milsko.h>
 #include <Mw/Widget/OpenGL.h>
 
+#include <GL/glu.h>
+
+enum AF_SCENES {
+	AF_SCENE_MAIN = 0
+};
+
 /* main.c */
 extern MwWidget root, window, opengl;
 
+void scene_change(int scene);
+
 /* gl.c */
+typedef struct gl_scene {
+	void (*init)(void);
+	void (*draw)(void);
+} gl_scene_t;
+
+extern int	  gl_scene;
+extern gl_scene_t gl_scenes[];
+extern double	  gl_cam_lr;
+extern double	  gl_cam_ud;
+extern double	  gl_cam_x;
+extern double	  gl_cam_y;
+extern double	  gl_cam_z;
+
 void gl_init(void);
 void gl_render(void);
+void gl_resize(int width, int height);
+
+/* gl_main.c */
+void gl_main_init(void);
+void gl_main_draw(void);
 
 /* ui.c */
 MwWidget ui_notice(int width, int height);
-void ui_notice_destroy(MwWidget widget);
-void ui_init(void);
+void	 ui_notice_destroy(MwWidget widget);
+void	 ui_init(void);
+void	 ui_scene(void);
 
 #endif
