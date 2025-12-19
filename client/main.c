@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 	MwLibraryInit();
 
 	root = MwVaCreateWidget(NULL, "root", NULL, 0, 0, 0, 0,
-				MwNwaitMS, 15,
+				MwNwaitMS, AF_WAIT_MS,
 				MwNbitmapFont, 0,
 				MwNmodernLook, 1,
 				NULL);

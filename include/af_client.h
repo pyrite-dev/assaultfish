@@ -7,6 +7,8 @@
 
 #include <GL/glu.h>
 
+#define AF_WAIT_MS 15
+
 enum AF_SCENES {
 	AF_SCENE_MAIN = 0
 };
@@ -33,6 +35,12 @@ extern double	  gl_cam_z;
 void gl_init(void);
 void gl_render(void);
 void gl_resize(int width, int height);
+
+/* gl_font.c */
+void gl_font_init(void);
+void gl_font_text(const char* text, int x, int y, double scale);
+int  gl_font_width(const char* text);
+int  gl_font_height(const char* text);
 
 /* gl_main.c */
 void gl_main_init(void);

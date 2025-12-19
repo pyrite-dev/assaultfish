@@ -31,5 +31,5 @@ void gl_main_draw(void) {
 	glPopMatrix();
 	glEnable(GL_DEPTH_TEST);
 
-	r += 1;
+	r += 60.0 / (1000.0 / AF_WAIT_MS);
 }
