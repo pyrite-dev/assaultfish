@@ -52,7 +52,7 @@ void gl_init(void) {
 
 static void gl_common(void) {
 	char buf[128];
-	glColor3f(1, 0, 0);
+	glColor3f(1, 1, 1);
 
 	sprintf(buf, "AssaultFish %s", AF_VERSION);
 	gl_font_text(buf, MwGetInteger(opengl, MwNwidth) - gl_font_width(buf), MwGetInteger(opengl, MwNheight) - gl_font_height(buf) * 2, 1);

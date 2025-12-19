@@ -26,6 +26,8 @@ void gl_font_text(const char* text, int x, int y, double scale) {
 	int is = glIsEnabled(GL_TEXTURE_2D) ? 1 : 0;
 
 	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_CULL_FACE);
 	if(!is) glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, font_atlas);
 
@@ -63,6 +65,8 @@ void gl_font_text(const char* text, int x, int y, double scale) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	if(!is) glEnable(GL_TEXTURE_2D);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
 }
 
