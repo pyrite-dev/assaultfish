@@ -50,6 +50,38 @@ void gl_init(void) {
 	gl_font_init();
 }
 
+void gl_cube(double x, double y, double z, double xs, double ys, double zs, double xr, double yr, double zr) {
+	int i;
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	glScalef(xs, ys, zs);
+	glRotatef(xr, 1, 0, 0);
+	glRotatef(yr, 0, 1, 0);
+	glRotatef(zr, 0, 0, 1);
+	for(i = 0; i < 6; i++) {
+		glBegin(GL_QUADS);
+		glNormal3f(0, 0, 1);
+		glTexCoord2f(0, 0);
+		glVertex3f(-0.5, 0.5, 0.5);
+		glTexCoord2f(0, 1);
+		glVertex3f(-0.5, -0.5, 0.5);
+		glTexCoord2f(1, 1);
+		glVertex3f(0.5, -0.5, 0.5);
+		glTexCoord2f(1, 0);
+		glVertex3f(0.5, 0.5, 0.5);
+		glEnd();
+
+		if(i == 3) {
+			glRotatef(90, 1, 0, 0);
+		} else if(i == 4) {
+			glRotatef(180, 1, 0, 0);
+		} else {
+			glRotatef(90, 0, 1, 0);
+		}
+	}
+	glPopMatrix();
+}
+
 static void gl_common(void) {
 	char buf[128];
 	glColor3f(1, 1, 1);
@@ -93,7 +125,7 @@ static void cross(double* out, double v00, double v01, double v02, double v10, d
 	out[2] = v00 * v11 - v01 * v10;
 }
 
-void gl_calc_normal(double* out, double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21, double v22) {
+void gl_calc_normal3(double* out, double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21, double v22) {
 	double v[3];
 	double l = 0;
 	int    i;

@@ -27,7 +27,7 @@ void gl_main_draw(void) {
 		double n[3];
 		double u = 0.3;
 
-		gl_calc_normal(&n[0], 0, u * 1.4, 0, -u, 0, u, u, 0, u);
+		gl_calc_normal3(&n[0], 0, u * 1.4, 0, -u, 0, u, u, 0, u);
 
 		glColor3f(c ? 0.75 : 0, 0, c ? 0 : 0.75);
 		glBegin(GL_TRIANGLES);

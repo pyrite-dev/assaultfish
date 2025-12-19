@@ -38,7 +38,7 @@ void gl_init(void);
 void gl_render(void);
 void gl_resize(int width, int height);
 void gl_scene_change(void);
-void gl_calc_normal(double* out, double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21, double v22);
+void gl_calc_normal3(double* out, double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21, double v22);
 
 /* gl_font.c */
 void gl_font_init(void);
