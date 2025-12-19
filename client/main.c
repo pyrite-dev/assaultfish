@@ -46,6 +46,8 @@ int main(int argc, char** argv) {
 
 	root = MwVaCreateWidget(NULL, "root", NULL, 0, 0, 0, 0,
 				MwNwaitMS, 15,
+				MwNbitmapFont, 0,
+				MwNmodernLook, 1,
 				NULL);
 
 	window = MwVaCreateWidget(MwWindowClass, "main", root, 0, 0, 640, 480,
