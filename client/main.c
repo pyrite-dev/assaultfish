@@ -22,6 +22,8 @@ static void resize(MwWidget handle, void* user, void* client) {
 }
 
 static void tick(MwWidget handle, void* user, void* client) {
+	net_poll();
+
 	gl_render();
 
 	MwOpenGLSwapBuffer(opengl);
@@ -34,6 +36,7 @@ static void* gl_load(const char* name) {
 void scene_change(int scene) {
 	gl_scene = scene;
 
+	gl_scenes[gl_scene].changed();
 	ui_scene();
 }
 

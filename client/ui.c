@@ -17,8 +17,17 @@ void ui_notice_destroy(MwWidget widget) {
 }
 
 static void ui_login_join(MwWidget handle, void* user, void* client) {
+	char* username = MwStringDuplicate(MwGetText(MwGetVoid(user, "VusernameEntry"), MwNtext));
+	char* hostname = MwStringDuplicate(MwGetText(MwGetVoid(user, "VhostnameEntry"), MwNtext));
+	int   port     = atoi(MwGetText(MwGetVoid(user, "VportEntry"), MwNtext));
+
 	MwLLDestroyPixmap(MwGetVoid(user, MwNpixmap));
 	ui_notice_destroy(user);
+
+	net_connect(username, hostname, port);
+
+	free(username);
+	free(hostname);
 }
 
 static void ui_login(void) {
@@ -37,6 +46,7 @@ static void ui_login(void) {
 					    MwNfixedSize, 100,
 					    NULL);
 	MwWidget    entrybox[3];
+	MwWidget    entryinput[3];
 	MwLLPixmap  px	      = MwLoadImage(wnd, DATAROOTDIR "/assaultfish/logo.png");
 	const char* labels[3] = {
 	    "Username",
@@ -64,9 +74,9 @@ static void ui_login(void) {
 				 MwNtext, labels[i],
 				 MwNalignment, MwALIGNMENT_END,
 				 NULL);
-		MwVaCreateWidget(MwEntryClass, "entry", entrybox[i], 0, 0, 0, 0,
-				 MwNtext, entries[i],
-				 NULL);
+		entryinput[i] = MwVaCreateWidget(MwEntryClass, "entry", entrybox[i], 0, 0, 0, 0,
+						 MwNtext, entries[i],
+						 NULL);
 	}
 
 	MwVaApply(icon,
@@ -75,9 +85,33 @@ static void ui_login(void) {
 
 	MwVaApply(wnd,
 		  MwNpixmap, px,
+		  "VusernameEntry", entryinput[0],
+		  "VhostnameEntry", entryinput[1],
+		  "VportEntry", entryinput[2],
 		  NULL);
 
 	MwAddUserHandler(join, MwNactivateHandler, ui_login_join, wnd);
+}
+
+static void ui_message_ok(MwWidget handle, void* user, void* client) {
+	MwDispatchUserHandler(user, MwNactivateHandler, NULL);
+
+	ui_notice_destroy(user);
+}
+
+MwWidget ui_message(const char* message) {
+	MwWidget wnd   = ui_notice(0, 0);
+	int	 bw    = MwDefaultBorderWidth(wnd);
+	MwWidget label = MwVaCreateWidget(MwLabelClass, "label", wnd, bw, (MwGetInteger(wnd, MwNheight) - 24) / 2, MwGetInteger(wnd, MwNwidth) - bw * 2, 24,
+					  MwNtext, message,
+					  NULL);
+	MwWidget ok    = MwVaCreateWidget(MwButtonClass, "ok", wnd, MwGetInteger(wnd, MwNwidth) - bw - 10 - 96, MwGetInteger(wnd, MwNheight) - bw - 10 - 24, 96, 24,
+					  MwNtext, "OK",
+					  NULL);
+
+	MwAddUserHandler(ok, MwNactivateHandler, ui_message_ok, wnd);
+
+	return wnd;
 }
 
 void ui_scene(void) {

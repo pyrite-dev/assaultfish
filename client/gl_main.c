@@ -1,5 +1,11 @@
 #include <af_common.h>
 
+static double rad;
+
+void gl_main_changed(void) {
+	rad = 0;
+}
+
 void gl_main_init(void) {
 	gl_cam_x = 0;
 	gl_cam_y = 0;
@@ -10,14 +16,13 @@ void gl_main_init(void) {
 }
 
 void gl_main_draw(void) {
-	int	      i;
-	static double r = 0;
+	int i;
 
 	glDisable(GL_DEPTH_TEST);
 	glPushMatrix();
-	glRotatef(r, 1, 0, 0);
-	glRotatef(r, 0, 1, 0);
-	glRotatef(r, 0, 0, 1);
+	glRotatef(rad, 1, 0, 0);
+	glRotatef(rad, 0, 1, 0);
+	glRotatef(rad, 0, 0, 1);
 	glBegin(GL_TRIANGLES);
 	for(i = 0; i < 8; i++) {
 		double r = i * 90 / 180.0 * M_PI;
@@ -31,5 +36,5 @@ void gl_main_draw(void) {
 	glPopMatrix();
 	glEnable(GL_DEPTH_TEST);
 
-	r += 60.0 / (1000.0 / AF_WAIT_MS);
+	rad += 60.0 / (1000.0 / AF_WAIT_MS);
 }

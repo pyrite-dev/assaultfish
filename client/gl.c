@@ -9,7 +9,9 @@ double gl_cam_z;
 int gl_scene = AF_SCENE_MAIN;
 
 gl_scene_t gl_scenes[] = {
-    {gl_main_init, gl_main_draw}};
+    {gl_main_changed, gl_main_init, gl_main_draw},		    /**/
+    {gl_connecting_changed, gl_connecting_init, gl_connecting_draw} /**/
+};
 
 void gl_resize(int width, int height) {
 	glViewport(0, 0, width, height);
