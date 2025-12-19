@@ -18,6 +18,8 @@
 #endif
 
 #define AF_DEFAULT_PORT 5312
+#define AF_VERSION "0.0.0"
+#define AF_COPYRIGHT "Copyright (C) 2025 Fishsoup"
 
 /* should be broadcasted! otherwise other user wouldn't know */
 typedef struct af_pkt_join {

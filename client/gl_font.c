@@ -23,9 +23,10 @@ void gl_font_init(void) {
 void gl_font_text(const char* text, int x, int y, double scale) {
 	int i;
 	int gw = font_width / 16 * scale, gh = font_height / 16 * scale;
+	int is = glIsEnabled(GL_TEXTURE_2D) ? 1 : 0;
 
 	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_TEXTURE_2D);
+	if(!is) glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, font_atlas);
 
 	glMatrixMode(GL_PROJECTION);
@@ -61,7 +62,7 @@ void gl_font_text(const char* text, int x, int y, double scale) {
 	glMatrixMode(GL_MODELVIEW);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	glEnable(GL_TEXTURE_2D);
+	if(!is) glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 }
 
