@@ -13,6 +13,8 @@ gl_scene_t gl_scenes[] = {
     {NULL, NULL, NULL}				   /**/
 };
 
+static char gl_status[256];
+
 void gl_resize(int width, int height) {
 	glViewport(0, 0, width, height);
 }
@@ -48,6 +50,8 @@ void gl_init(void) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	gl_font_init();
+
+	gl_status[0] = 0;
 }
 
 void gl_cube(double x, double y, double z, double xs, double ys, double zs, double xr, double yr, double zr) {
@@ -91,6 +95,8 @@ static void gl_common(void) {
 
 	sprintf(buf, "%s", AF_COPYRIGHT);
 	gl_font_text(buf, MwGetInteger(opengl, MwNwidth) - gl_font_width(buf), MwGetInteger(opengl, MwNheight) - gl_font_height(buf), 1);
+
+	gl_font_text(gl_status, 0, 0, 1);
 }
 
 void gl_render(void) {
@@ -117,6 +123,12 @@ void gl_render(void) {
 
 void gl_scene_change(void) {
 	if(gl_scenes[gl_scene].changed != NULL) gl_scenes[gl_scene].changed();
+
+	gl_status[0] = 0;
+}
+
+void gl_set_status(const char* status) {
+	strcpy(gl_status, status);
 }
 
 static void cross(double* out, double v00, double v01, double v02, double v10, double v11, double v12) {

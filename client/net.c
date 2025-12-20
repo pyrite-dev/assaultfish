@@ -4,7 +4,7 @@ static fishsoup_client_t* client = NULL;
 
 enum OPAQUE_STATES {
 	OPAQUE_WAITING_HELLO = 0,
-	OPAQUE_SENT_JOIN
+	OPAQUE_JOINING
 };
 
 typedef struct opaque {
@@ -41,13 +41,28 @@ static void on_packet(fishsoup_client_t* self, fishsoup_packet_t* pkt) {
 
 			fishsoup_packet_send(self->fd, &p);
 
-			o->state = OPAQUE_SENT_JOIN;
+			o->state = OPAQUE_JOINING;
+
+			gl_set_status("Joining");
 
 			return;
 		}
 
 		af_common_log_info("Server version is incompatible with this client\n");
 		MwAddUserHandler(ui_message("Server version is incompatible with this client"), MwNactivateHandler, net_return, NULL);
+		fishsoup_client_destroy(self);
+		client = NULL;
+	} else if(pkt->header.type == AF_PACKET_OK && pkt->header.length == sizeof(af_packet_ok_t) && o->state == OPAQUE_JOINING) {
+		af_packet_ok_t* p_ok = pkt->data;
+
+		af_common_log_info("OK Packet: Joined successfully\n");
+
+		gl_set_status("Downloading data");
+	} else if(pkt->header.type == AF_PACKET_ERROR && pkt->header.length == sizeof(af_packet_error_t) && o->state == OPAQUE_JOINING) {
+		af_packet_error_t* p_error = pkt->data;
+
+		af_common_log_info("ERROR Packet: Failed to join\n");
+
 		fishsoup_client_destroy(self);
 		client = NULL;
 	}
@@ -74,6 +89,8 @@ void net_connect(const char* username, const char* hostname, int port) {
 
 	fishsoup_client_on_packet(client, on_packet);
 	fishsoup_client_on_disconnect(client, on_disconnect);
+
+	gl_set_status("Waiting for server to be ready");
 }
 
 void net_poll(void) {
