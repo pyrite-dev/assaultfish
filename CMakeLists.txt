@@ -9,10 +9,10 @@ add_subdirectory(external/libfishsoup)
 add_subdirectory(external/milsko)
 add_subdirectory(external/glad)
 
-file(GLOB SERVER_SRC server/*.c)
-file(GLOB CLIENT_SRC client/*.c)
+file(GLOB SERVER_SRC server/*.c src/*.c)
+file(GLOB CLIENT_SRC client/*.c src/*.c)
 
-add_executable(af_server ${SERVER_SRC})
+add_executable(af_server ${SERVER_SRC} external/stb/stb_ds.c)
 add_executable(af_client ${CLIENT_SRC} external/stb/stb_image.c)
 add_executable(af_dumpfont tools/af_dumpfont.c external/stb/stb_image_write.c)
 
