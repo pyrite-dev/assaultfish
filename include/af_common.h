@@ -21,10 +21,14 @@
 #define AF_VERSION "0.0.0"
 #define AF_COPYRIGHT "Copyright (C) 2025 Fishsoup"
 
-/* should be broadcasted! otherwise other user wouldn't know */
-typedef struct af_pkt_join {
-	unsigned char length;
-	char*	      name;
-} af_pkt_join_t;
+enum AF_USER_PACKETS {
+	AF_PACKET_JOIN = FISHSOUP_PACKET_USER
+};
+
+#pragma pack(1)
+typedef struct af_packet_join {
+	char name[256];
+} af_packet_join_t;
+#pragma pack()
 
 #endif

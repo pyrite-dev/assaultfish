@@ -10,6 +10,9 @@ static void on_packet(fishsoup_client_t* client, fishsoup_packet_t* pkt) {
 }
 
 void net_connect(const char* username, const char* hostname, int port) {
+	fishsoup_packet_t pkt;
+	af_packet_join_t  join;
+
 	scene_change(AF_SCENE_CONNECTING);
 	client = fishsoup_client(hostname, port == 0 ? AF_DEFAULT_PORT : port);
 	if(client == NULL) {
@@ -17,7 +20,13 @@ void net_connect(const char* username, const char* hostname, int port) {
 		return;
 	}
 
+	pkt.header.type	  = AF_PACKET_JOIN;
+	pkt.header.length = sizeof(join);
+	pkt.data	  = &join;
+
 	fishsoup_client_on_packet(client, on_packet);
+
+	fishsoup_packet_send(client->fd, &pkt);
 }
 
 void net_poll(void) {
