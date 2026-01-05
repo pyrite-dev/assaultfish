@@ -1,5 +1,7 @@
 #include <af_common.h>
 
+#include <stb_image.h>
+
 static double rad;
 
 void gl_main_changed(void) {
@@ -18,6 +20,8 @@ void gl_main_init(void) {
 void gl_main_draw(void) {
 	int i;
 
+	glUniform1f(glGetUniformLocation(gl_shadow, "solid_color"), 1);
+
 	glPushMatrix();
 	glRotatef(rad, 1, 0, 0);
 	glRotatef(rad, 0, 1, 0);
@@ -31,6 +35,7 @@ void gl_main_draw(void) {
 
 		glColor3f(c ? 0.75 : 0, 0, c ? 0 : 0.75);
 		glBegin(GL_TRIANGLES);
+
 		glNormal3f(n[0], n[1], n[2]);
 		glVertex3f(0, u * 1.4, 0);
 		glVertex3f(-u, 0, u);
@@ -53,6 +58,8 @@ void gl_main_draw(void) {
 	glVertex3f(5, -1, 5);
 	glVertex3f(5, -1, -5);
 	glEnd();
+
+	glUniform1f(glGetUniformLocation(gl_shadow, "solid_color"), 0);
 }
 
 void gl_main_after(void) {

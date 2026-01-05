@@ -11,7 +11,9 @@ double gl_cam_z;
 
 int gl_scene = AF_SCENE_MAIN;
 
-static GLuint shadow_texture, shadow;
+GLuint gl_shadow;
+
+static GLuint shadow_texture;
 
 gl_scene_t gl_scenes[] = {
     {gl_main_changed, gl_main_init, gl_main_draw, gl_main_after}, /**/
@@ -25,7 +27,7 @@ void gl_resize(int width, int height) {
 }
 
 void gl_init(void) {
-	GLfloat lightamb[] = {0.1, 0.1, 0.1, 1.0};
+	GLfloat lightamb[] = {0.25, 0.25, 0.25, 1.0};
 	GLfloat lightcol[] = {1.0, 1.0, 1.0, 1.0};
 
 	glEnable(GL_DEPTH_TEST);
@@ -70,9 +72,10 @@ void gl_init(void) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	if(gl_shader(&shadow, DATAROOTDIR "/assaultfish/shadow.vs", DATAROOTDIR "/assaultfish/shadow.fs")) {
-		glUseProgram(shadow);
-		glUniform1i(glGetUniformLocation(shadow, "texture"), 1);
+	if(gl_shader(&gl_shadow, DATAROOTDIR "/assaultfish/shadow.vs", DATAROOTDIR "/assaultfish/shadow.fs")) {
+		glUseProgram(gl_shadow);
+		glUniform1i(glGetUniformLocation(gl_shadow, "texture"), 1);
+		glUniform1i(glGetUniformLocation(gl_shadow, "texture_in"), 0);
 	}
 }
 
@@ -109,16 +112,34 @@ void gl_cube(double x, double y, double z, double xs, double ys, double zs, doub
 }
 
 static void gl_common(void) {
-	char buf[128];
+	char buf1[128];
+	char buf2[128];
+	int  l;
+	gl_util_begin_2d();
+
+	glColor4f(0, 0, 0, 0.5);
+	sprintf(buf1, "AssaultFish %s", AF_VERSION);
+	sprintf(buf2, "%s", AF_COPYRIGHT);
+
+	l = gl_font_width(buf1);
+	if(l < gl_font_width(buf2)) l = gl_font_width(buf2);
+
+	glBegin(GL_QUADS);
+	glVertex2f(MwGetInteger(opengl, MwNwidth) - l, MwGetInteger(opengl, MwNheight) - gl_font_height(buf1) - gl_font_height(buf2));
+	glVertex2f(MwGetInteger(opengl, MwNwidth) - l, MwGetInteger(opengl, MwNheight));
+	glVertex2f(MwGetInteger(opengl, MwNwidth), MwGetInteger(opengl, MwNheight));
+	glVertex2f(MwGetInteger(opengl, MwNwidth), MwGetInteger(opengl, MwNheight) - gl_font_height(buf1) - gl_font_height(buf2));
+	glEnd();
+
 	glColor3f(1, 1, 1);
 
-	sprintf(buf, "AssaultFish %s", AF_VERSION);
-	gl_font_text(buf, MwGetInteger(opengl, MwNwidth) - gl_font_width(buf), MwGetInteger(opengl, MwNheight) - gl_font_height(buf) * 2, 1);
+	gl_font_text(buf1, MwGetInteger(opengl, MwNwidth) - gl_font_width(buf1), MwGetInteger(opengl, MwNheight) - gl_font_height(buf1) - gl_font_height(buf2), 1);
 
-	sprintf(buf, "%s", AF_COPYRIGHT);
-	gl_font_text(buf, MwGetInteger(opengl, MwNwidth) - gl_font_width(buf), MwGetInteger(opengl, MwNheight) - gl_font_height(buf), 1);
+	gl_font_text(buf2, MwGetInteger(opengl, MwNwidth) - gl_font_width(buf2), MwGetInteger(opengl, MwNheight) - gl_font_height(buf2), 1);
 
 	gl_font_text(gl_status, 0, 0, 1);
+
+	gl_util_end_2d();
 }
 
 static void scene(void) {
@@ -157,9 +178,11 @@ void gl_render(void) {
 
 	scene();
 
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, shadow_texture);
 	glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE0);
 
 	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -201,16 +224,12 @@ void gl_render(void) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glActiveTexture(GL_TEXTURE0);
 
-	glUseProgram(0);
-
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
 
 	glMatrixMode(GL_MODELVIEW);
 
 	gl_common();
-
-	glUseProgram(shadow);
 
 	if(gl_scenes[gl_scene].after != NULL) gl_scenes[gl_scene].after();
 }

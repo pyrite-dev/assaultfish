@@ -25,20 +25,10 @@ void gl_font_text(const char* text, int x, int y, double scale) {
 	int gw = font_width / 16 * scale, gh = font_height / 16 * scale;
 	int is = glIsEnabled(GL_TEXTURE_2D) ? 1 : 0;
 
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_LIGHTING);
-	glDisable(GL_CULL_FACE);
+	gl_util_begin_2d();
+
 	if(!is) glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, font_atlas);
-
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	glOrtho(0, MwGetInteger(opengl, MwNwidth), MwGetInteger(opengl, MwNheight), 0, -1, 1);
-
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
 
 	glBegin(GL_QUADS);
 	for(i = 0; text[i] != 0; i++) {
@@ -55,19 +45,10 @@ void gl_font_text(const char* text, int x, int y, double scale) {
 	}
 	glEnd();
 
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-
-	glMatrixMode(GL_MODELVIEW);
-
 	glBindTexture(GL_TEXTURE_2D, 0);
-	if(!is) glEnable(GL_TEXTURE_2D);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
+	if(!is) glDisable(GL_TEXTURE_2D);
+
+	gl_util_end_2d();
 }
 
 int gl_font_width(const char* text) {

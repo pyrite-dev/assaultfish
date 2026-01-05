@@ -53,6 +53,8 @@ int gl_shader(GLuint* r, const char* vs, const char* fs) {
 		glDeleteShader(fsi);
 		free(vss);
 		free(fss);
+
+		printf("%s: compilation failure\n", vs);
 		return 0;
 	}
 
@@ -63,6 +65,8 @@ int gl_shader(GLuint* r, const char* vs, const char* fs) {
 		glDeleteShader(fsi);
 		free(vss);
 		free(fss);
+
+		printf("%s: compilation failure\n", fs);
 		return 0;
 	}
 

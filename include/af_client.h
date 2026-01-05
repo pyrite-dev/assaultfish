@@ -34,6 +34,7 @@ extern double	  gl_cam_ud;
 extern double	  gl_cam_x;
 extern double	  gl_cam_y;
 extern double	  gl_cam_z;
+extern GLuint	  gl_shadow;
 
 void gl_init(void);
 void gl_render(void);
@@ -54,6 +55,10 @@ void gl_main_changed(void);
 void gl_main_init(void);
 void gl_main_draw(void);
 void gl_main_after(void);
+
+/* gl_util.c */
+void gl_util_begin_2d(void);
+void gl_util_end_2d(void);
 
 /* gl_shader.c */
 int gl_shader(GLuint* r, const char* vs, const char* fs);
