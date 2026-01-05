@@ -48,6 +48,6 @@ install(
 )
 
 install(
-	FILES resource/logo.png resource/font.png
+	FILES resource/logo.png resource/font.png resource/shadow.vs resource/shadow.fs
 	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/assaultfish
 )

@@ -45,5 +45,16 @@ void gl_main_draw(void) {
 
 	glPopMatrix();
 
+	glColor3f(1, 1, 1);
+	glBegin(GL_QUADS);
+	glNormal3f(0, 1, 0);
+	glVertex3f(-5, -1, -5);
+	glVertex3f(-5, -1, 5);
+	glVertex3f(5, -1, 5);
+	glVertex3f(5, -1, -5);
+	glEnd();
+}
+
+void gl_main_after(void) {
 	rad += 60.0 / (1000.0 / AF_WAIT_MS);
 }

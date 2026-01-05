@@ -1,5 +1,8 @@
 #include <af_common.h>
 
+#define SHADOW_WIDTH 1024
+#define SHADOW_HEIGHT 1024
+
 double gl_cam_lr = 0;
 double gl_cam_ud = 0;
 double gl_cam_x;
@@ -8,9 +11,11 @@ double gl_cam_z;
 
 int gl_scene = AF_SCENE_MAIN;
 
+static GLuint shadow_texture, shadow;
+
 gl_scene_t gl_scenes[] = {
-    {gl_main_changed, gl_main_init, gl_main_draw}, /**/
-    {NULL, NULL, NULL}				   /**/
+    {gl_main_changed, gl_main_init, gl_main_draw, gl_main_after}, /**/
+    {NULL, NULL, NULL, NULL}					  /**/
 };
 
 static char gl_status[256];
@@ -20,14 +25,8 @@ void gl_resize(int width, int height) {
 }
 
 void gl_init(void) {
-	GLfloat	       lightamb[]   = {0.1, 0.1, 0.1, 1.0};
-	GLfloat	       lightcol[]   = {1.0, 1.0, 1.0, 1.0};
-	const GLdouble genfunc[][4] = {
-	    {1.0, 0.0, 0.0, 0.0},
-	    {0.0, 1.0, 0.0, 0.0},
-	    {0.0, 0.0, 1.0, 0.0},
-	    {0.0, 0.0, 0.0, 1.0},
-	};
+	GLfloat lightamb[] = {0.1, 0.1, 0.1, 1.0};
+	GLfloat lightcol[] = {1.0, 1.0, 1.0, 1.0};
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
@@ -52,6 +51,29 @@ void gl_init(void) {
 	gl_font_init();
 
 	gl_status[0] = 0;
+
+	glGenTextures(1, &shadow_texture);
+	glBindTexture(GL_TEXTURE_2D, shadow_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	if(gl_shader(&shadow, DATAROOTDIR "/assaultfish/shadow.vs", DATAROOTDIR "/assaultfish/shadow.fs")) {
+		glUseProgram(shadow);
+		glUniform1i(glGetUniformLocation(shadow, "texture"), 1);
+	}
 }
 
 void gl_cube(double x, double y, double z, double xs, double ys, double zs, double xr, double yr, double zr) {
@@ -99,26 +121,98 @@ static void gl_common(void) {
 	gl_font_text(gl_status, 0, 0, 1);
 }
 
+static void scene(void) {
+	if(gl_scenes[gl_scene].draw != NULL) gl_scenes[gl_scene].draw();
+}
+
 void gl_render(void) {
-	GLfloat	 lightpos[4] = {0, 5, 0, 1};
+	GLfloat	 lightpos[4] = {2.5, 5, -2.5, 1};
+	GLint	 viewport[4];
 	GLdouble modelview[16];
+	GLdouble modelview2[16];
 
 	if(gl_scenes[gl_scene].init != NULL) gl_scenes[gl_scene].init();
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	glGetIntegerv(GL_VIEWPORT, &viewport[0]);
+
+	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluPerspective(60, (double)SHADOW_WIDTH / SHADOW_HEIGHT, 0.01, 100.0);
+	gluLookAt(lightpos[0], lightpos[1], lightpos[2], 0, 0, 0, 0, 1, 0);
+
+	glGetDoublev(GL_MODELVIEW_MATRIX, &modelview[0]);
+
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+	glDisable(GL_LIGHTING);
+
+	glCullFace(GL_FRONT);
+
+	scene();
+
+	glBindTexture(GL_TEXTURE_2D, shadow_texture);
+	glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glEnable(GL_LIGHTING);
+	glCullFace(GL_BACK);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60, (double)MwGetInteger(opengl, MwNwidth) / MwGetInteger(opengl, MwNheight), 0.01, 100.0);
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(gl_cam_x, gl_cam_y, gl_cam_z, gl_cam_x + cos(gl_cam_lr / 180.0 * M_PI), gl_cam_y + sin(gl_cam_ud / 180.0 * M_PI), gl_cam_z + sin(gl_cam_lr / 180.0 * M_PI), 0, 1, 0);
+	glGetDoublev(GL_MODELVIEW_MATRIX, &modelview2[0]);
+
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+
+	glTranslated(0.5, 0.5, 0.5);
+	glScaled(0.5, 0.5, 0.5);
+	glMultMatrixd(modelview);
+	glMultMatrixd(modelview2);
+
+	glMatrixMode(GL_MODELVIEW);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, shadow_texture);
+	glEnable(GL_TEXTURE_2D);
+	glActiveTexture(GL_TEXTURE0);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
-	if(gl_scenes[gl_scene].draw != NULL) gl_scenes[gl_scene].draw();
+	scene();
+
+	glActiveTexture(GL_TEXTURE1);
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE0);
+
+	glUseProgram(0);
+
+	glMatrixMode(GL_TEXTURE);
+	glLoadIdentity();
+
+	glMatrixMode(GL_MODELVIEW);
 
 	gl_common();
+
+	glUseProgram(shadow);
+
+	if(gl_scenes[gl_scene].after != NULL) gl_scenes[gl_scene].after();
 }
 
 void gl_scene_change(void) {

@@ -24,6 +24,7 @@ typedef struct gl_scene {
 	void (*changed)(void);
 	void (*init)(void);
 	void (*draw)(void);
+	void (*after)(void);
 } gl_scene_t;
 
 extern int	  gl_scene;
@@ -52,6 +53,10 @@ int  gl_font_height(const char* text);
 void gl_main_changed(void);
 void gl_main_init(void);
 void gl_main_draw(void);
+void gl_main_after(void);
+
+/* gl_shader.c */
+int gl_shader(GLuint* r, const char* vs, const char* fs);
 
 /* net.c */
 void net_connect(const char* username, const char* hostname, int port);
