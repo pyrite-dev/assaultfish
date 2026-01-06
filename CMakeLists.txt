@@ -10,6 +10,6 @@ add_subdirectory(external/milsko)
 add_subdirectory(engine)
 
 install(
-	FILES resource/logo.png resource/font.png resource/shadow.vs resource/shadow.fs
+	FILES resource/logo.png resource/font.png
 	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/assaultfish
 )

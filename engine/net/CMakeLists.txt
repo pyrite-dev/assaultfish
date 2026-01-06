@@ -12,3 +12,5 @@ target_include_directories(gbnet PRIVATE ${ZLIB_INCLUDE_DIRS})
 target_link_options(gbnet PRIVATE ${ZLIB_LDFLAGS_OTHER})
 target_link_directories(gbnet PRIVATE ${ZLIB_LIBRARY_DIRS})
 target_link_libraries(gbnet PRIVATE ${ZLIB_LIBRARIES})
+
+install_target(gbnet)
