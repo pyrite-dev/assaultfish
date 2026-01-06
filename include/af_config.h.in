@@ -1,6 +1,0 @@
-#ifndef __AF_CONFIG_H__
-#define __AF_CONFIG_H__
-
-#define DATAROOTDIR "@CMAKE_INSTALL_FULL_DATAROOTDIR@"
-
-#endif
