@@ -1,12 +1,12 @@
-#include <fishsoup.h>
+#include <gbnet.h>
 
 #include "stb_ds.h"
 
-fishsoup_server_t* fishsoup_server(int port) {
-	fishsoup_server_t* server = malloc(sizeof(*server));
+gbnet_server_t* gbnet_server(int port) {
+	gbnet_server_t* server = malloc(sizeof(*server));
 	int		   val;
 
-	if(port == 0) port = FISHSOUP_PORT;
+	if(port == 0) port = NET_PORT;
 
 	if((server->fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
 		free(server);
@@ -39,11 +39,11 @@ fishsoup_server_t* fishsoup_server(int port) {
 	return server;
 }
 
-int fishsoup_server_clients(fishsoup_server_t* server) {
+int gbnet_server_clients(gbnet_server_t* server) {
 	return arrlen(server->clients);
 }
 
-void fishsoup_server_loop(fishsoup_server_t* server) {
+void gbnet_server_loop(gbnet_server_t* server) {
 	struct pollfd* pfd;
 
 	while(1) {
@@ -68,7 +68,7 @@ void fishsoup_server_loop(fishsoup_server_t* server) {
 		if(server->on_tick != NULL) server->on_tick(server);
 
 		if(pfd[0].revents & POLLIN) {
-			fishsoup_client_t  client;
+			gbnet_client_t  client;
 			struct sockaddr_in address;
 			int		   len = sizeof(address);
 
@@ -91,26 +91,26 @@ void fishsoup_server_loop(fishsoup_server_t* server) {
 			time_t diff;
 			if(server->clients[i].server.cleanup) continue;
 			if(pfd[1 + i].revents & POLLIN) {
-				fishsoup_packet_t pkt;
+				gbnet_packet_t pkt;
 
-				if(fishsoup_packet_recv(server->clients[i].fd, &pkt) == 0) {
+				if(gbnet_packet_recv(server->clients[i].fd, &pkt) == 0) {
 					server->clients[i].server.cleanup = 1;
 				} else {
-					if(pkt.header.type == FISHSOUP_PACKET_PONG && server->clients[i].server.sent_ping) {
+					if(pkt.header.type == NET_PACKET_PONG && server->clients[i].server.sent_ping) {
 						server->clients[i].last_ping	    = time(NULL);
 						server->clients[i].server.sent_ping = 0;
 
 #ifdef DEBUG
 						fprintf(stderr, "Pong from client %d\n", server->clients[i].fd);
 #endif
-					} else if(pkt.header.type == FISHSOUP_PACKET_PING) {
-						fishsoup_packet_t ret;
+					} else if(pkt.header.type == NET_PACKET_PING) {
+						gbnet_packet_t ret;
 
-						ret.header.type	  = FISHSOUP_PACKET_PONG;
+						ret.header.type	  = NET_PACKET_PONG;
 						ret.header.length = 0;
 						ret.data	  = NULL;
 
-						if(fishsoup_packet_send(server->clients[i].fd, &ret) == 0) {
+						if(gbnet_packet_send(server->clients[i].fd, &ret) == 0) {
 							server->clients[i].server.cleanup = 1;
 						} else {
 #ifdef DEBUG
@@ -128,14 +128,14 @@ void fishsoup_server_loop(fishsoup_server_t* server) {
 
 			diff = time(NULL) - server->clients[i].last_ping;
 
-			if(diff == FISHSOUP_PING && !server->clients[i].server.sent_ping) {
-				fishsoup_packet_t pkt;
+			if(diff == NET_PING && !server->clients[i].server.sent_ping) {
+				gbnet_packet_t pkt;
 
-				pkt.header.type	  = FISHSOUP_PACKET_PING;
+				pkt.header.type	  = NET_PACKET_PING;
 				pkt.header.length = 0;
 				pkt.data	  = NULL;
 
-				if(fishsoup_packet_send(server->clients[i].fd, &pkt) == 0) {
+				if(gbnet_packet_send(server->clients[i].fd, &pkt) == 0) {
 					server->clients[i].server.cleanup = 1;
 #ifdef DEBUG
 					fprintf(stderr, "Failed to ping client %d\n", server->clients[i].fd);
@@ -146,7 +146,7 @@ void fishsoup_server_loop(fishsoup_server_t* server) {
 					fprintf(stderr, "Pinging client %d\n", server->clients[i].fd);
 #endif
 				}
-			} else if(diff == FISHSOUP_PING * 2 && server->clients[i].server.sent_ping) {
+			} else if(diff == NET_PING * 2 && server->clients[i].server.sent_ping) {
 				server->clients[i].server.cleanup = 1;
 #ifdef DEBUG
 				fprintf(stderr, "Ping timeout (client %d)\n", server->clients[i].fd);
@@ -170,15 +170,15 @@ void fishsoup_server_loop(fishsoup_server_t* server) {
 	}
 }
 
-void fishsoup_server_on_client(fishsoup_server_t* server, void (*on_client)(fishsoup_server_t* server, fishsoup_client_t* client)) {
+void gbnet_server_on_client(gbnet_server_t* server, void (*on_client)(gbnet_server_t* server, gbnet_client_t* client)) {
 	server->on_client = on_client;
 }
 
-void fishsoup_server_on_tick(fishsoup_server_t* server, void (*on_tick)(fishsoup_server_t* server)) {
+void gbnet_server_on_tick(gbnet_server_t* server, void (*on_tick)(gbnet_server_t* server)) {
 	server->on_tick = on_tick;
 }
 
-void fishsoup_server_destroy(fishsoup_server_t* server) {
+void gbnet_server_destroy(gbnet_server_t* server) {
 	int i;
 	for(i = 0; i < arrlen(server->clients); i++) {
 		if(server->clients[i].on_disconnect != NULL) server->clients[i].on_disconnect(&server->clients[i]);
@@ -189,10 +189,10 @@ void fishsoup_server_destroy(fishsoup_server_t* server) {
 	free(server);
 }
 
-void fishsoup_server_broadcast(fishsoup_server_t* server, fishsoup_packet_t* packet) {
+void gbnet_server_broadcast(gbnet_server_t* server, gbnet_packet_t* packet) {
 	int i;
 	for(i = 0; i < arrlen(server->clients); i++) {
-		if(fishsoup_packet_send(server->clients[i].fd, packet) == 0) {
+		if(gbnet_packet_send(server->clients[i].fd, packet) == 0) {
 			server->clients[i].server.cleanup = 1;
 		}
 	}

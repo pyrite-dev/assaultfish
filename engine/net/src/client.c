@@ -1,13 +1,13 @@
-#include <fishsoup.h>
+#include <gbnet.h>
 
-fishsoup_client_t* fishsoup_client(const char* host, int port) {
-	fishsoup_client_t* client = malloc(sizeof(*client));
+gbnet_client_t* gbnet_client(const char* host, int port) {
+	gbnet_client_t* client = malloc(sizeof(*client));
 	struct addrinfo	   hints;
 	char		   p[32];
 	struct addrinfo*   result;
 	struct addrinfo*   rp;
 
-	if(port == 0) port = FISHSOUP_PORT;
+	if(port == 0) port = NET_PORT;
 	sprintf(p, "%d", port);
 
 	memset(&hints, 0, sizeof(hints));
@@ -46,17 +46,17 @@ fishsoup_client_t* fishsoup_client(const char* host, int port) {
 	return client;
 }
 
-void fishsoup_client_on_packet(fishsoup_client_t* client, void (*on_packet)(fishsoup_client_t* client, fishsoup_packet_t* packet)) {
+void gbnet_client_on_packet(gbnet_client_t* client, void (*on_packet)(gbnet_client_t* client, gbnet_packet_t* packet)) {
 	client->on_packet = on_packet;
 }
 
-void fishsoup_client_on_disconnect(fishsoup_client_t* client, void (*on_disconnect)(fishsoup_client_t* client)) {
+void gbnet_client_on_disconnect(gbnet_client_t* client, void (*on_disconnect)(gbnet_client_t* client)) {
 	client->on_disconnect = on_disconnect;
 }
 
-int fishsoup_client_poll(fishsoup_client_t* client) {
+int gbnet_client_poll(gbnet_client_t* client) {
 	struct pollfd	  pfd;
-	fishsoup_packet_t pkt;
+	gbnet_packet_t pkt;
 	int		  ret;
 
 	pfd.fd	   = client->fd;
@@ -64,17 +64,17 @@ int fishsoup_client_poll(fishsoup_client_t* client) {
 	ret	   = poll(&pfd, 1, 0);
 	if(ret <= 0) return ret;
 
-	ret = fishsoup_packet_recv(client->fd, &pkt);
+	ret = gbnet_packet_recv(client->fd, &pkt);
 	if(ret == 0) return -1; /* connection broke, probably */
 
-	if(pkt.header.type == FISHSOUP_PACKET_PING) {
-		fishsoup_packet_t ret;
+	if(pkt.header.type == NET_PACKET_PING) {
+		gbnet_packet_t ret;
 		client->last_ping = time(NULL);
 
-		ret.header.type	  = FISHSOUP_PACKET_PONG;
+		ret.header.type	  = NET_PACKET_PONG;
 		ret.header.length = 0;
 		ret.data	  = NULL;
-		if(fishsoup_packet_send(client->fd, &ret) == 0) {
+		if(gbnet_packet_send(client->fd, &ret) == 0) {
 			if(pkt.data != NULL) free(pkt.data);
 			return -1;
 		}
@@ -86,7 +86,7 @@ int fishsoup_client_poll(fishsoup_client_t* client) {
 	return 1;
 }
 
-void fishsoup_client_destroy(fishsoup_client_t* client) {
+void gbnet_client_destroy(gbnet_client_t* client) {
 	if(client->on_disconnect != NULL) client->on_disconnect(client);
 	close(client->fd);
 	free(client);

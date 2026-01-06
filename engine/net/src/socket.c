@@ -1,12 +1,12 @@
-#include <fishsoup.h>
+#include <gbnet.h>
 
 #include <zlib.h>
 
 #define CHUNK 512
 
-int fishsoup_packet_send(int fd, fishsoup_packet_t* packet) {
+int gbnet_packet_send(int fd, gbnet_packet_t* packet) {
 	int			 r;
-	fishsoup_packet_header_t h;
+	gbnet_packet_header_t h;
 	int			 len  = 0;
 	unsigned char*		 data = NULL;
 
@@ -63,11 +63,11 @@ int fishsoup_packet_send(int fd, fishsoup_packet_t* packet) {
 	memcpy(&h, &packet->header, sizeof(h));
 	h.length = htons(len);
 
-	r = fishsoup_fd_send(fd, &h, sizeof(h));
+	r = gbnet_fd_send(fd, &h, sizeof(h));
 	if(r != sizeof(h)) return 0;
 
 	if(data != NULL) {
-		r = fishsoup_fd_send(fd, data, len);
+		r = gbnet_fd_send(fd, data, len);
 		if(r != sizeof(h)) {
 			free(data);
 			return 0;
@@ -78,10 +78,10 @@ int fishsoup_packet_send(int fd, fishsoup_packet_t* packet) {
 	return sizeof(h) + len;
 }
 
-int fishsoup_packet_recv(int fd, fishsoup_packet_t* packet) {
-	fishsoup_packet_header_t h;
+int gbnet_packet_recv(int fd, gbnet_packet_t* packet) {
+	gbnet_packet_header_t h;
 
-	if(fishsoup_fd_recv(fd, &h, sizeof(h), 500) != sizeof(h)) {
+	if(gbnet_fd_recv(fd, &h, sizeof(h), 500) != sizeof(h)) {
 		packet->data = NULL;
 		return 0;
 	}
@@ -97,7 +97,7 @@ int fishsoup_packet_recv(int fd, fishsoup_packet_t* packet) {
 		int	       seek = 0;
 		int	       len  = 0;
 		unsigned char  buf[CHUNK];
-		if(fishsoup_fd_recv(fd, data, packet->header.length, 50) != packet->header.length) {
+		if(gbnet_fd_recv(fd, data, packet->header.length, 50) != packet->header.length) {
 			free(data);
 			return 0;
 		}
@@ -164,7 +164,7 @@ int fishsoup_packet_recv(int fd, fishsoup_packet_t* packet) {
 	return sizeof(h) + packet->header.length;
 }
 
-int fishsoup_fd_send(int fd, const void* buf, int length) {
+int gbnet_fd_send(int fd, const void* buf, int length) {
 	struct pollfd pfd;
 	pfd.fd	   = fd;
 	pfd.events = POLLOUT | POLLPRI;
@@ -175,7 +175,7 @@ int fishsoup_fd_send(int fd, const void* buf, int length) {
 	return send(fd, buf, length, 0);
 }
 
-int fishsoup_fd_recv(int fd, void* buf, int length, int to) {
+int gbnet_fd_recv(int fd, void* buf, int length, int to) {
 	struct pollfd  pfd;
 	int	       ret;
 	unsigned char* b = buf;
