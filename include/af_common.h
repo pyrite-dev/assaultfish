@@ -21,7 +21,7 @@
 
 #define AF_DEFAULT_PORT 5312
 #define AF_VERSION "0.0.0"
-#define AF_COPYRIGHT "Copyright (C) 2025 Fishsoup"
+#define AF_COPYRIGHT "Copyright (C) 2025-2026 Pyrite development team"
 
 enum AF_USER_PACKETS {
 	AF_PACKET_HELLO = FISHSOUP_PACKET_USER,

@@ -1,5 +1,21 @@
 #include <af_common.h>
 
+static void err(const char* path, GLuint shader) {
+	GLint len, ret;
+	char* e;
+
+	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
+
+	e      = malloc(len);
+	e[len] = 0;
+
+	glGetShaderInfoLog(shader, len, &ret, e);
+
+	fprintf(stderr, "%s: %s\n", path, e);
+
+	free(e);
+}
+
 int gl_shader(GLuint* r, const char* vs, const char* fs) {
 	GLuint vsi;
 	GLuint fsi;
@@ -49,24 +65,24 @@ int gl_shader(GLuint* r, const char* vs, const char* fs) {
 	glCompileShader(vsi);
 	glGetShaderiv(vsi, GL_COMPILE_STATUS, &st);
 	if(!st) {
+		err(vs, vsi);
+
 		glDeleteShader(vsi);
 		glDeleteShader(fsi);
 		free(vss);
 		free(fss);
-
-		printf("%s: compilation failure\n", vs);
 		return 0;
 	}
 
 	glCompileShader(fsi);
 	glGetShaderiv(fsi, GL_COMPILE_STATUS, &st);
 	if(!st) {
+		err(fs, fsi);
+
 		glDeleteShader(vsi);
 		glDeleteShader(fsi);
 		free(vss);
 		free(fss);
-
-		printf("%s: compilation failure\n", fs);
 		return 0;
 	}
 
