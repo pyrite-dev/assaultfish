@@ -4,7 +4,7 @@
 
 gbnet_server_t* gbnet_server(int port) {
 	gbnet_server_t* server = malloc(sizeof(*server));
-	int		   val;
+	int		val;
 
 	if(port == 0) port = NET_PORT;
 
@@ -68,7 +68,7 @@ void gbnet_server_loop(gbnet_server_t* server) {
 		if(server->on_tick != NULL) server->on_tick(server);
 
 		if(pfd[0].revents & POLLIN) {
-			gbnet_client_t  client;
+			gbnet_client_t	   client;
 			struct sockaddr_in address;
 			int		   len = sizeof(address);
 

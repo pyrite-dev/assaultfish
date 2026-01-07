@@ -1,11 +1,11 @@
 #include <gbnet.h>
 
 gbnet_client_t* gbnet_client(const char* host, int port) {
-	gbnet_client_t* client = malloc(sizeof(*client));
-	struct addrinfo	   hints;
-	char		   p[32];
-	struct addrinfo*   result;
-	struct addrinfo*   rp;
+	gbnet_client_t*	 client = malloc(sizeof(*client));
+	struct addrinfo	 hints;
+	char		 p[32];
+	struct addrinfo* result;
+	struct addrinfo* rp;
 
 	if(port == 0) port = NET_PORT;
 	sprintf(p, "%d", port);
@@ -55,9 +55,9 @@ void gbnet_client_on_disconnect(gbnet_client_t* client, void (*on_disconnect)(gb
 }
 
 int gbnet_client_poll(gbnet_client_t* client) {
-	struct pollfd	  pfd;
+	struct pollfd  pfd;
 	gbnet_packet_t pkt;
-	int		  ret;
+	int	       ret;
 
 	pfd.fd	   = client->fd;
 	pfd.events = POLLIN | POLLPRI;

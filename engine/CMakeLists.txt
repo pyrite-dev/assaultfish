@@ -17,5 +17,11 @@ endmacro()
 add_subdirectory(external/glad)
 
 add_subdirectory(net)
+add_subdirectory(common)
 
 add_subdirectory(tools)
+
+install(
+	FILES resource/shadow.vs resource/shadow.fs
+	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/gearbox
+)

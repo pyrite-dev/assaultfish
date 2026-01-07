@@ -25,10 +25,10 @@ enum gbnet_packet_type {
 	NET_PACKET_USER
 };
 
-typedef struct gbnet_client	      gbnet_client_t;
-typedef struct gbnet_server	      gbnet_server_t;
+typedef struct gbnet_client	   gbnet_client_t;
+typedef struct gbnet_server	   gbnet_server_t;
 typedef struct gbnet_packet_header gbnet_packet_header_t;
-typedef struct gbnet_packet	      gbnet_packet_t;
+typedef struct gbnet_packet	   gbnet_packet_t;
 
 struct gbnet_client {
 	int    fd;
@@ -45,7 +45,7 @@ struct gbnet_client {
 struct gbnet_server {
 	int		   fd;
 	struct sockaddr_in address;
-	gbnet_client_t* clients;
+	gbnet_client_t*	   clients;
 	void*		   user;
 	void (*on_client)(gbnet_server_t* server, gbnet_client_t* client);
 	void (*on_tick)(gbnet_server_t* server);
@@ -61,22 +61,22 @@ struct gbnet_packet_header {
 /* !!! REMEMBER TO FREE DATA AFTER RECV UNLESS IT'S NULL !!! */
 struct gbnet_packet {
 	gbnet_packet_header_t header;
-	void*			 data;
+	void*		      data;
 };
 
 gbnet_client_t* gbnet_client(const char* host, int port);
-void		   gbnet_client_on_packet(gbnet_client_t* client, void (*on_packet)(gbnet_client_t* client, gbnet_packet_t* packet));
-void		   gbnet_client_on_disconnect(gbnet_client_t* client, void (*on_disconnect)(gbnet_client_t* client));
-int		   gbnet_client_poll(gbnet_client_t* client);
-void		   gbnet_client_destroy(gbnet_client_t* client);
+void		gbnet_client_on_packet(gbnet_client_t* client, void (*on_packet)(gbnet_client_t* client, gbnet_packet_t* packet));
+void		gbnet_client_on_disconnect(gbnet_client_t* client, void (*on_disconnect)(gbnet_client_t* client));
+int		gbnet_client_poll(gbnet_client_t* client);
+void		gbnet_client_destroy(gbnet_client_t* client);
 
 gbnet_server_t* gbnet_server(int port);
-int		   gbnet_server_clients(gbnet_server_t* server);
-void		   gbnet_server_loop(gbnet_server_t* server);
-void		   gbnet_server_on_client(gbnet_server_t* server, void (*on_client)(gbnet_server_t* server, gbnet_client_t* client));
-void		   gbnet_server_on_tick(gbnet_server_t* server, void (*on_tick)(gbnet_server_t* server));
-void		   gbnet_server_broadcast(gbnet_server_t* server, gbnet_packet_t* packet);
-void		   gbnet_server_destroy(gbnet_server_t* server);
+int		gbnet_server_clients(gbnet_server_t* server);
+void		gbnet_server_loop(gbnet_server_t* server);
+void		gbnet_server_on_client(gbnet_server_t* server, void (*on_client)(gbnet_server_t* server, gbnet_client_t* client));
+void		gbnet_server_on_tick(gbnet_server_t* server, void (*on_tick)(gbnet_server_t* server));
+void		gbnet_server_broadcast(gbnet_server_t* server, gbnet_packet_t* packet);
+void		gbnet_server_destroy(gbnet_server_t* server);
 
 int gbnet_fd_send(int fd, const void* buf, int length);
 int gbnet_fd_recv(int fd, void* buf, int length, int to);

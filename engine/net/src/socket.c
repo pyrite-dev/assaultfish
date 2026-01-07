@@ -5,10 +5,10 @@
 #define CHUNK 512
 
 int gbnet_packet_send(int fd, gbnet_packet_t* packet) {
-	int			 r;
+	int		      r;
 	gbnet_packet_header_t h;
-	int			 len  = 0;
-	unsigned char*		 data = NULL;
+	int		      len  = 0;
+	unsigned char*	      data = NULL;
 
 	if(packet->header.length > 0) {
 		z_stream      strm;
