@@ -3,11 +3,18 @@
 #include <GearBox/Log.h>
 
 GBClient GBClientCreate(GBEngine engine) {
+	GBClient client = malloc(sizeof(*client));
+
+	memset(client, 0, sizeof(*client));
+
 	GBLog(GBLogInfo, "Creating client");
 
-	return NULL;
+	return client;
 }
 
 void GBClientDestroy(GBClient client) {
 	free(client);
+}
+
+void GBClientStep(GBClient client) {
 }

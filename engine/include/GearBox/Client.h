@@ -10,6 +10,7 @@ extern "C" {
 
 GBDECL GBClient GBClientCreate(GBEngine engine);
 GBDECL void	GBClientDestroy(GBClient client);
+GBDECL void	GBClientStep(GBClient client);
 
 #ifdef __cplusplus
 }

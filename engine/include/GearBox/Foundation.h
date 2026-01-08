@@ -9,5 +9,6 @@
 #include <GearBox/Log.h>
 #include <GearBox/Client.h>
 #include <GearBox/Server.h>
+#include <GearBox/Math.h>
 
 #endif

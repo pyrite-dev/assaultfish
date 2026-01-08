@@ -8,11 +8,14 @@
 extern "C" {
 #endif
 
-GBDECL void	GBInit(void);
+GBDECL void GBInit(void);
+
 GBDECL GBEngine GBEngineCreate(GBEngineParam* param);
 GBDECL void	GBEngineDestroy(GBEngine engine);
-GBDECL void	GBEngineStart(GBEngine engine);
+GBDECL void	GBEngineParamInit(GBEngineParam* param);
 GBDECL void	GBEngineLoop(GBEngine engine);
+GBDECL GBClient GBEngineGetClient(GBEngine engine);
+GBDECL GBServer GBEngineGetServer(GBEngine engine);
 
 #ifdef __cplusplus
 }

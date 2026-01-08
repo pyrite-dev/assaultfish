@@ -5,8 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <math.h>
 
-#if defined(_MILSKO) && defined(_WIN32)
+#ifdef _GEARBOX
+#include <gbnet.h>
+#endif
+
+#if defined(_GEARBOX) && defined(_WIN32)
 #define GBDECL extern __declspec(dllexport)
 #elif defined(_WIN32)
 #define GBDECL extern __declspec(dllimport)

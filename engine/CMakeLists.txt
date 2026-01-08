@@ -14,15 +14,17 @@ macro(install_target name)
 	)
 endmacro()
 
-add_subdirectory(external/glad)
-
 add_subdirectory(net)
 
 file(GLOB GearBox_SRC src/*.c)
 
-add_library(GearBox SHARED ${GearBox_SRC})
-target_include_directories(GearBox PUBLIC include)
+add_library(GearBox SHARED ${GearBox_SRC} external/glad/src/glad.c)
+target_include_directories(GearBox PUBLIC include external/glad/include)
 target_compile_definitions(GearBox PRIVATE _GEARBOX)
+target_link_libraries(GearBox PRIVATE gbnet)
+if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+target_link_libraries(GearBox PRIVATE m)
+endif()
 
 install_target(GearBox)
 

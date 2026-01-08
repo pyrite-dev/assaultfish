@@ -5,6 +5,8 @@
 #include <GearBox/Client.h>
 #include <GearBox/Server.h>
 
+#include <glad/glad.h>
+
 void GBInit(void) {
 	GBVersion version;
 
@@ -17,6 +19,17 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 	GBEngine engine = malloc(sizeof(*engine));
 
 	memset(engine, 0, sizeof(*engine));
+
+	engine->param = malloc(sizeof(*engine->param));
+	memcpy(engine->param, param, sizeof(*param));
+
+	if(param->ready != NULL) {
+		param->ready(1024, 768);
+	}
+
+	if(param->gl_getprocaddress != NULL) {
+		gladLoadGLLoader(param->gl_getprocaddress);
+	}
 
 	if(engine != NULL && param->client && (engine->client = GBClientCreate(engine)) == NULL) {
 		GBLog(GBLogError, "Failed to create client");
@@ -44,12 +57,63 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 void GBEngineDestroy(GBEngine engine) {
 	if(engine->server != NULL) GBServerDestroy(engine->server);
 	if(engine->client != NULL) GBClientDestroy(engine->client);
+	if(engine->param != NULL) free(engine->param);
 
 	free(engine);
 }
 
-void GBEngineStart(GBEngine engine) {
+void GBEngineParamInit(GBEngineParam* param) {
+	memset(param, 0, sizeof(*param));
+
+	param->server		 = 0;
+	param->client		 = 1;
+	param->gl_getprocaddress = NULL;
+	param->gl_swapbuffer	 = NULL;
+	param->ready		 = NULL;
+	param->sleep		 = NULL;
+	param->get_tick		 = NULL;
 }
 
 void GBEngineLoop(GBEngine engine) {
+	long t		   = 0;
+	int  wait_actually = 0;
+	int  more	   = 0;
+	long wait	   = 1000 / 50.0;
+
+	if(engine->param->sleep == NULL || engine->param->get_tick == NULL) {
+		GBLog(GBLogWarn, "sleep and/or get_tick parameter are missing!");
+		GBLog(GBLogWarn, "This will result game to be crazy fast!!!");
+	} else {
+		t = engine->param->get_tick();
+
+		wait_actually = 1;
+	}
+
+	while(1) {
+		GBClientStep(engine->client);
+		GBServerStep(engine->server);
+
+		if(engine->param->tick != NULL) engine->param->tick();
+
+		if(wait_actually) {
+			int diff = (wait - more) - (engine->param->get_tick() - t);
+
+			if(diff > 0) {
+				engine->param->sleep(diff);
+			}
+
+			more -= diff;
+			if(more < 0) more = 0;
+
+			t = engine->param->get_tick();
+		}
+	}
+}
+
+GBClient GBEngineGetClient(GBEngine engine) {
+	return engine->client;
+}
+
+GBServer GBEngineGetServer(GBEngine engine) {
+	return engine->server;
 }
