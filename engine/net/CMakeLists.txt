@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.11)
 project(gbnet)
 
 add_library(gbnet SHARED src/client.c src/server.c src/socket.c src/stb_ds.c)
-
 target_include_directories(gbnet PUBLIC include)
 
 find_package(PkgConfig)

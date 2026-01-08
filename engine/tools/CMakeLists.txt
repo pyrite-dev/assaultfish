@@ -1,3 +1,5 @@
+project(gbtools)
+
 include(GNUInstallDirs)
 
 macro(compile_tool name)
