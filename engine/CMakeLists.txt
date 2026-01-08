@@ -18,7 +18,7 @@ add_subdirectory(net)
 
 file(GLOB GearBox_SRC src/*.c)
 
-add_library(GearBox SHARED ${GearBox_SRC} external/glad/src/glad.c)
+add_library(GearBox SHARED ${GearBox_SRC})
 target_include_directories(GearBox PUBLIC include external/glad/include)
 target_compile_definitions(GearBox PRIVATE _GEARBOX)
 target_link_libraries(GearBox PRIVATE gbnet)
@@ -27,6 +27,11 @@ target_link_libraries(GearBox PRIVATE m)
 endif()
 
 install_target(GearBox)
+install(
+	DIRECTORY include/
+	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+	FILES_MATCHING PATTERN "*.h"
+)
 
 add_subdirectory(tools)
 

@@ -7,6 +7,8 @@ GBClient GBClientCreate(GBEngine engine) {
 
 	memset(client, 0, sizeof(*client));
 
+	client->engine = engine;
+
 	GBLog(GBLogInfo, "Creating client");
 
 	return client;

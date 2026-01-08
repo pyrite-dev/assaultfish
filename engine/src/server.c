@@ -7,6 +7,8 @@ GBServer GBServerCreate(GBEngine engine) {
 
 	memset(server, 0, sizeof(*server));
 
+	server->engine = engine;
+
 	GBLog(GBLogInfo, "Creating server");
 
 	return server;

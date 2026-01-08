@@ -46,7 +46,6 @@ int main(int argc, char** argv){
 	param.tick = tick;
 	param.get_tick = MwTimeGetTick;
 	param.sleep = MwTimeSleep;
-	param.gl_getprocaddress = gl_getprocaddress;
 	param.gl_swapbuffer = gl_swapbuffer;
 
 	GBInit();

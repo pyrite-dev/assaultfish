@@ -13,7 +13,6 @@ typedef void* GBServer;
 typedef void* GBEngine;
 #endif
 
-typedef void* (*GBGLGetProcAddressCallback)(const char* name);
 typedef void (*GBGLSwapBufferCallback)(void);
 typedef void (*GBReadyCallback)(int width, int height);
 typedef void (*GBTickCallback)(void);
@@ -22,9 +21,11 @@ typedef void (*GBSleepCallback)(int ms);
 
 #ifdef _GEARBOX
 struct _GBClient {
+	GBEngine engine;
 };
 
 struct _GBServer {
+	GBEngine engine;
 };
 
 struct _GBEngine {
@@ -42,14 +43,13 @@ struct _GBVersion {
 };
 
 struct _GBEngineParam {
-	int			   client;
-	int			   server;
-	GBGLGetProcAddressCallback gl_getprocaddress;
-	GBGLSwapBufferCallback	   gl_swapbuffer;
-	GBReadyCallback		   ready;
-	GBTickCallback		   tick;
-	GBGetTickCallback	   get_tick;
-	GBSleepCallback		   sleep;
+	int		       client;
+	int		       server;
+	GBGLSwapBufferCallback gl_swapbuffer;
+	GBReadyCallback	       ready;
+	GBTickCallback	       tick;
+	GBGetTickCallback      get_tick;
+	GBSleepCallback	       sleep;
 };
 
 #endif

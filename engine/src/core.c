@@ -4,8 +4,7 @@
 #include <GearBox/Log.h>
 #include <GearBox/Client.h>
 #include <GearBox/Server.h>
-
-#include <glad/glad.h>
+#include <GearBox/GL.h>
 
 void GBInit(void) {
 	GBVersion version;
@@ -13,6 +12,8 @@ void GBInit(void) {
 	GBVersionGet(&version);
 
 	GBLog(GBLogInfo, "GearBox Engine %s", version.string);
+
+	gload_init();
 }
 
 GBEngine GBEngineCreate(GBEngineParam* param) {
@@ -25,10 +26,6 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 
 	if(param->ready != NULL) {
 		param->ready(1024, 768);
-	}
-
-	if(param->gl_getprocaddress != NULL) {
-		gladLoadGLLoader(param->gl_getprocaddress);
 	}
 
 	if(engine != NULL && param->client && (engine->client = GBClientCreate(engine)) == NULL) {
@@ -65,13 +62,12 @@ void GBEngineDestroy(GBEngine engine) {
 void GBEngineParamInit(GBEngineParam* param) {
 	memset(param, 0, sizeof(*param));
 
-	param->server		 = 0;
-	param->client		 = 1;
-	param->gl_getprocaddress = NULL;
-	param->gl_swapbuffer	 = NULL;
-	param->ready		 = NULL;
-	param->sleep		 = NULL;
-	param->get_tick		 = NULL;
+	param->server	     = 0;
+	param->client	     = 1;
+	param->gl_swapbuffer = NULL;
+	param->ready	     = NULL;
+	param->sleep	     = NULL;
+	param->get_tick	     = NULL;
 }
 
 void GBEngineLoop(GBEngine engine) {
@@ -90,8 +86,8 @@ void GBEngineLoop(GBEngine engine) {
 	}
 
 	while(1) {
-		GBClientStep(engine->client);
-		GBServerStep(engine->server);
+		if(engine->client != NULL) GBClientStep(engine->client);
+		if(engine->server != NULL) GBServerStep(engine->server);
 
 		if(engine->param->tick != NULL) engine->param->tick();
 

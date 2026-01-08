@@ -10,5 +10,6 @@
 #include <GearBox/Client.h>
 #include <GearBox/Server.h>
 #include <GearBox/Math.h>
+#include <GearBox/GL.h>
 
 #endif
