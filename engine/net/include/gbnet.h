@@ -1,5 +1,5 @@
-#ifndef __LIBNET_H__
-#define __LIBNET_H__
+#ifndef __GBNET_H__
+#define __GBNET_H__
 
 #include <stdlib.h>
 #include <string.h>
