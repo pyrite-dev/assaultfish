@@ -1,9 +1,19 @@
 #include <GearBox/Resource.h>
 
 #include <GearBox/File.h>
+#include <GearBox/Log.h>
+
+#include <lz4.h>
+
+static unsigned char res_sig[4] = {
+    0x7f,
+    'P',
+    'A',
+    'K'};
 
 GBResource GBResourceOpen(GBEngine engine, const char* path) {
-	GBResource resource = malloc(sizeof(*resource));
+	GBResource    resource = malloc(sizeof(*resource));
+	unsigned char sig[4];
 
 	memset(resource, 0, sizeof(*resource));
 
@@ -12,7 +22,68 @@ GBResource GBResourceOpen(GBEngine engine, const char* path) {
 		return NULL;
 	}
 
+	if(GBFileRead(resource->file, sig, 4) < 4) {
+		GBResourceClose(resource);
+		return NULL;
+	}
+
+	if(memcmp(sig, res_sig, 4) != 0) {
+		GBLog(GBLogError, "%s: Resource has wrong signature", path);
+		GBResourceClose(resource);
+		return NULL;
+	}
+
 	return resource;
+}
+
+void* GBResourceGet(GBResource resource, const char* name, unsigned int* size) {
+	char fn[129];
+
+	fn[128] = 0;
+
+	GBFileSeek(resource->file, 4);
+
+	while(!(GBFileRead(resource->file, fn, 128) < 128 || fn[0] == 0)) {
+		unsigned int  actsz = 0;
+		unsigned int  cmpsz = 0;
+		unsigned char c;
+		int	      i;
+		void*	      d;
+
+		for(i = 0; i < 4; i++) {
+			if(GBFileRead(resource->file, &c, 1) < 1) return NULL;
+
+			actsz = actsz << 8;
+			actsz = actsz | c;
+		}
+
+		for(i = 0; i < 4; i++) {
+			if(GBFileRead(resource->file, &c, 1) < 1) return NULL;
+
+			cmpsz = cmpsz << 8;
+			cmpsz = cmpsz | c;
+		}
+
+		*size = actsz;
+
+		d = malloc(cmpsz);
+		if(GBFileRead(resource->file, d, cmpsz) < cmpsz) {
+			free(d);
+			return NULL;
+		}
+		if(strcmp(fn, name) == 0) {
+			unsigned char* r = malloc(actsz);
+			LZ4_decompress_safe(d, r, cmpsz, actsz);
+
+			free(d);
+
+			return r;
+		} else {
+			free(d);
+		}
+	}
+
+	return NULL;
 }
 
 void GBResourceClose(GBResource resource) {

@@ -42,15 +42,25 @@ static void pack(const char* fullpath, const char* path) {
 	outsz = LZ4_compress_default(input, output, insz, m);
 
 	if(outsz > 0) {
-		int  sz = outsz;
-		int  i;
-		char fn[128];
+		unsigned int sz;
+		int	     i;
+		char	     fn[128];
 
 		memset(fn, 0, 128);
 		memcpy(fn, path, strlen(path));
 
 		fwrite(fn, 1, 128, out);
 
+		sz = insz;
+		for(i = 0; i < 4; i++) {
+			unsigned char n = (sz >> 24) & 0xff;
+
+			fwrite(&n, 1, 1, out);
+
+			sz = sz << 8;
+		}
+
+		sz = outsz;
 		for(i = 0; i < 4; i++) {
 			unsigned char n = (sz >> 24) & 0xff;
 
@@ -76,7 +86,7 @@ static int is_dir(const char* path) {
 #ifdef _WIN32
 	DWORD dw;
 
-	if((dw = GetFileAttributes(path)) == INVALID_FILE_ATTRIBUTES && !(dw & FILE_ATTRIBUTE_DIRECTORY)) return 0;
+	if((dw = GetFileAttributes(path)) == INVALID_FILE_ATTRIBUTES || !(dw & FILE_ATTRIBUTE_DIRECTORY)) return 0;
 
 	return 1;
 #else
@@ -151,9 +161,18 @@ static void scan(const char* path, const char* pre) {
 }
 
 int main(int argc, char** argv) {
-	unsigned char nul[128];
+	unsigned char dat[128];
 
-	if(argc >= 2) out = fopen(argv[1], "wb");
+	if(argc >= 2) {
+		out = fopen(argv[1], "wb");
+
+		dat[0] = 0x7f;
+		dat[1] = 'P';
+		dat[2] = 'A';
+		dat[3] = 'K';
+
+		fwrite(dat, 1, 4, out);
+	}
 	if(argc == 2) {
 		scan(".", "");
 	} else if(argc > 2) {
@@ -166,8 +185,8 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	memset(nul, 0, 128);
-	fwrite(nul, 1, 128, out);
+	memset(dat, 0, 128);
+	fwrite(dat, 1, 128, out);
 
 	fclose(out);
 }

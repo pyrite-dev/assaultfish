@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 GBDECL GBResource GBResourceOpen(GBEngine engine, const char* path);
+GBDECL void*	  GBResourceGet(GBResource resource, const char* name, unsigned int* size);
 GBDECL void	  GBResourceClose(GBResource resource);
 
 #ifdef __cplusplus

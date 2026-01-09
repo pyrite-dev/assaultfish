@@ -48,7 +48,10 @@ struct _GBEngine {
 };
 
 struct _GBFile {
-	FILE* fp;
+	FILE*	       fp;
+	unsigned char* data;
+	unsigned int   size;
+	unsigned int   seek;
 };
 
 struct _GBResource {

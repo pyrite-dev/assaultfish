@@ -1,5 +1,7 @@
 #include <GearBox/GL.h>
 
+#include <GearBox/File.h>
+
 static void err(const char* path, GLuint shader) {
 	GLint len, ret;
 	char* e;
@@ -16,40 +18,36 @@ static void err(const char* path, GLuint shader) {
 	free(e);
 }
 
-int GBGLShaderPrepare(GLuint* shader, const char* vs, const char* fs) {
+int GBGLShaderPrepare(GBEngine engine, GLuint* shader, const char* vs, const char* fs) {
 	GLuint vsi;
 	GLuint fsi;
-	FILE*  f;
+	GBFile f;
 	int    vsl = 0;
 	int    fsl = 0;
 	char*  vss;
 	char*  fss;
 	GLint  st;
 
-	if((f = fopen(vs, "rb")) != NULL) {
-		fseek(f, 0, SEEK_END);
-		vsl = ftell(f);
-		fseek(f, 0, SEEK_SET);
+	if((f = GBFileOpen(engine, vs)) != NULL) {
+		int sz = GBFileSize(f);
 
-		vss = malloc(vsl + 1);
-		fread(vss, vsl, 1, f);
-		vss[vsl] = 0;
+		vss = malloc(sz + 1);
+		GBFileRead(f, vss, sz);
+		vss[sz] = 0;
 
-		fclose(f);
+		GBFileClose(f);
 	} else {
 		return 0;
 	}
 
-	if((f = fopen(fs, "rb")) != NULL) {
-		fseek(f, 0, SEEK_END);
-		fsl = ftell(f);
-		fseek(f, 0, SEEK_SET);
+	if((f = GBFileOpen(engine, fs)) != NULL) {
+		int sz = GBFileSize(f);
 
-		fss = malloc(fsl + 1);
-		fread(fss, fsl, 1, f);
-		fss[fsl] = 0;
+		fss = malloc(sz + 1);
+		GBFileRead(f, fss, sz);
+		fss[sz] = 0;
 
-		fclose(f);
+		GBFileClose(f);
 	} else {
 		free(vss);
 

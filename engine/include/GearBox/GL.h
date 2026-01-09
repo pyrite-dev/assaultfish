@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 /* gl_shader.c */
-GBDECL int GBGLShaderPrepare(GLuint* shader, const char* vs, const char* fs);
+GBDECL int GBGLShaderPrepare(GBEngine engine, GLuint* shader, const char* vs, const char* fs);
 
 #ifdef __cplusplus
 }
