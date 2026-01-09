@@ -796,6 +796,8 @@ union LZ4_streamDecode_u {
 #    define LZ4_DEPRECATED(message) __attribute__((deprecated(message)))
 #  elif defined(__GNUC__) && (__GNUC__ * 10 + __GNUC_MINOR__ >= 31)
 #    define LZ4_DEPRECATED(message) __attribute__((deprecated))
+#  elif defined(__WATCOMC__)
+#    define LZ4_DEPRECATED(message)
 #  else
 #    pragma message("WARNING: LZ4_DEPRECATED needs custom implementation for this compiler")
 #    define LZ4_DEPRECATED(message)   /* disabled */
