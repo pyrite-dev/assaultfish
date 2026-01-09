@@ -13,7 +13,9 @@ typedef struct kv {
 
 } kv_t;
 
-static FILE* out;
+static FILE*	    out;
+static unsigned int total    = 0;
+static unsigned int totalact = 0, totalcmp = 0;
 
 static void scan(const char* path, const char* pre);
 
@@ -72,6 +74,10 @@ static void pack(const char* fullpath, const char* path) {
 		fwrite(output, 1, outsz, out);
 
 		printf("done (%6d -> %6d)\n", insz, outsz);
+
+		total++;
+		totalact += insz;
+		totalcmp += outsz;
 	} else {
 		printf("failed\n");
 	}
@@ -187,6 +193,8 @@ int main(int argc, char** argv) {
 
 	memset(dat, 0, 128);
 	fwrite(dat, 1, 128, out);
+
+	printf("total %u files added, compressed %u -> %u bytes\n", total, totalact, totalcmp);
 
 	fclose(out);
 }

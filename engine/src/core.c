@@ -34,8 +34,13 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 
 	sh_new_strdup(engine->resource);
 
-	resource = GBResourceOpen(engine, "base.pak");
-	shput(engine->resource, "base", resource);
+	if((resource = GBResourceOpen(engine, "base.pak")) != NULL) {
+		shput(engine->resource, "base", resource);
+	}
+
+	if((resource = GBResourceOpen(engine, "game.pak")) != NULL) {
+		shput(engine->resource, "game", resource);
+	}
 
 	if(engine != NULL && param->client && (engine->client = GBClientCreate(engine)) == NULL) {
 		GBLog(GBLogError, "Failed to create client");
@@ -61,6 +66,10 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 }
 
 void GBEngineDestroy(GBEngine engine) {
+	int i;
+	for(i = 0; i < shlen(engine->resource); i++) {
+		GBResourceClose(engine->resource[i].value);
+	}
 	shfree(engine->resource);
 
 	if(engine->server != NULL) GBServerDestroy(engine->server);
