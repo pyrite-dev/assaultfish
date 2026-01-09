@@ -5,6 +5,9 @@
 #include <GearBox/Client.h>
 #include <GearBox/Server.h>
 #include <GearBox/GL.h>
+#include <GearBox/Resource.h>
+
+#include <stb_ds.h>
 
 void GBInit(void) {
 	GBVersion version;
@@ -17,7 +20,8 @@ void GBInit(void) {
 }
 
 GBEngine GBEngineCreate(GBEngineParam* param) {
-	GBEngine engine = malloc(sizeof(*engine));
+	GBEngine   engine = malloc(sizeof(*engine));
+	GBResource resource;
 
 	memset(engine, 0, sizeof(*engine));
 
@@ -27,6 +31,11 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 	if(param->ready != NULL) {
 		param->ready(1024, 768);
 	}
+
+	sh_new_strdup(engine->resource);
+
+	resource = GBResourceOpen(engine, "base.pak");
+	shput(engine->resource, "base", resource);
 
 	if(engine != NULL && param->client && (engine->client = GBClientCreate(engine)) == NULL) {
 		GBLog(GBLogError, "Failed to create client");
@@ -52,6 +61,8 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 }
 
 void GBEngineDestroy(GBEngine engine) {
+	shfree(engine->resource);
+
 	if(engine->server != NULL) GBServerDestroy(engine->server);
 	if(engine->client != NULL) GBClientDestroy(engine->client);
 	if(engine->param != NULL) free(engine->param);

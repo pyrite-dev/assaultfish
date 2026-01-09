@@ -37,6 +37,6 @@ install(
 add_subdirectory(tools)
 
 install(
-	FILES resource/shadow.vs resource/shadow.fs
+	DIRECTORY resource/
 	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/GearBox
 )

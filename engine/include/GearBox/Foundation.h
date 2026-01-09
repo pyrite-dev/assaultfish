@@ -11,5 +11,7 @@
 #include <GearBox/Server.h>
 #include <GearBox/Math.h>
 #include <GearBox/GL.h>
+#include <GearBox/File.h>
+#include <GearBox/Resource.h>
 
 #endif
