@@ -16,6 +16,7 @@ GBDECL void	GBEngineParamInit(GBEngineParam* param);
 GBDECL void	GBEngineLoop(GBEngine engine);
 GBDECL GBClient GBEngineGetClient(GBEngine engine);
 GBDECL GBServer GBEngineGetServer(GBEngine engine);
+GBDECL int	GBEngineRegisterResource(GBEngine engine, const char* name, const char* path);
 
 #ifdef __cplusplus
 }

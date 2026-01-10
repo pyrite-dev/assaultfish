@@ -19,9 +19,19 @@ void GBInit(void) {
 	gload_init();
 }
 
-GBEngine GBEngineCreate(GBEngineParam* param) {
-	GBEngine   engine = malloc(sizeof(*engine));
+int GBEngineRegisterResource(GBEngine engine, const char* name, const char* path) {
 	GBResource resource;
+	if((resource = GBResourceOpen(engine, path)) != NULL) {
+		shput(engine->resource, name, resource);
+
+		return 1;
+	}
+
+	return 0;
+}
+
+GBEngine GBEngineCreate(GBEngineParam* param) {
+	GBEngine engine = malloc(sizeof(*engine));
 
 	memset(engine, 0, sizeof(*engine));
 
@@ -34,13 +44,8 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 
 	sh_new_strdup(engine->resource);
 
-	if((resource = GBResourceOpen(engine, "base.pak")) != NULL) {
-		shput(engine->resource, "base", resource);
-	}
-
-	if((resource = GBResourceOpen(engine, "game.pak")) != NULL) {
-		shput(engine->resource, "game", resource);
-	}
+	GBEngineRegisterResource(engine, "base", "base.pak");
+	GBEngineRegisterResource(engine, "game", "game.pak");
 
 	if(engine != NULL && param->client && (engine->client = GBClientCreate(engine)) == NULL) {
 		GBLog(GBLogError, "Failed to create client");
