@@ -24,7 +24,7 @@ target_include_directories(GearBox PRIVATE lz4)
 target_compile_definitions(GearBox PRIVATE _GEARBOX)
 target_link_libraries(GearBox PRIVATE gbnet)
 if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-target_link_libraries(GearBox PRIVATE m)
+	target_link_libraries(GearBox PRIVATE m)
 endif()
 
 install_target(GearBox)

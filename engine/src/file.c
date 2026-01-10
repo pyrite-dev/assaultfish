@@ -13,14 +13,14 @@ GBFile GBFileOpen(GBEngine engine, const char* path) {
 
 	memset(file, 0, sizeof(*file));
 
-	GBLog(GBLogInfo, "Opening %s", path);
-
 	file->seek = 0;
 
 	if((file->fp = fopen(path, "rb")) != NULL) {
 		fseek(file->fp, 0, SEEK_END);
 		file->size = ftell(file->fp);
 		fseek(file->fp, 0, SEEK_SET);
+
+		GBLog(GBLogInfo, "Opened %s", path);
 
 		return file;
 	}
@@ -37,6 +37,8 @@ GBFile GBFileOpen(GBEngine engine, const char* path) {
 			if(strcmp(engine->resource[i].key, s) == 0) {
 				if((file->data = GBResourceGet(engine->resource[i].value, nam, &file->size)) != NULL) {
 					free(s);
+
+					GBLog(GBLogInfo, "Opened %s", path);
 					return file;
 				}
 				break;

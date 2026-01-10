@@ -11,7 +11,17 @@ extern "C" {
 #endif
 
 /* gl_shader.c */
-GBDECL int GBGLShaderPrepare(GBEngine engine, GLuint* shader, const char* vs, const char* fs);
+GBDECL int GBGLShaderPrepare(GBGL gl, GLuint* shader, const char* vs, const char* fs);
+
+/* gl_texture.c */
+GBDECL int GBGLTexturePrepare(GBGL gl, GLuint* texture, unsigned char* rgba, int width, int height);
+
+/* gl_shadow.c */
+GBDECL void GBGLShadowInit(GBGL gl);
+
+/* gl.c */
+GBDECL GBGL GBGLCreate(GBClient client);
+GBDECL void GBGLDestroy(GBGL gl);
 
 #ifdef __cplusplus
 }

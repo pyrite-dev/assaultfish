@@ -46,13 +46,17 @@ typedef struct _GBServer*   GBServer;
 typedef struct _GBEngine*   GBEngine;
 typedef struct _GBFile*	    GBFile;
 typedef struct _GBResource* GBResource;
+typedef struct _GBGL*	    GBGL;
 #else
 typedef void* GBClient;
 typedef void* GBServer;
 typedef void* GBEngine;
 typedef void* GBFile;
 typedef void* GBResource;
+typedef void* GBGL;
 #endif
+typedef double GBVector3[3];
+typedef double GBVector4[4];
 
 typedef void (*GBGLSwapBufferCallback)(void);
 typedef void (*GBReadyCallback)(int width, int height);
@@ -66,8 +70,21 @@ struct _GBResourceKV {
 };
 
 #ifdef _GEARBOX
+#include <GearBox/GL/GL.h>
+
+struct _GBGL {
+	GBEngine engine;
+
+	GLuint shadow_texture;
+	GLuint shadow_shader;
+};
+
 struct _GBClient {
 	GBEngine engine;
+
+	GBGL	  gl;
+	GBVector3 look_at;
+	GBVector3 camera;
 };
 
 struct _GBServer {

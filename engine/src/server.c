@@ -9,13 +9,15 @@ GBServer GBServerCreate(GBEngine engine) {
 
 	server->engine = engine;
 
-	GBLog(GBLogInfo, "Creating server");
+	GBLog(GBLogInfo, "Created server");
 
 	return server;
 }
 
 void GBServerDestroy(GBServer server) {
 	free(server);
+
+	GBLog(GBLogInfo, "Destroyed server");
 }
 
 void GBServerStep(GBServer server) {

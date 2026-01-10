@@ -1,6 +1,7 @@
 #include <GearBox/GL.h>
 
 #include <GearBox/File.h>
+#include <GearBox/Log.h>
 
 static void err(const char* path, GLuint shader) {
 	GLint len, ret;
@@ -13,12 +14,12 @@ static void err(const char* path, GLuint shader) {
 
 	glGetShaderInfoLog(shader, len, &ret, e);
 
-	fprintf(stderr, "%s: %s\n", path, e);
+	GBLog(GBLogError, "%s: %s\n", path, e);
 
 	free(e);
 }
 
-int GBGLShaderPrepare(GBEngine engine, GLuint* shader, const char* vs, const char* fs) {
+int GBGLShaderPrepare(GBGL gl, GLuint* shader, const char* vs, const char* fs) {
 	GLuint vsi;
 	GLuint fsi;
 	GBFile f;
@@ -28,7 +29,7 @@ int GBGLShaderPrepare(GBEngine engine, GLuint* shader, const char* vs, const cha
 	char*  fss;
 	GLint  st;
 
-	if((f = GBFileOpen(engine, vs)) != NULL) {
+	if((f = GBFileOpen(gl->engine, vs)) != NULL) {
 		int sz = GBFileSize(f);
 
 		vss = malloc(sz + 1);
@@ -40,7 +41,7 @@ int GBGLShaderPrepare(GBEngine engine, GLuint* shader, const char* vs, const cha
 		return 0;
 	}
 
-	if((f = GBFileOpen(engine, fs)) != NULL) {
+	if((f = GBFileOpen(gl->engine, fs)) != NULL) {
 		int sz = GBFileSize(f);
 
 		fss = malloc(sz + 1);

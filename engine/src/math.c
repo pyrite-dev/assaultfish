@@ -1,9 +1,40 @@
 #include <GearBox/Math.h>
 
-void GBMathCross(double* out, double v00, double v01, double v02, double v10, double v11, double v12) {
-	out[0] = v01 * v12 - v02 * v11;
-	out[1] = v02 * v10 - v00 * v12;
-	out[2] = v00 * v11 - v01 * v10;
+void GBMathCross3(GBVector3 r, GBVector3 v0, GBVector3 v1) {
+	r[0] = v0[1] * v1[2] - v0[2] * v1[1];
+	r[1] = v0[2] * v1[0] - v0[0] * v1[2];
+	r[2] = v0[0] * v1[1] - v0[1] * v1[0];
+}
+
+void GBMathNormalize3(GBVector3 vec) {
+	double l = 0;
+	int    i;
+
+	for(i = 0; i < 3; i++) l += vec[i] * vec[i];
+
+	l = sqrt(l);
+
+	if(l > 0) {
+		l = (double)1 / l;
+	} else {
+		l = 0;
+	}
+
+	vec[0] *= l;
+	vec[1] *= l;
+	vec[2] *= l;
+}
+
+void GBMathSubtract3(GBVector3 r, GBVector3 v0, GBVector3 v1) {
+	int i;
+
+	for(i = 0; i < 3; i++) r[i] = v0[i] - v1[i];
+}
+
+void GBMathAdd3(GBVector3 r, GBVector3 v0, GBVector3 v1) {
+	int i;
+
+	for(i = 0; i < 3; i++) r[i] = v0[i] + v1[i];
 }
 
 /*
@@ -11,21 +42,15 @@ void GBMathCross(double* out, double v00, double v01, double v02, double v10, do
  *  | /
  * v1/
  */
-void GBMathNormal3(double* out, double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21, double v22) {
-	double v[3];
-	double l = 0;
-	int    i;
+void GBMathNormal3x3(GBVector3 r, GBVector3 v0, GBVector3 v1, GBVector3 v2) {
+	GBVector3 t0, t1;
 
-	GBMathCross(&v[0],			     /**/
-		    v10 - v00, v11 - v01, v12 - v02, /**/
-		    v20 - v00, v21 - v01, v22 - v02  /**/
-	);
+	GBMathSubtract3(t0, v1, v0);
+	GBMathSubtract3(t0, v2, v0);
 
-	l = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+	GBMathCross3(r, t0, t1);
 
-	for(i = 0; i < 3; i++) {
-		out[i] = v[i] / l;
-	}
+	GBMathNormalize3(r);
 }
 
 /*
@@ -33,22 +58,17 @@ void GBMathNormal3(double* out, double v00, double v01, double v02, double v10, 
  *  | |
  * v1-v2
  */
-void GBMathNormal4(double* out, double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21, double v22, double v30, double v31, double v32) {
-	double v0[3];
-	double v1[3];
-	int    i;
-	double l = 0;
+void GBMathNormal3x4(GBVector3 r, GBVector3 v0, GBVector3 v1, GBVector3 v2, GBVector3 v3) {
+	GBVector3 t0, t1;
 
-	GBMathNormal3(&v0[0], v00, v01, v02, v10, v11, v12, v30, v31, v32);
-	GBMathNormal3(&v1[0], v10, v11, v12, v20, v21, v22, v30, v31, v32);
+	GBMathNormal3x3(t0, v0, v1, v3);
+	GBMathNormal3x3(t1, v1, v2, v3);
 
-	for(i = 0; i < 3; i++) {
-		out[i] = v0[i] + v1[i];
-	}
+	GBMathAdd3(r, t0, t1);
 
-	l = sqrt(out[0] * out[0] + out[1] * out[1] + out[2] * out[2]);
+	GBMathNormalize3(r);
+}
 
-	for(i = 0; i < 3; i++) {
-		out[i] = out[i] / l;
-	}
+double GBMathCot(double x) {
+	return (double)1 / tan(x);
 }

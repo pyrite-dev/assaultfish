@@ -8,9 +8,15 @@
 extern "C" {
 #endif
 
-GBDECL void GBMathCross(double* out, double v00, double v01, double v02, double v10, double v11, double v12);
-GBDECL void GBMathNormal3(double* out, double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21, double v22);
-GBDECL void GBMathNormal4(double* out, double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21, double v22, double v30, double v31, double v32);
+#define GBMathPi 3.14159265358979323846
+
+GBDECL void   GBMathCross3(GBVector3 r, GBVector3 v0, GBVector3 v1);
+GBDECL void   GBMathNormalize3(GBVector3 vec);
+GBDECL void   GBMathSubtract3(GBVector3 r, GBVector3 v0, GBVector3 v1);
+GBDECL void   GBMathAdd3(GBVector3 r, GBVector3 v0, GBVector3 v1);
+GBDECL void   GBMathNormal3x3(GBVector3 r, GBVector3 v0, GBVector3 v1, GBVector3 v2);
+GBDECL void   GBMathNormal3x4(GBVector3 r, GBVector3 v0, GBVector3 v1, GBVector3 v2, GBVector3 v3);
+GBDECL double GBMathCot(double x);
 
 #ifdef __cplusplus
 }
