@@ -13,5 +13,6 @@
 #include <GearBox/GL.h>
 #include <GearBox/File.h>
 #include <GearBox/Resource.h>
+#include <GearBox/Endian.h>
 
 #endif

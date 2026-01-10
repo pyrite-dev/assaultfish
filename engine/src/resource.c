@@ -2,6 +2,7 @@
 
 #include <GearBox/File.h>
 #include <GearBox/Log.h>
+#include <GearBox/Endian.h>
 
 #include <lz4.h>
 
@@ -44,25 +45,16 @@ void* GBResourceGet(GBResource resource, const char* name, unsigned int* size) {
 	GBFileSeek(resource->file, 4);
 
 	while(!(GBFileRead(resource->file, fn, 128) < 128 || fn[0] == 0)) {
-		unsigned int  actsz = 0;
-		unsigned int  cmpsz = 0;
-		unsigned char c;
-		int	      i;
-		void*	      d;
+		GBU32 actsz = 0;
+		GBU32 cmpsz = 0;
+		int   i;
+		void* d;
 
-		for(i = 0; i < 4; i++) {
-			if(GBFileRead(resource->file, &c, 1) < 1) return NULL;
+		if(GBFileRead(resource->file, &actsz, 4) < 4) return NULL;
+		if(GBFileRead(resource->file, &cmpsz, 4) < 4) return NULL;
 
-			actsz = actsz << 8;
-			actsz = actsz | c;
-		}
-
-		for(i = 0; i < 4; i++) {
-			if(GBFileRead(resource->file, &c, 1) < 1) return NULL;
-
-			cmpsz = cmpsz << 8;
-			cmpsz = cmpsz | c;
-		}
+		actsz = GBEndianSwapU32BE(actsz);
+		cmpsz = GBEndianSwapU32BE(cmpsz);
 
 		*size = actsz;
 

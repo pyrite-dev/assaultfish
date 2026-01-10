@@ -3,6 +3,40 @@
 
 #include <GearBox/MachDep.h>
 
+#if defined(_MSC_VER) || defined(__WATCOMC__)
+typedef __int8_t  GBI8;
+typedef __int16_t GBI16;
+typedef __int32_t GBI32;
+typedef __int64_t GBI64;
+
+typedef unsigned __int8_t  GBU8;
+typedef unsigned __int16_t GBU16;
+typedef unsigned __int32_t GBU32;
+typedef unsigned __int64_t GBU64;
+#elif __STDC_VERSION__ >= 199901L
+#include <stdint.h>
+
+typedef int8_t	GBI8;
+typedef int16_t GBI16;
+typedef int32_t GBI32;
+typedef int64_t GBI64;
+
+typedef uint8_t	 GBU8;
+typedef uint16_t GBU16;
+typedef uint32_t GBU32;
+typedef uint64_t GBU64;
+#else
+typedef signed char GBI8;
+typedef short	    GBI16;
+typedef int	    GBI32;
+typedef long	    GBI64;
+
+typedef unsigned char  GBU8;
+typedef unsigned short GBU16;
+typedef unsigned int   GBU32;
+typedef unsigned long  GBU64;
+#endif
+
 typedef struct _GBVersion     GBVersion;
 typedef struct _GBEngineParam GBEngineParam;
 typedef struct _GBResourceKV  GBResourceKV;

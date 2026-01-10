@@ -73,7 +73,7 @@ static void pack(const char* fullpath, const char* path) {
 
 		fwrite(output, 1, outsz, out);
 
-		printf("done (%6d -> %6d)\n", insz, outsz);
+		printf("done (%8d -> %8d)\n", insz, outsz);
 
 		total++;
 		totalact += insz;
