@@ -169,6 +169,7 @@ static void scan(const char* path, const char* pre) {
 int main(int argc, char** argv) {
 	unsigned char dat[128];
 
+	printf("GearBox Engine resource packer\n");
 	if(argc >= 2) {
 		out = fopen(argv[1], "wb");
 
