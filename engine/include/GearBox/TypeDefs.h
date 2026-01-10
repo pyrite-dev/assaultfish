@@ -75,8 +75,11 @@ struct _GBResourceKV {
 struct _GBGL {
 	GBEngine engine;
 
-	GLuint shadow_texture;
-	GLuint shadow_shader;
+	GLuint	 shadow_texture;
+	GLuint	 shadow_shader;
+	GLdouble shadow_modelview[16];
+	GLdouble shadow_old_projection[16];
+	GLdouble shadow_old_modelview[16];
 };
 
 struct _GBClient {
@@ -85,6 +88,7 @@ struct _GBClient {
 	GBGL	  gl;
 	GBVector3 look_at;
 	GBVector3 camera;
+	GBVector4 light0;
 };
 
 struct _GBServer {
@@ -96,6 +100,8 @@ struct _GBEngine {
 	GBClient       client;
 	GBServer       server;
 	GBResourceKV*  resource;
+	int	       width;
+	int	       height;
 };
 
 struct _GBFile {

@@ -18,10 +18,18 @@ GBDECL int GBGLTexturePrepare(GBGL gl, GLuint* texture, unsigned char* rgba, int
 
 /* gl_shadow.c */
 GBDECL void GBGLShadowInit(GBGL gl);
+GBDECL void GBGLShadowBeforeMapping(GBGL gl);
+GBDECL void GBGLShadowAfterMapping(GBGL gl);
+GBDECL void GBGLShadowEnd(GBGL gl);
 
 /* gl.c */
 GBDECL GBGL GBGLCreate(GBClient client);
 GBDECL void GBGLDestroy(GBGL gl);
+
+/* gl_camera.c */
+GBDECL void GBGLPerspective(GBGL gl, double width, double height);
+GBDECL void GBGLSetCamera(GBGL gl);
+GBDECL void GBGLLookAt(GBGL gl, GBVector3 camera, GBVector3 look_at);
 
 #ifdef __cplusplus
 }

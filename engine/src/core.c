@@ -38,8 +38,11 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 	engine->param = malloc(sizeof(*engine->param));
 	memcpy(engine->param, param, sizeof(*param));
 
-	if(param->ready != NULL) {
-		param->ready(1024, 768);
+	engine->width  = 1024;
+	engine->height = 768;
+
+	if(param->ready != NULL && param->client) {
+		param->ready(engine->width, engine->height);
 	}
 
 	sh_new_strdup(engine->resource);

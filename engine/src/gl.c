@@ -1,7 +1,7 @@
 #include <GearBox/GL.h>
 
 GBGL GBGLCreate(GBClient client) {
-	GLfloat lightamb[] = {0.25, 0.25, 0.25, 1.0};
+	GLfloat lightamb[] = {0.5, 0.5, 0.5, 1.0};
 	GLfloat lightcol[] = {1.0, 1.0, 1.0, 1.0};
 	GBGL	gl;
 
@@ -35,4 +35,6 @@ GBGL GBGLCreate(GBClient client) {
 }
 
 void GBGLDestroy(GBGL gl) {
+
+	free(gl);
 }

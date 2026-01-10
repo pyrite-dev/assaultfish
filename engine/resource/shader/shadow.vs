@@ -22,7 +22,7 @@ void main(void){
 		gl_FrontColor += temp + gl_FrontLightProduct[0].specular * specular;
 	}
 	
-	gl_TexCoord[0] = gl_TextureMatrix[0] * gl_ModelViewMatrix * gl_Vertex;
-	gl_TexCoord[1] = gl_MultiTexCoord0;
+	gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;
+	gl_TexCoord[1] = gl_TextureMatrix[1] * gl_ModelViewMatrix * gl_Vertex;
 	gl_Position = ftransform();
 }

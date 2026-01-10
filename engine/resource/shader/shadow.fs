@@ -12,8 +12,9 @@ void main (void){
 	if(solid_color > 0.5){
 		c = color;
 	}else{
-		c = texture2D(current_texture, gl_TexCoord[1].st);
+		c = texture2D(current_texture, gl_TexCoord[0].st);
 	}
+	c = color;
 
-	gl_FragColor = (shadow + (gl_Color - shadow) * shadow2DProj(depth_texture, gl_TexCoord[0])) * c;
+	gl_FragColor = (shadow + (gl_Color - shadow) * shadow2DProj(depth_texture, gl_TexCoord[1])) * c;
 }
