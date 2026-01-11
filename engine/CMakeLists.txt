@@ -37,6 +37,6 @@ install(
 add_subdirectory(tools)
 
 install(
-	DIRECTORY resource/
+	DIRECTORY data/
 	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/GearSrc
 )
