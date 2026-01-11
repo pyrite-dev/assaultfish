@@ -29,6 +29,8 @@ int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
 	char*  fss;
 	GLint  st;
 
+	if(glUseProgram == NULL) return 0;
+
 	if((f = GSFileOpen(gl->engine, vs)) != NULL) {
 		int sz = GSFileSize(f);
 
