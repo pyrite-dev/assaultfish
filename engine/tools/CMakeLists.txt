@@ -5,6 +5,7 @@ include(GNUInstallDirs)
 macro(compile_tool name)
 	file(GLOB ${name}_SRC ${name}/*.c)
 	add_executable(${name} ${${name}_SRC})
+	target_link_libraries(${name} PRIVATE GearSrc)
 	install_target(${name})
 endmacro()
 

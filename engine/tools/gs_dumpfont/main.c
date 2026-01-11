@@ -2,14 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <GearSrc/File.h>
+
 #include <stb_image_write.h>
 
 #define CHECK(s) ((linelen > strlen(s)) && memcmp(line, s, strlen(s)) == 0)
 
 int main() {
 	char*	       line = NULL;
-	size_t	       linesize;
-	ssize_t	       linelen;
+	int	       linesize;
+	int	       linelen;
 	int	       iw, ih;
 	unsigned char* font = NULL;
 	int	       c;
@@ -17,7 +19,7 @@ int main() {
 	int	       y = 0;
 	int	       w, h;
 
-	while((linelen = getline(&line, &linesize, stdin)) != -1) {
+	while((linelen = GSFileGetLine(&line, &linesize, stdin)) != -1) {
 		linelen--;
 
 		line[linelen] = 0;
