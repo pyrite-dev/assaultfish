@@ -41,6 +41,8 @@ target_compile_definitions(ode PRIVATE
 	dLIBCCD_CONVEX_CONVEX
 )
 
+set_property(TARGET ode PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 set(ODE_PRECISION "dDOUBLE")
 set(CCD_PRECISION "CCD_DOUBLE")
 set(ODE_VERSION "Custom-ODE")
