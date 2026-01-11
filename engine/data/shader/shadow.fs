@@ -23,8 +23,8 @@ vec4 PhongShading(void)
         if(dcoef > 0.0){
                 vec3 V = normalize(-vPos.xyz);
 
-                vec3 R = reflect(-L, N);
-                float specularLight = pow(max(dot(R, V), 0.0), gl_FrontMaterial.shininess);
+                vec3 H = normalize(L + V);
+                float specularLight = pow(max(dot(N, H), 0.0), gl_FrontMaterial.shininess);
 
                 specular = gl_FrontLightProduct[0].specular * specularLight;
         }
