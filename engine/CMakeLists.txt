@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11)
-project(gearbox)
+project(gearsrc)
 
 include(GNUInstallDirs)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
