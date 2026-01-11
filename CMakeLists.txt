@@ -12,8 +12,3 @@ add_subdirectory(external/milsko)
 add_subdirectory(engine)
 
 add_subdirectory(client)
-
-install(
-	FILES data/
-	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/assaultfish
-)
