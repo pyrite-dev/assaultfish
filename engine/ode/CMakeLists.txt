@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.11)
 project(ode)
 
 file(GLOB ODE_SRC
