@@ -35,6 +35,7 @@ GBGL GBGLCreate(GBClient client) {
 }
 
 void GBGLDestroy(GBGL gl) {
+	GBGLShadowDeinit(gl);
 
 	free(gl);
 }

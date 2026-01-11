@@ -18,9 +18,10 @@ GBDECL int GBGLTexturePrepare(GBGL gl, GLuint* texture, unsigned char* rgba, int
 
 /* gl_shadow.c */
 GBDECL void GBGLShadowInit(GBGL gl);
-GBDECL void GBGLShadowBeforeMapping(GBGL gl);
+GBDECL int  GBGLShadowBeforeMapping(GBGL gl);
 GBDECL void GBGLShadowAfterMapping(GBGL gl);
 GBDECL void GBGLShadowEnd(GBGL gl);
+GBDECL void GBGLShadowDeinit(GBGL gl);
 
 /* gl.c */
 GBDECL GBGL GBGLCreate(GBClient client);

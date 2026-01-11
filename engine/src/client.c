@@ -10,9 +10,9 @@ GBClient GBClientCreate(GBEngine engine) {
 
 	client->engine = engine;
 
-	client->camera[0] = 0;
+	client->camera[0] = 2;
 	client->camera[1] = 1.5;
-	client->camera[2] = 0;
+	client->camera[2] = 2;
 
 	client->look_at[0] = 0;
 	client->look_at[1] = 0;
@@ -21,7 +21,7 @@ GBClient GBClientCreate(GBEngine engine) {
 	client->light0[0] = 5;
 	client->light0[1] = 5;
 	client->light0[2] = 5;
-	client->light0[3] = 0;
+	client->light0[3] = 1;
 
 	client->gl = GBGLCreate(client);
 
@@ -114,9 +114,10 @@ void GBClientStep(GBClient client) {
 
 	glLightfv(GL_LIGHT0, GL_POSITION, f);
 
-	GBGLShadowBeforeMapping(client->gl);
-	scene();
-	GBGLShadowAfterMapping(client->gl);
+	if(GBGLShadowBeforeMapping(client->gl)) {
+		scene();
+		GBGLShadowAfterMapping(client->gl);
+	}
 	scene();
 	GBGLShadowEnd(client->gl);
 
@@ -127,8 +128,8 @@ void GBClientStep(GBClient client) {
 	client->camera[0] = cos(r) * 2;
 	client->camera[2] = sin(r) * 2;
 
-	// client->light0[0] = -cos(r) * 2;
-	// client->light0[2] = -sin(r) * 2;
+	client->light0[0] = -cos(r) * 5;
+	client->light0[2] = -sin(r) * 5;
 
 	r += 0.1;
 }

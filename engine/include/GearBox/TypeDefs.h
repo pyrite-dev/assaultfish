@@ -76,6 +76,7 @@ struct _GBResourceKV {
 struct _GBGL {
 	GBEngine engine;
 
+	int	 shadow_use_shader;
 	GLuint	 shadow_texture;
 	GLuint	 shadow_shader;
 	GLdouble shadow_modelview[16];

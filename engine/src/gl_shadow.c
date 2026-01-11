@@ -4,6 +4,7 @@
 
 #define SHADOW_WIDTH 1024
 #define SHADOW_HEIGHT 1024
+#define SHADOW_CULL
 
 void GBGLShadowInit(GBGL gl) {
 	glGenTextures(1, &gl->shadow_texture);
@@ -29,11 +30,19 @@ void GBGLShadowInit(GBGL gl) {
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "depth_texture"), 7);
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "current_texture"), 0);
 		glUseProgram(0);
+
+		gl->shadow_use_shader = 1;
+	} else {
+		glDeleteTextures(1, &gl->shadow_texture);
+
+		gl->shadow_use_shader = 0;
 	}
 }
 
-void GBGLShadowBeforeMapping(GBGL gl) {
+int GBGLShadowBeforeMapping(GBGL gl) {
 	GBVector3 zero = {0, 0, 0};
+
+	if(!gl->shadow_use_shader) return 0;
 
 	glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -65,6 +74,8 @@ void GBGLShadowBeforeMapping(GBGL gl) {
 
 	glPolygonOffset(1.1f, 4.0f);
 	glEnable(GL_POLYGON_OFFSET_FILL);
+
+	return 1;
 }
 
 void GBGLShadowAfterMapping(GBGL gl) {
@@ -125,6 +136,8 @@ void GBGLShadowAfterMapping(GBGL gl) {
 }
 
 void GBGLShadowEnd(GBGL gl) {
+	if(!gl->shadow_use_shader) return;
+
 	glUseProgram(0);
 
 	glActiveTexture(GL_TEXTURE7);
@@ -138,4 +151,11 @@ void GBGLShadowEnd(GBGL gl) {
 	glActiveTexture(GL_TEXTURE0);
 
 	glMatrixMode(GL_MODELVIEW);
+}
+
+void GBGLShadowDeinit(GBGL gl) {
+	if(gl->shadow_use_shader) {
+		glDeleteTextures(1, &gl->shadow_texture);
+		glDeleteProgram(gl->shadow_shader);
+	}
 }
