@@ -14,6 +14,6 @@ add_subdirectory(engine)
 add_subdirectory(client)
 
 install(
-	FILES resource/logo.png
+	FILES data/
 	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/assaultfish
 )
