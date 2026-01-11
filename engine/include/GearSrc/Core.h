@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_CORE_H__
-#define __GEARBOX_CORE_H__
+#ifndef __GEARSRC_CORE_H__
+#define __GEARSRC_CORE_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>

@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_VERSION_H__
-#define __GEARBOX_VERSION_H__
+#ifndef __GEARSRC_VERSION_H__
+#define __GEARSRC_VERSION_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>

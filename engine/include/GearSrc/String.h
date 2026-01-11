@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_STRING_H__
-#define __GEARBOX_STRING_H__
+#ifndef __GEARSRC_STRING_H__
+#define __GEARSRC_STRING_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>

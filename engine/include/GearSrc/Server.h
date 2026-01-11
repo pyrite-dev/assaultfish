@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_SERVER_H__
-#define __GEARBOX_SERVER_H__
+#ifndef __GEARSRC_SERVER_H__
+#define __GEARSRC_SERVER_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>

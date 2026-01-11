@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_MACHDEP_H__
-#define __GEARBOX_MACHDEP_H__
+#ifndef __GEARSRC_MACHDEP_H__
+#define __GEARSRC_MACHDEP_H__
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,11 +7,11 @@
 #include <stdarg.h>
 #include <math.h>
 
-#ifdef _GEARBOX
+#ifdef _GEARSRC
 #include <gbnet.h>
 #endif
 
-#if defined(_GEARBOX) && defined(_WIN32)
+#if defined(_GEARSRC) && defined(_WIN32)
 #define GSDECL extern __declspec(dllexport)
 #elif defined(_WIN32)
 #define GSDECL extern __declspec(dllimport)

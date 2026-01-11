@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_MATH_H__
-#define __GEARBOX_MATH_H__
+#ifndef __GEARSRC_MATH_H__
+#define __GEARSRC_MATH_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>

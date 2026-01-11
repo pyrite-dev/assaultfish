@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_LOG_H__
-#define __GEARBOX_LOG_H__
+#ifndef __GEARSRC_LOG_H__
+#define __GEARSRC_LOG_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>

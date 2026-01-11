@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_TYPEDEFS_H__
-#define __GEARBOX_TYPEDEFS_H__
+#ifndef __GEARSRC_TYPEDEFS_H__
+#define __GEARSRC_TYPEDEFS_H__
 
 #include <GearSrc/MachDep.h>
 
@@ -40,7 +40,7 @@ typedef unsigned long  GSU64;
 typedef struct _GSVersion     GSVersion;
 typedef struct _GSEngineParam GSEngineParam;
 typedef struct _GSResourceKV  GSResourceKV;
-#ifdef _GEARBOX
+#ifdef _GEARSRC
 typedef struct _GSClient*   GSClient;
 typedef struct _GSServer*   GSServer;
 typedef struct _GSEngine*   GSEngine;
@@ -74,7 +74,7 @@ struct _GSResourceKV {
 	GSResource value;
 };
 
-#ifdef _GEARBOX
+#ifdef _GEARSRC
 #include <GearSrc/GL/GL.h>
 
 struct _GSGL {

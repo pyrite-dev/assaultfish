@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_ENDIAN_H__
-#define __GEARBOX_ENDIAN_H__
+#ifndef __GEARSRC_ENDIAN_H__
+#define __GEARSRC_ENDIAN_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>

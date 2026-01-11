@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_GL_H__
-#define __GEARBOX_GL_H__
+#ifndef __GEARSRC_GL_H__
+#define __GEARSRC_GL_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>

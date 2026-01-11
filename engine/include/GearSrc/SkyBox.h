@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_SKYBOX_H__
-#define __GEARBOX_SKYBOX_H__
+#ifndef __GEARSRC_SKYBOX_H__
+#define __GEARSRC_SKYBOX_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>

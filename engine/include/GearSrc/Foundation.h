@@ -1,5 +1,5 @@
-#ifndef __GEARBOX_FOUNDATION_H__
-#define __GEARBOX_FOUNDATION_H__
+#ifndef __GEARSRC_FOUNDATION_H__
+#define __GEARSRC_FOUNDATION_H__
 
 #include <GearSrc/MachDep.h>
 #include <GearSrc/TypeDefs.h>
