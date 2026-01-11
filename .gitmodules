@@ -4,3 +4,6 @@
 [submodule "submodule/ode"]
 	path = submodule/ode
 	url = https://github.com/thomasmarsh/ODE
+[submodule "submodule/xemil"]
+	path = submodule/xemil
+	url = ../xemil

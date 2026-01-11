@@ -12,6 +12,7 @@ set(MW_INSTALL_HEADERS OFF)
 add_subdirectory(external/lz4)
 add_subdirectory(external/ode)
 add_subdirectory(submodule/milsko) # Since Milsko provides CMake, we just use it
+add_subdirectory(external/xemil)
 
 add_subdirectory(engine)
 
