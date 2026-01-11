@@ -1,20 +1,52 @@
 #version 110
 
-uniform sampler2DShadow depth_texture;
-varying vec4 shadow;
-varying vec4 color;
-uniform float solid_color;
+varying vec4 vPos;
+varying vec3 vNrm;
+varying vec4 vShadowCoord;
+
+uniform sampler2D depth_texture;
 uniform sampler2D current_texture;
 
-void main (void){
-	vec4 c;
+vec4 PhongShading(void)
+{
+        vec3 N = normalize(vNrm);
+        vec3 L = normalize(gl_LightSource[0].position.xyz-vPos.xyz);
 
-	if(solid_color > 0.5){
-		c = color;
-	}else{
-		c = texture2D(current_texture, gl_TexCoord[0].st);
+        vec4 ambient = gl_FrontLightProduct[0].ambient;
+
+        float dcoef = max(dot(L, N), 0.0);
+        vec4 diffuse = gl_FrontLightProduct[0].diffuse*dcoef;
+
+        vec4 specular = vec4(0.0);
+        if(dcoef > 0.0){
+                vec3 V = normalize(-vPos.xyz);
+
+                vec3 R = reflect(-L, N);
+                float specularLight = pow(max(dot(R, V), 0.0), gl_FrontMaterial.shininess);
+
+                specular = gl_FrontLightProduct[0].specular*specularLight;
+        }
+        return ambient+diffuse+specular;
+}
+
+float ShadowCoef(void){
+	vec4 shadow_coord = vShadowCoord / vShadowCoord.w;
+	float view = shadow_coord.z;
+	float light = texture2D(depth_texture, shadow_coord.xy).z;
+	float shadow_coef = 1.0;
+
+	if(vShadowCoord.w > 0.0){
+		shadow_coef = light < view ? 0.0 : 1.0;
 	}
-	c = color;
 
-	gl_FragColor = (shadow + (gl_Color - shadow) * shadow2DProj(depth_texture, gl_TexCoord[1])) * c;
+	return shadow_coef;
+}
+
+void main(void){
+	vec4 c = gl_Color;
+	vec4 ambient = gl_LightSource[0].ambient;
+	float shadow_coef = ShadowCoef();
+
+	gl_FragColor = ambient * shadow_coef * c + (1.0 - ambient) * c;
+	gl_FragColor.a = 1.0;
 }

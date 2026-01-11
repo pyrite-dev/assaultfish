@@ -1,5 +1,7 @@
 #include <GearBox/GL.h>
 
+#include <GearBox/Math.h>
+
 #define SHADOW_WIDTH 1024
 #define SHADOW_HEIGHT 1024
 
@@ -24,8 +26,9 @@ void GBGLShadowInit(GBGL gl) {
 
 	if(GBGLShaderPrepare(gl, &gl->shadow_shader, "base:/shader/shadow.vs", "base:/shader/shadow.fs")) {
 		glUseProgram(gl->shadow_shader);
-		glUniform1i(glGetUniformLocation(gl->shadow_shader, "depth_texture"), 1);
+		glUniform1i(glGetUniformLocation(gl->shadow_shader, "depth_texture"), 7);
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "current_texture"), 0);
+		glUseProgram(0);
 	}
 }
 
@@ -39,11 +42,13 @@ void GBGLShadowBeforeMapping(GBGL gl) {
 	glMatrixMode(GL_PROJECTION);
 	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_old_projection);
 	glLoadIdentity();
+	GBGLPerspective(gl, SHADOW_WIDTH, SHADOW_HEIGHT);
+
+	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_projection);
 
 	glMatrixMode(GL_MODELVIEW);
 	glGetDoublev(GL_MODELVIEW_MATRIX, gl->shadow_old_modelview);
 	glLoadIdentity();
-	GBGLPerspective(gl, SHADOW_WIDTH, SHADOW_HEIGHT);
 	GBGLLookAt(gl, gl->engine->client->light0, zero);
 
 	glGetDoublev(GL_MODELVIEW_MATRIX, gl->shadow_modelview);
@@ -52,11 +57,24 @@ void GBGLShadowBeforeMapping(GBGL gl) {
 
 	glDisable(GL_LIGHTING);
 
+#ifdef SHADOW_CULL
 	glCullFace(GL_FRONT);
+#else
+	glDisable(GL_CULL_FACE);
+#endif
+
+	glPolygonOffset(1.1f, 4.0f);
+	glEnable(GL_POLYGON_OFFSET_FILL);
 }
 
 void GBGLShadowAfterMapping(GBGL gl) {
-	glActiveTexture(GL_TEXTURE1);
+	GBMatrix4x4 in, out;
+	GLdouble    mat[16];
+	int	    i;
+
+	glDisable(GL_POLYGON_OFFSET_FILL);
+
+	glActiveTexture(GL_TEXTURE7);
 	glBindTexture(GL_TEXTURE_2D, gl->shadow_texture);
 	glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -65,7 +83,11 @@ void GBGLShadowAfterMapping(GBGL gl) {
 	glViewport(0, 0, gl->engine->width, gl->engine->height);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glEnable(GL_LIGHTING);
+#ifdef SHADOW_CULL
 	glCullFace(GL_BACK);
+#else
+	glEnable(GL_CULL_FACE);
+#endif
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -75,33 +97,42 @@ void GBGLShadowAfterMapping(GBGL gl) {
 	glLoadIdentity();
 	glMultMatrixd(gl->shadow_old_modelview);
 
-	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE7);
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
 
+	for(i = 0; i < 16; i++) in[i] = gl->shadow_old_modelview[i];
+	GBMathInvert4x4(out, in);
+	for(i = 0; i < 16; i++) mat[i] = out[i];
+
 	glTranslated(0.5, 0.5, 0.5);
 	glScaled(0.5, 0.5, 0.5);
+	glMultMatrixd(gl->shadow_projection);
 	glMultMatrixd(gl->shadow_modelview);
-	glMultMatrixd(gl->shadow_old_modelview);
+	glMultMatrixd(mat);
 	glActiveTexture(GL_TEXTURE0);
 
 	glMatrixMode(GL_MODELVIEW);
 
-	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE7);
 	glBindTexture(GL_TEXTURE_2D, gl->shadow_texture);
 	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glUseProgram(gl->shadow_shader);
 }
 
 void GBGLShadowEnd(GBGL gl) {
-	glActiveTexture(GL_TEXTURE1);
+	glUseProgram(0);
+
+	glActiveTexture(GL_TEXTURE7);
 	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glActiveTexture(GL_TEXTURE0);
 
-	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE7);
 	glMatrixMode(GL_TEXTURE);
 	glLoadIdentity();
 	glActiveTexture(GL_TEXTURE0);

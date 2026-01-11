@@ -18,10 +18,10 @@ GBClient GBClientCreate(GBEngine engine) {
 	client->look_at[1] = 0;
 	client->look_at[2] = 0;
 
-	client->light0[0] = 0;
-	client->light0[1] = 1;
-	client->light0[2] = -5;
-	client->light0[3] = 1;
+	client->light0[0] = 5;
+	client->light0[1] = 5;
+	client->light0[2] = 5;
+	client->light0[3] = 0;
 
 	client->gl = GBGLCreate(client);
 
@@ -56,13 +56,44 @@ static void scene(void) {
 		glRotatef(180 * i, 0, 1, 0);
 		glBegin(GL_QUADS);
 		glNormal3f(-1, 0, 0);
-		glVertex3f(-1, 0.5, 0);
-		glVertex3f(-1, 0, 0);
-		glVertex3f(1, 0, 0);
-		glVertex3f(1, 0.5, 0);
+		glVertex3f(-1, 0.5, 0.25);
+		glVertex3f(-1, 0, 0.25);
+		glVertex3f(1, 0, 0.25);
+		glVertex3f(1, 0.5, 0.25);
 		glEnd();
 		glPopMatrix();
 	}
+	glBegin(GL_QUADS);
+	glNormal3f(0, 1, 0);
+	glVertex3f(-1, 0.5, -0.25);
+	glVertex3f(-1, 0.5, 0.25);
+	glVertex3f(1, 0.5, 0.25);
+	glVertex3f(1, 0.5, -0.25);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glNormal3f(0, 1, 0);
+	glVertex3f(-1, -0.5, 0.25);
+	glVertex3f(-1, -0.5, -0.25);
+	glVertex3f(1, -0.5, -0.25);
+	glVertex3f(1, -0.5, 0.25);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glNormal3f(-1, 0, 0);
+	glVertex3f(-1, 0.5, 0.25);
+	glVertex3f(-1, 0.5, -0.25);
+	glVertex3f(-1, 0, -0.25);
+	glVertex3f(-1, 0, 0.25);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glNormal3f(1, 0, 0);
+	glVertex3f(1, 0.5, -0.25);
+	glVertex3f(1, 0.5, 0.25);
+	glVertex3f(1, 0, 0.25);
+	glVertex3f(1, 0, -0.25);
+	glEnd();
 }
 
 void GBClientStep(GBClient client) {

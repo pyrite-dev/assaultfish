@@ -57,6 +57,7 @@ typedef void* GBGL;
 #endif
 typedef double GBVector3[3];
 typedef double GBVector4[4];
+typedef double GBMatrix4x4[16];
 
 typedef void (*GBGLSwapBufferCallback)(void);
 typedef void (*GBReadyCallback)(int width, int height);
@@ -78,6 +79,7 @@ struct _GBGL {
 	GLuint	 shadow_texture;
 	GLuint	 shadow_shader;
 	GLdouble shadow_modelview[16];
+	GLdouble shadow_projection[16];
 	GLdouble shadow_old_projection[16];
 	GLdouble shadow_old_modelview[16];
 };
