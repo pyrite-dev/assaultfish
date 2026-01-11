@@ -1,7 +1,7 @@
 #define MW_OPENGL_NO_INCLUDE
 #define _MILSKO
 
-#include <GearBox/Foundation.h>
+#include <GearSrc/Foundation.h>
 
 #include <Mw/Milsko.h>
 #include <Mw/Widget/OpenGL.h>
@@ -38,20 +38,20 @@ static void tick(void){
 }
 
 int main(int argc, char** argv){
-	GBEngineParam param;
-	GBEngine engine;
+	GSEngineParam param;
+	GSEngine engine;
 
-	GBEngineParamInit(&param);
+	GSEngineParamInit(&param);
 	param.ready = ready;
 	param.tick = tick;
 	param.get_tick = MwTimeGetTick;
 	param.sleep = MwTimeSleep;
 	param.gl_swapbuffer = gl_swapbuffer;
 
-	GBInit();
+	GSInit();
 
-	if((engine = GBEngineCreate(&param)) != NULL){
-		GBEngineLoop(engine);
-		GBEngineDestroy(engine);
+	if((engine = GSEngineCreate(&param)) != NULL){
+		GSEngineLoop(engine);
+		GSEngineDestroy(engine);
 	}
 }

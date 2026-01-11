@@ -1,10 +1,10 @@
-#include <GearBox/GL.h>
+#include <GearSrc/GL.h>
 
-#include <GearBox/File.h>
+#include <GearSrc/File.h>
 
 #include <stb_image.h>
 
-void GBGLTexturePrepare(GBGL gl, GLuint* texture, unsigned char* rgba, int width, int height) {
+void GSGLTexturePrepare(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height) {
 	glGenTextures(1, texture);
 	glBindTexture(GL_TEXTURE_2D, *texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
@@ -13,18 +13,18 @@ void GBGLTexturePrepare(GBGL gl, GLuint* texture, unsigned char* rgba, int width
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void GBGLTextureEnable(GBGL gl, GLuint texture) {
+void GSGLTextureEnable(GSGL gl, GLuint texture) {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glEnable(GL_TEXTURE_2D);
 }
 
-void GBGLTextureDisable(GBGL gl, GLuint texture) {
+void GSGLTextureDisable(GSGL gl, GLuint texture) {
 	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-int GBGLTextureLoadFile(GBGL gl, GLuint* texture, int* width, int* height, const char* filename) {
-	GBFile	       f = GBFileOpen(gl->engine, filename);
+int GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename) {
+	GSFile	       f = GSFileOpen(gl->engine, filename);
 	unsigned char* data;
 	unsigned char* rgba;
 	unsigned long  sz;
@@ -33,16 +33,16 @@ int GBGLTextureLoadFile(GBGL gl, GLuint* texture, int* width, int* height, const
 	int	       w, h;
 	if(f == NULL) return 0;
 
-	sz = GBFileSize(f);
+	sz = GSFileSize(f);
 
 	data = malloc(sz);
-	GBFileRead(f, data, sz);
-	GBFileClose(f);
+	GSFileRead(f, data, sz);
+	GSFileClose(f);
 
 	if((rgba = stbi_load_from_memory(data, sz, &w, &h, &ch, 4)) == NULL) {
 		st = 0;
 	} else {
-		GBGLTexturePrepare(gl, texture, rgba, w, h);
+		GSGLTexturePrepare(gl, texture, rgba, w, h);
 
 		free(rgba);
 	}
@@ -55,7 +55,7 @@ int GBGLTextureLoadFile(GBGL gl, GLuint* texture, int* width, int* height, const
 	return st;
 }
 
-void GBGLTextureSet(GBGL gl, GLuint texture) {
+void GSGLTextureSet(GSGL gl, GLuint texture) {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	if(texture == 0) {
 		glDisable(GL_TEXTURE_2D);
@@ -64,6 +64,6 @@ void GBGLTextureSet(GBGL gl, GLuint texture) {
 	}
 }
 
-void GBGLTextureDelete(GBGL gl, GLuint texture) {
+void GSGLTextureDelete(GSGL gl, GLuint texture) {
 	glDeleteTextures(1, &texture);
 }

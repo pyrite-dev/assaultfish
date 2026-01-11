@@ -1,0 +1,52 @@
+#ifndef __GEARBOX_GL_H__
+#define __GEARBOX_GL_H__
+
+#include <GearSrc/MachDep.h>
+#include <GearSrc/TypeDefs.h>
+
+#include <GearSrc/GL/GL.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define GSGLMaxDistance 100.0
+
+/* gl_shader.c */
+GSDECL int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs);
+
+/* gl_texture.c */
+GSDECL void GSGLTexturePrepare(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height);
+GSDECL void GSGLTextureSet(GSGL gl, GLuint texture);
+GSDECL int  GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename);
+GSDECL void GSGLTextureDelete(GSGL gl, GLuint texture);
+
+/* gl_shadow.c */
+GSDECL void GSGLShadowInit(GSGL gl);
+GSDECL int  GSGLShadowBeforeMapping(GSGL gl);
+GSDECL void GSGLShadowAfterMapping(GSGL gl);
+GSDECL void GSGLShadowEnd(GSGL gl);
+GSDECL void GSGLShadowDeinit(GSGL gl);
+GSDECL void GSGLShadowDisable(GSGL gl);
+GSDECL void GSGLShadowEnable(GSGL gl);
+
+/* gl.c */
+GSDECL GSGL GSGLCreate(GSClient client);
+GSDECL void GSGLDestroy(GSGL gl);
+GSDECL void GSGLClear(GSGL gl);
+GSDECL void GSGLIgnoreDepth(GSGL gl);
+GSDECL void GSGLCareDepth(GSGL gl);
+GSDECL void GSGLSetLight(GSGL gl);
+GSDECL void GSGLPolygon(GSGL gl, int pairs, GSVector3* vert, GSVector2* tex);
+
+/* gl_camera.c */
+GSDECL void GSGLCameraPerspective(GSGL gl, GSNumber width, GSNumber height);
+GSDECL void GSGLCameraSet(GSGL gl);
+GSDECL void GSGLCameraLookAt(GSGL gl, GSVector3 camera, GSVector3 look_at);
+GSDECL void GSGLCameraSetup(GSGL gl);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -10,8 +10,8 @@ endmacro()
 
 file(GLOB lz4_SRC ../lz4/*.c)
 
-compile_tool(gb_dumpfont)
-compile_tool(gb_makepak)
+compile_tool(gs_dumpfont)
+compile_tool(gs_makepak)
 
-target_include_directories(gb_makepak PRIVATE ../lz4)
-target_sources(gb_makepak PRIVATE ${lz4_SRC})
+target_include_directories(gs_makepak PRIVATE ../lz4)
+target_sources(gs_makepak PRIVATE ${lz4_SRC})

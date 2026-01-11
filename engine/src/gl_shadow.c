@@ -1,12 +1,12 @@
-#include <GearBox/GL.h>
+#include <GearSrc/GL.h>
 
-#include <GearBox/Math.h>
+#include <GearSrc/Math.h>
 
 #define SHADOW_WIDTH 512
 #define SHADOW_HEIGHT 512
 #define SHADOW_CULL
 
-void GBGLShadowInit(GBGL gl) {
+void GSGLShadowInit(GSGL gl) {
 	glGenTextures(1, &gl->shadow_texture);
 	glBindTexture(GL_TEXTURE_2D, gl->shadow_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
@@ -25,7 +25,7 @@ void GBGLShadowInit(GBGL gl) {
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	if(GBGLShaderPrepare(gl, &gl->shadow_shader, "base:/shader/shadow.vs", "base:/shader/shadow.fs")) {
+	if(GSGLShaderPrepare(gl, &gl->shadow_shader, "base:/shader/shadow.vs", "base:/shader/shadow.fs")) {
 		glUseProgram(gl->shadow_shader);
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "depth_texture"), 7);
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "current_texture"), 0);
@@ -40,26 +40,26 @@ void GBGLShadowInit(GBGL gl) {
 	}
 }
 
-int GBGLShadowBeforeMapping(GBGL gl) {
-	GBVector3 zero = {0, 0, 0};
+int GSGLShadowBeforeMapping(GSGL gl) {
+	GSVector3 zero = {0, 0, 0};
 
 	if(!gl->shadow_use_shader) return 0;
 
-	GBGLClear(gl);
+	GSGLClear(gl);
 
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 
 	glMatrixMode(GL_PROJECTION);
 	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_old_projection);
 	glLoadIdentity();
-	GBGLCameraPerspective(gl, SHADOW_WIDTH, SHADOW_HEIGHT);
+	GSGLCameraPerspective(gl, SHADOW_WIDTH, SHADOW_HEIGHT);
 
 	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_projection);
 
 	glMatrixMode(GL_MODELVIEW);
 	glGetDoublev(GL_MODELVIEW_MATRIX, gl->shadow_old_modelview);
 	glLoadIdentity();
-	GBGLCameraLookAt(gl, gl->engine->client->light0, zero);
+	GSGLCameraLookAt(gl, gl->engine->client->light0, zero);
 
 	glGetDoublev(GL_MODELVIEW_MATRIX, gl->shadow_modelview);
 
@@ -79,8 +79,8 @@ int GBGLShadowBeforeMapping(GBGL gl) {
 	return 1;
 }
 
-void GBGLShadowAfterMapping(GBGL gl) {
-	GBMatrix4x4 in, out;
+void GSGLShadowAfterMapping(GSGL gl) {
+	GSMatrix4x4 in, out;
 	GLdouble    mat[16];
 	int	    i;
 
@@ -114,7 +114,7 @@ void GBGLShadowAfterMapping(GBGL gl) {
 	glLoadIdentity();
 
 	for(i = 0; i < 16; i++) in[i] = gl->shadow_old_modelview[i];
-	GBMathInvert4x4(out, in);
+	GSMathInvert4x4(out, in);
 	for(i = 0; i < 16; i++) mat[i] = out[i];
 
 	glTranslated(0.5, 0.5, 0.5);
@@ -126,12 +126,12 @@ void GBGLShadowAfterMapping(GBGL gl) {
 
 	glMatrixMode(GL_MODELVIEW);
 
-	GBGLClear(gl);
+	GSGLClear(gl);
 
-	GBGLShadowEnable(gl);
+	GSGLShadowEnable(gl);
 }
 
-void GBGLShadowDisable(GBGL gl) {
+void GSGLShadowDisable(GSGL gl) {
 	glDisable(GL_LIGHTING);
 	if(gl->shadow_use_shader) {
 		glUseProgram(0);
@@ -143,7 +143,7 @@ void GBGLShadowDisable(GBGL gl) {
 	}
 }
 
-void GBGLShadowEnable(GBGL gl) {
+void GSGLShadowEnable(GSGL gl) {
 	glEnable(GL_LIGHTING);
 	if(gl->shadow_use_shader) {
 		glUseProgram(gl->shadow_shader);
@@ -155,10 +155,10 @@ void GBGLShadowEnable(GBGL gl) {
 	}
 }
 
-void GBGLShadowEnd(GBGL gl) {
+void GSGLShadowEnd(GSGL gl) {
 	if(!gl->shadow_use_shader) return;
 
-	GBGLShadowDisable(gl);
+	GSGLShadowDisable(gl);
 
 	glActiveTexture(GL_TEXTURE7);
 	glDisable(GL_TEXTURE_2D);
@@ -173,7 +173,7 @@ void GBGLShadowEnd(GBGL gl) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void GBGLShadowDeinit(GBGL gl) {
+void GSGLShadowDeinit(GSGL gl) {
 	if(gl->shadow_use_shader) {
 		glDeleteTextures(1, &gl->shadow_texture);
 		glDeleteProgram(gl->shadow_shader);

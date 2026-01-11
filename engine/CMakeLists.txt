@@ -16,18 +16,18 @@ endmacro()
 
 add_subdirectory(net)
 
-file(GLOB GearBox_SRC src/*.c lz4/*.c)
+file(GLOB GearSrc_SRC src/*.c lz4/*.c)
 
-add_library(GearBox SHARED ${GearBox_SRC})
-target_include_directories(GearBox PUBLIC include)
-target_include_directories(GearBox PRIVATE lz4)
-target_compile_definitions(GearBox PRIVATE _GEARBOX)
-target_link_libraries(GearBox PRIVATE gbnet)
+add_library(GearSrc SHARED ${GearSrc_SRC})
+target_include_directories(GearSrc PUBLIC include)
+target_include_directories(GearSrc PRIVATE lz4)
+target_compile_definitions(GearSrc PRIVATE _GEARBOX)
+target_link_libraries(GearSrc PRIVATE gbnet)
 if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	target_link_libraries(GearBox PRIVATE m)
+	target_link_libraries(GearSrc PRIVATE m)
 endif()
 
-install_target(GearBox)
+install_target(GearSrc)
 install(
 	DIRECTORY include/
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -38,5 +38,5 @@ add_subdirectory(tools)
 
 install(
 	DIRECTORY resource/
-	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/GearBox
+	DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/GearSrc
 )

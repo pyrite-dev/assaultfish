@@ -1,7 +1,7 @@
-#include <GearBox/GL.h>
+#include <GearSrc/GL.h>
 
-#include <GearBox/File.h>
-#include <GearBox/Log.h>
+#include <GearSrc/File.h>
+#include <GearSrc/Log.h>
 
 static void err(const char* path, GLuint shader) {
 	GLint len, ret;
@@ -14,41 +14,41 @@ static void err(const char* path, GLuint shader) {
 
 	glGetShaderInfoLog(shader, len, &ret, e);
 
-	GBLog(GBLogError, "%s: %s\n", path, e);
+	GSLog(GSLogError, "%s: %s\n", path, e);
 
 	free(e);
 }
 
-int GBGLShaderPrepare(GBGL gl, GLuint* shader, const char* vs, const char* fs) {
+int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
 	GLuint vsi;
 	GLuint fsi;
-	GBFile f;
+	GSFile f;
 	int    vsl = 0;
 	int    fsl = 0;
 	char*  vss;
 	char*  fss;
 	GLint  st;
 
-	if((f = GBFileOpen(gl->engine, vs)) != NULL) {
-		int sz = GBFileSize(f);
+	if((f = GSFileOpen(gl->engine, vs)) != NULL) {
+		int sz = GSFileSize(f);
 
 		vss = malloc(sz + 1);
-		GBFileRead(f, vss, sz);
+		GSFileRead(f, vss, sz);
 		vss[sz] = 0;
 
-		GBFileClose(f);
+		GSFileClose(f);
 	} else {
 		return 0;
 	}
 
-	if((f = GBFileOpen(gl->engine, fs)) != NULL) {
-		int sz = GBFileSize(f);
+	if((f = GSFileOpen(gl->engine, fs)) != NULL) {
+		int sz = GSFileSize(f);
 
 		fss = malloc(sz + 1);
-		GBFileRead(f, fss, sz);
+		GSFileRead(f, fss, sz);
 		fss[sz] = 0;
 
-		GBFileClose(f);
+		GSFileClose(f);
 	} else {
 		free(vss);
 

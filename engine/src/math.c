@@ -1,13 +1,13 @@
-#include <GearBox/Math.h>
+#include <GearSrc/Math.h>
 
-void GBMathCross3(GBVector3 r, GBVector3 v0, GBVector3 v1) {
+void GSMathCross3(GSVector3 r, GSVector3 v0, GSVector3 v1) {
 	r[0] = v0[1] * v1[2] - v0[2] * v1[1];
 	r[1] = v0[2] * v1[0] - v0[0] * v1[2];
 	r[2] = v0[0] * v1[1] - v0[1] * v1[0];
 }
 
-void GBMathNormalize3(GBVector3 vec) {
-	GBNumber l = 0;
+void GSMathNormalize3(GSVector3 vec) {
+	GSNumber l = 0;
 	int	 i;
 
 	for(i = 0; i < 3; i++) l += vec[i] * vec[i];
@@ -15,7 +15,7 @@ void GBMathNormalize3(GBVector3 vec) {
 	l = sqrt(l);
 
 	if(l > 0) {
-		l = (GBNumber)1 / l;
+		l = (GSNumber)1 / l;
 	} else {
 		l = 0;
 	}
@@ -25,13 +25,13 @@ void GBMathNormalize3(GBVector3 vec) {
 	vec[2] *= l;
 }
 
-void GBMathSubtract3(GBVector3 r, GBVector3 v0, GBVector3 v1) {
+void GSMathSubtract3(GSVector3 r, GSVector3 v0, GSVector3 v1) {
 	int i;
 
 	for(i = 0; i < 3; i++) r[i] = v0[i] - v1[i];
 }
 
-void GBMathAdd3(GBVector3 r, GBVector3 v0, GBVector3 v1) {
+void GSMathAdd3(GSVector3 r, GSVector3 v0, GSVector3 v1) {
 	int i;
 
 	for(i = 0; i < 3; i++) r[i] = v0[i] + v1[i];
@@ -42,15 +42,15 @@ void GBMathAdd3(GBVector3 r, GBVector3 v0, GBVector3 v1) {
  *  | /
  * v1/
  */
-void GBMathNormal3x3(GBVector3 r, GBVector3 v0, GBVector3 v1, GBVector3 v2) {
-	GBVector3 t0, t1;
+void GSMathNormal3x3(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2) {
+	GSVector3 t0, t1;
 
-	GBMathSubtract3(t0, v1, v0);
-	GBMathSubtract3(t1, v2, v0);
+	GSMathSubtract3(t0, v1, v0);
+	GSMathSubtract3(t1, v2, v0);
 
-	GBMathCross3(r, t0, t1);
+	GSMathCross3(r, t0, t1);
 
-	GBMathNormalize3(r);
+	GSMathNormalize3(r);
 }
 
 /*
@@ -58,23 +58,23 @@ void GBMathNormal3x3(GBVector3 r, GBVector3 v0, GBVector3 v1, GBVector3 v2) {
  *  | |
  * v1-v2
  */
-void GBMathNormal3x4(GBVector3 r, GBVector3 v0, GBVector3 v1, GBVector3 v2, GBVector3 v3) {
-	GBVector3 t0, t1;
+void GSMathNormal3x4(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2, GSVector3 v3) {
+	GSVector3 t0, t1;
 
-	GBMathNormal3x3(t0, v0, v1, v3);
-	GBMathNormal3x3(t1, v1, v2, v3);
+	GSMathNormal3x3(t0, v0, v1, v3);
+	GSMathNormal3x3(t1, v1, v2, v3);
 
-	GBMathAdd3(r, t0, t1);
+	GSMathAdd3(r, t0, t1);
 
-	GBMathNormalize3(r);
+	GSMathNormalize3(r);
 }
 
-GBNumber GBMathCot(GBNumber x) {
-	return (GBNumber)1 / tan(x);
+GSNumber GSMathCot(GSNumber x) {
+	return (GSNumber)1 / tan(x);
 }
 
-void GBMathInvert4x4(GBMatrix4x4 out, GBMatrix4x4 in) {
-	GBNumber inv[16], det;
+void GSMathInvert4x4(GSMatrix4x4 out, GSMatrix4x4 in) {
+	GSNumber inv[16], det;
 	int	 i;
 
 	inv[0]	= in[5] * in[10] * in[15] - in[5] * in[11] * in[14] - in[9] * in[6] * in[15] + in[9] * in[7] * in[14] + in[13] * in[6] * in[11] - in[13] * in[7] * in[10];

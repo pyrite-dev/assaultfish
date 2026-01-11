@@ -1,6 +1,6 @@
-#include <GearBox/String.h>
+#include <GearSrc/String.h>
 
-char* GBStringDuplicate(const char* str) {
+char* GSStringDuplicate(const char* str) {
 	char* s = malloc(strlen(str) + 1);
 
 	strcpy(s, str);
@@ -8,7 +8,7 @@ char* GBStringDuplicate(const char* str) {
 	return s;
 }
 
-char* GBStringConcat(const char* str1, const char* str2) {
+char* GSStringConcat(const char* str1, const char* str2) {
 	char* r = malloc(strlen(str1) + strlen(str2) + 1);
 
 	strcpy(r, str1);

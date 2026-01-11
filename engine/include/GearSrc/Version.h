@@ -1,14 +1,14 @@
 #ifndef __GEARBOX_VERSION_H__
 #define __GEARBOX_VERSION_H__
 
-#include <GearBox/MachDep.h>
-#include <GearBox/TypeDefs.h>
+#include <GearSrc/MachDep.h>
+#include <GearSrc/TypeDefs.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-GBDECL void GBVersionGet(GBVersion* version);
+GSDECL void GSVersionGet(GSVersion* version);
 
 #ifdef __cplusplus
 }

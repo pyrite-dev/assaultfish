@@ -1,9 +1,9 @@
-#include <GearBox/GL.h>
+#include <GearSrc/GL.h>
 
-GBGL GBGLCreate(GBClient client) {
+GSGL GSGLCreate(GSClient client) {
 	GLfloat lightamb[] = {0.5, 0.5, 0.5, 1.0};
 	GLfloat lightcol[] = {1.0, 1.0, 1.0, 1.0};
-	GBGL	gl;
+	GSGL	gl;
 
 	gl = malloc(sizeof(*client->gl));
 
@@ -29,30 +29,30 @@ GBGL GBGLCreate(GBClient client) {
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	GBGLShadowInit(gl);
+	GSGLShadowInit(gl);
 
 	return gl;
 }
 
-void GBGLDestroy(GBGL gl) {
-	GBGLShadowDeinit(gl);
+void GSGLDestroy(GSGL gl) {
+	GSGLShadowDeinit(gl);
 
 	free(gl);
 }
 
-void GBGLClear(GBGL gl) {
+void GSGLClear(GSGL gl) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GBGLIgnoreDepth(GBGL gl) {
+void GSGLIgnoreDepth(GSGL gl) {
 	glDisable(GL_DEPTH_TEST);
 }
 
-void GBGLCareDepth(GBGL gl) {
+void GSGLCareDepth(GSGL gl) {
 	glEnable(GL_DEPTH_TEST);
 }
 
-void GBGLSetLight(GBGL gl) {
+void GSGLSetLight(GSGL gl) {
 	GLfloat f[4];
 	int	i;
 
@@ -61,7 +61,7 @@ void GBGLSetLight(GBGL gl) {
 	glLightfv(GL_LIGHT0, GL_POSITION, f);
 }
 
-void GBGLPolygon(GBGL gl, int pairs, GBVector3* vert, GBVector2* tex) {
+void GSGLPolygon(GSGL gl, int pairs, GSVector3* vert, GSVector2* tex) {
 	int i;
 
 	glBegin(GL_POLYGON);

@@ -1,27 +1,27 @@
-#include <GearBox/Core.h>
+#include <GearSrc/Core.h>
 
-#include <GearBox/Version.h>
-#include <GearBox/Log.h>
-#include <GearBox/Client.h>
-#include <GearBox/Server.h>
-#include <GearBox/GL.h>
-#include <GearBox/Resource.h>
+#include <GearSrc/Version.h>
+#include <GearSrc/Log.h>
+#include <GearSrc/Client.h>
+#include <GearSrc/Server.h>
+#include <GearSrc/GL.h>
+#include <GearSrc/Resource.h>
 
 #include <stb_ds.h>
 
-void GBInit(void) {
-	GBVersion version;
+void GSInit(void) {
+	GSVersion version;
 
-	GBVersionGet(&version);
+	GSVersionGet(&version);
 
-	GBLog(GBLogInfo, "GearBox Engine %s", version.string);
+	GSLog(GSLogInfo, "GearSrc Engine %s", version.string);
 
 	gload_init();
 }
 
-int GBEngineRegisterResource(GBEngine engine, const char* name, const char* path) {
-	GBResource resource;
-	if((resource = GBResourceOpen(engine, path)) != NULL) {
+int GSEngineRegisterResource(GSEngine engine, const char* name, const char* path) {
+	GSResource resource;
+	if((resource = GSResourceOpen(engine, path)) != NULL) {
 		shput(engine->resource, name, resource);
 
 		return 1;
@@ -30,8 +30,8 @@ int GBEngineRegisterResource(GBEngine engine, const char* name, const char* path
 	return 0;
 }
 
-GBEngine GBEngineCreate(GBEngineParam* param) {
-	GBEngine engine = malloc(sizeof(*engine));
+GSEngine GSEngineCreate(GSEngineParam* param) {
+	GSEngine engine = malloc(sizeof(*engine));
 
 	memset(engine, 0, sizeof(*engine));
 
@@ -47,47 +47,47 @@ GBEngine GBEngineCreate(GBEngineParam* param) {
 
 	sh_new_strdup(engine->resource);
 
-	GBEngineRegisterResource(engine, "base", "base.pak");
-	GBEngineRegisterResource(engine, "game", "game.pak");
+	GSEngineRegisterResource(engine, "base", "base.pak");
+	GSEngineRegisterResource(engine, "game", "game.pak");
 
-	if(engine != NULL && param->client && (engine->client = GBClientCreate(engine)) == NULL) {
-		GBLog(GBLogError, "Failed to create client");
+	if(engine != NULL && param->client && (engine->client = GSClientCreate(engine)) == NULL) {
+		GSLog(GSLogError, "Failed to create client");
 
-		GBEngineDestroy(engine);
+		GSEngineDestroy(engine);
 
 		engine = NULL;
 	}
 
-	if(engine != NULL && param->server && (engine->server = GBServerCreate(engine)) == NULL) {
-		GBLog(GBLogError, "Failed to create server");
+	if(engine != NULL && param->server && (engine->server = GSServerCreate(engine)) == NULL) {
+		GSLog(GSLogError, "Failed to create server");
 
-		GBEngineDestroy(engine);
+		GSEngineDestroy(engine);
 
 		engine = NULL;
 	}
 
 	if(engine == NULL) {
-		GBLog(GBLogError, "Failed to create engine");
+		GSLog(GSLogError, "Failed to create engine");
 	}
 
 	return engine;
 }
 
-void GBEngineDestroy(GBEngine engine) {
+void GSEngineDestroy(GSEngine engine) {
 	int i;
 	for(i = 0; i < shlen(engine->resource); i++) {
-		GBResourceClose(engine->resource[i].value);
+		GSResourceClose(engine->resource[i].value);
 	}
 	shfree(engine->resource);
 
-	if(engine->server != NULL) GBServerDestroy(engine->server);
-	if(engine->client != NULL) GBClientDestroy(engine->client);
+	if(engine->server != NULL) GSServerDestroy(engine->server);
+	if(engine->client != NULL) GSClientDestroy(engine->client);
 	if(engine->param != NULL) free(engine->param);
 
 	free(engine);
 }
 
-void GBEngineParamInit(GBEngineParam* param) {
+void GSEngineParamInit(GSEngineParam* param) {
 	memset(param, 0, sizeof(*param));
 
 	param->server	     = 0;
@@ -98,15 +98,15 @@ void GBEngineParamInit(GBEngineParam* param) {
 	param->get_tick	     = NULL;
 }
 
-void GBEngineLoop(GBEngine engine) {
+void GSEngineLoop(GSEngine engine) {
 	long t		   = 0;
 	int  wait_actually = 0;
 	int  more	   = 0;
 	long wait	   = 1000 / 50.0;
 
 	if(engine->param->sleep == NULL || engine->param->get_tick == NULL) {
-		GBLog(GBLogWarn, "sleep and/or get_tick parameter are missing!");
-		GBLog(GBLogWarn, "This will result game to be crazy fast!!!");
+		GSLog(GSLogWarn, "sleep and/or get_tick parameter are missing!");
+		GSLog(GSLogWarn, "This will result game to be crazy fast!!!");
 	} else {
 		t = engine->param->get_tick();
 
@@ -114,8 +114,8 @@ void GBEngineLoop(GBEngine engine) {
 	}
 
 	while(1) {
-		if(engine->client != NULL) GBClientStep(engine->client);
-		if(engine->server != NULL) GBServerStep(engine->server);
+		if(engine->client != NULL) GSClientStep(engine->client);
+		if(engine->server != NULL) GSServerStep(engine->server);
 
 		if(engine->param->tick != NULL) engine->param->tick();
 
@@ -134,10 +134,10 @@ void GBEngineLoop(GBEngine engine) {
 	}
 }
 
-GBClient GBEngineGetClient(GBEngine engine) {
+GSClient GSEngineGetClient(GSEngine engine) {
 	return engine->client;
 }
 
-GBServer GBEngineGetServer(GBEngine engine) {
+GSServer GSEngineGetServer(GSEngine engine) {
 	return engine->server;
 }

@@ -1,6 +1,6 @@
-#include <GearBox/Endian.h>
+#include <GearSrc/Endian.h>
 
-#ifdef GBEndianHostLittle
+#ifdef GSEndianHostLittle
 static void swap(void* from, void* to, int size) {
 	unsigned char* f = from;
 	unsigned char* t = to;
@@ -14,48 +14,48 @@ static void swap(void* from, void* to, int size) {
 
 #define SWAP(in, out) swap(&in, &out, sizeof(in))
 
-GBI16 GBEndianSwapI16BE(GBI16 in) {
-	GBI16 out;
+GSI16 GSEndianSwapI16BE(GSI16 in) {
+	GSI16 out;
 
 	SWAP(in, out);
 
 	return out;
 }
 
-GBI32 GBEndianSwapI32BE(GBI32 in) {
-	GBI32 out;
+GSI32 GSEndianSwapI32BE(GSI32 in) {
+	GSI32 out;
 
 	SWAP(in, out);
 
 	return out;
 }
 
-GBI64 GBEndianSwapI64BE(GBI64 in) {
-	GBI64 out;
+GSI64 GSEndianSwapI64BE(GSI64 in) {
+	GSI64 out;
 
 	SWAP(in, out);
 
 	return out;
 }
 
-GBU16 GBEndianSwapU16BE(GBU16 in) {
-	GBU16 out;
+GSU16 GSEndianSwapU16BE(GSU16 in) {
+	GSU16 out;
 
 	SWAP(in, out);
 
 	return out;
 }
 
-GBU32 GBEndianSwapU32BE(GBU32 in) {
-	GBU32 out;
+GSU32 GSEndianSwapU32BE(GSU32 in) {
+	GSU32 out;
 
 	SWAP(in, out);
 
 	return out;
 }
 
-GBU64 GBEndianSwapU64BE(GBU64 in) {
-	GBU64 out;
+GSU64 GSEndianSwapU64BE(GSU64 in) {
+	GSU64 out;
 
 	SWAP(in, out);
 

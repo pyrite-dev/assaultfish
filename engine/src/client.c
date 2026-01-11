@@ -1,12 +1,12 @@
-#include <GearBox/Client.h>
+#include <GearSrc/Client.h>
 
-#include <GearBox/Log.h>
-#include <GearBox/GL.h>
-#include <GearBox/SkyBox.h>
-#include <GearBox/Math.h>
+#include <GearSrc/Log.h>
+#include <GearSrc/GL.h>
+#include <GearSrc/SkyBox.h>
+#include <GearSrc/Math.h>
 
-GBClient GBClientCreate(GBEngine engine) {
-	GBClient client = malloc(sizeof(*client));
+GSClient GSClientCreate(GSEngine engine) {
+	GSClient client = malloc(sizeof(*client));
 
 	memset(client, 0, sizeof(*client));
 
@@ -25,39 +25,39 @@ GBClient GBClientCreate(GBEngine engine) {
 	client->light0[2] = 5;
 	client->light0[3] = 1;
 
-	client->gl = GBGLCreate(client);
+	client->gl = GSGLCreate(client);
 
-	client->skybox = GBSkyBoxOpen(client, "base:/skybox");
+	client->skybox = GSSkyBoxOpen(client, "base:/skybox");
 
-	GBLog(GBLogInfo, "Created client");
+	GSLog(GSLogInfo, "Created client");
 
 	return client;
 }
 
-void GBClientDestroy(GBClient client) {
-	GBGLDestroy(client->gl);
+void GSClientDestroy(GSClient client) {
+	GSGLDestroy(client->gl);
 
 	free(client);
 
-	GBLog(GBLogInfo, "Destroyed client");
+	GSLog(GSLogInfo, "Destroyed client");
 }
 
-static void scene(GBClient client) {
+static void scene(GSClient client) {
 }
 
-void GBClientStep(GBClient client) {
-	GBGLClear(client->gl);
-	GBGLCameraSetup(client->gl);
-	GBGLSetLight(client->gl);
+void GSClientStep(GSClient client) {
+	GSGLClear(client->gl);
+	GSGLCameraSetup(client->gl);
+	GSGLSetLight(client->gl);
 
-	if(GBGLShadowBeforeMapping(client->gl)) {
+	if(GSGLShadowBeforeMapping(client->gl)) {
 		scene(client);
-		GBGLShadowAfterMapping(client->gl);
+		GSGLShadowAfterMapping(client->gl);
 	}
 
-	if(client->skybox != NULL) GBSkyBoxDraw(client->skybox);
+	if(client->skybox != NULL) GSSkyBoxDraw(client->skybox);
 	scene(client);
-	GBGLShadowEnd(client->gl);
+	GSGLShadowEnd(client->gl);
 
 	client->engine->param->gl_swapbuffer();
 

@@ -1,18 +1,18 @@
-#include <GearBox/Log.h>
+#include <GearSrc/Log.h>
 
-void GBLog(int level, const char* fmt, ...) {
+void GSLog(int level, const char* fmt, ...) {
 	va_list va;
 	FILE*	out = stdout;
 
 #ifdef _WIN32
 #else
-	fprintf(out, "[\x1b[mGearBox\x1b[m|");
+	fprintf(out, "[\x1b[mGearSrc\x1b[m|");
 
-	if(level == GBLogInfo) {
+	if(level == GSLogInfo) {
 		fprintf(out, "\x1b[1mINFO\x1b[m ");
-	} else if(level == GBLogWarn) {
+	} else if(level == GSLogWarn) {
 		fprintf(out, "\x1b[1m\x1b[33mWARN\x1b[m ");
-	} else if(level == GBLogError) {
+	} else if(level == GSLogError) {
 		fprintf(out, "\x1b[1m\x1b[31mERROR\x1b[m");
 	}
 #endif

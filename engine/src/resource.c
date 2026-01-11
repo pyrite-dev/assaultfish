@@ -1,8 +1,8 @@
-#include <GearBox/Resource.h>
+#include <GearSrc/Resource.h>
 
-#include <GearBox/File.h>
-#include <GearBox/Log.h>
-#include <GearBox/Endian.h>
+#include <GearSrc/File.h>
+#include <GearSrc/Log.h>
+#include <GearSrc/Endian.h>
 
 #include <lz4.h>
 
@@ -12,54 +12,54 @@ static unsigned char res_sig[4] = {
     'A',
     'K'};
 
-GBResource GBResourceOpen(GBEngine engine, const char* path) {
-	GBResource    resource = malloc(sizeof(*resource));
+GSResource GSResourceOpen(GSEngine engine, const char* path) {
+	GSResource    resource = malloc(sizeof(*resource));
 	unsigned char sig[4];
 
 	memset(resource, 0, sizeof(*resource));
 
-	if((resource->file = GBFileOpen(engine, path)) == NULL) {
-		GBResourceClose(resource);
+	if((resource->file = GSFileOpen(engine, path)) == NULL) {
+		GSResourceClose(resource);
 		return NULL;
 	}
 
-	if(GBFileRead(resource->file, sig, 4) < 4) {
-		GBResourceClose(resource);
+	if(GSFileRead(resource->file, sig, 4) < 4) {
+		GSResourceClose(resource);
 		return NULL;
 	}
 
 	if(memcmp(sig, res_sig, 4) != 0) {
-		GBLog(GBLogError, "%s: Resource has wrong signature", path);
-		GBResourceClose(resource);
+		GSLog(GSLogError, "%s: Resource has wrong signature", path);
+		GSResourceClose(resource);
 		return NULL;
 	}
 
 	return resource;
 }
 
-void* GBResourceGet(GBResource resource, const char* name, unsigned int* size) {
+void* GSResourceGet(GSResource resource, const char* name, unsigned int* size) {
 	char fn[129];
 
 	fn[128] = 0;
 
-	GBFileSeek(resource->file, 4);
+	GSFileSeek(resource->file, 4);
 
-	while(!(GBFileRead(resource->file, fn, 128) < 128 || fn[0] == 0)) {
-		GBU32 actsz = 0;
-		GBU32 cmpsz = 0;
+	while(!(GSFileRead(resource->file, fn, 128) < 128 || fn[0] == 0)) {
+		GSU32 actsz = 0;
+		GSU32 cmpsz = 0;
 		int   i;
 		void* d;
 
-		if(GBFileRead(resource->file, &actsz, 4) < 4) return NULL;
-		if(GBFileRead(resource->file, &cmpsz, 4) < 4) return NULL;
+		if(GSFileRead(resource->file, &actsz, 4) < 4) return NULL;
+		if(GSFileRead(resource->file, &cmpsz, 4) < 4) return NULL;
 
-		actsz = GBEndianSwapU32BE(actsz);
-		cmpsz = GBEndianSwapU32BE(cmpsz);
+		actsz = GSEndianSwapU32BE(actsz);
+		cmpsz = GSEndianSwapU32BE(cmpsz);
 
 		*size = actsz;
 
 		d = malloc(cmpsz);
-		if(GBFileRead(resource->file, d, cmpsz) < cmpsz) {
+		if(GSFileRead(resource->file, d, cmpsz) < cmpsz) {
 			free(d);
 			return NULL;
 		}
@@ -78,8 +78,8 @@ void* GBResourceGet(GBResource resource, const char* name, unsigned int* size) {
 	return NULL;
 }
 
-void GBResourceClose(GBResource resource) {
-	if(resource->file != NULL) GBFileClose(resource->file);
+void GSResourceClose(GSResource resource) {
+	if(resource->file != NULL) GSFileClose(resource->file);
 
 	free(resource);
 }

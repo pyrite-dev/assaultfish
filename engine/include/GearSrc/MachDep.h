@@ -12,11 +12,11 @@
 #endif
 
 #if defined(_GEARBOX) && defined(_WIN32)
-#define GBDECL extern __declspec(dllexport)
+#define GSDECL extern __declspec(dllexport)
 #elif defined(_WIN32)
-#define GBDECL extern __declspec(dllimport)
+#define GSDECL extern __declspec(dllimport)
 #else
-#define GBDECL extern
+#define GSDECL extern
 #endif
 
 #endif

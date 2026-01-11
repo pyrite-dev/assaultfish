@@ -1,6 +1,6 @@
-#include <GearBox/Version.h>
+#include <GearSrc/Version.h>
 
-void GBVersionGet(GBVersion* version) {
+void GSVersionGet(GSVersion* version) {
 	version->majorlevel = 0;
 	version->minorlevel = 0;
 	version->patchlevel = 0;

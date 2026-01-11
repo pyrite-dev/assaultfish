@@ -1,18 +1,18 @@
-#include <GearBox/GL.h>
+#include <GearSrc/GL.h>
 
-#include <GearBox/Math.h>
+#include <GearSrc/Math.h>
 
-void GBGLCameraPerspective(GBGL gl, GBNumber width, GBNumber height) {
-	GBNumber aspect;
-	GBNumber f;
+void GSGLCameraPerspective(GSGL gl, GSNumber width, GSNumber height) {
+	GSNumber aspect;
+	GSNumber f;
 	GLdouble matrix[16];
 	int	 i;
-	GBNumber fovy  = 60.0;
-	GBNumber znear = 0.01;
-	GBNumber zfar  = GBGLMaxDistance;
+	GSNumber fovy  = 60.0;
+	GSNumber znear = 0.01;
+	GSNumber zfar  = GSGLMaxDistance;
 
 	aspect = width / height;
-	f      = GBMathCot(fovy / 180 * GBMathPi / 2);
+	f      = GSMathCot(fovy / 180 * GSMathPi / 2);
 
 	for(i = 0; i < 16; i++) matrix[i] = 0;
 	matrix[4 * 0 + 0] = f / aspect;
@@ -24,30 +24,30 @@ void GBGLCameraPerspective(GBGL gl, GBNumber width, GBNumber height) {
 	glMultMatrixd(matrix);
 }
 
-void GBGLCameraSet(GBGL gl) {
-	GBGLCameraLookAt(gl, gl->engine->client->camera, gl->engine->client->look_at);
+void GSGLCameraSet(GSGL gl) {
+	GSGLCameraLookAt(gl, gl->engine->client->camera, gl->engine->client->look_at);
 }
 
-void GBGLCameraLookAt(GBGL gl, GBVector3 camera, GBVector3 look_at) {
+void GSGLCameraLookAt(GSGL gl, GSVector3 camera, GSVector3 look_at) {
 	GLdouble  matrix[16];
-	GBVector3 f;
-	GBVector3 up;
-	GBVector3 s;
-	GBVector3 u;
+	GSVector3 f;
+	GSVector3 up;
+	GSVector3 s;
+	GSVector3 u;
 	int	  i;
 
-	GBMathSubtract3(f, look_at, camera);
-	GBMathNormalize3(f);
+	GSMathSubtract3(f, look_at, camera);
+	GSMathNormalize3(f);
 
 	up[0] = 0;
 	up[1] = 1;
 	up[2] = 0;
-	GBMathNormalize3(up);
+	GSMathNormalize3(up);
 
-	GBMathCross3(s, f, up);
-	GBMathNormalize3(s);
+	GSMathCross3(s, f, up);
+	GSMathNormalize3(s);
 
-	GBMathCross3(u, s, f);
+	GSMathCross3(u, s, f);
 
 	for(i = 0; i < 16; i++) matrix[i] = 0;
 	matrix[4 * 0 + 0] = s[0];
@@ -65,12 +65,12 @@ void GBGLCameraLookAt(GBGL gl, GBVector3 camera, GBVector3 look_at) {
 	glTranslated(-camera[0], -camera[1], -camera[2]);
 }
 
-void GBGLCameraSetup(GBGL gl) {
+void GSGLCameraSetup(GSGL gl) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	GBGLCameraPerspective(gl, gl->engine->width, gl->engine->height);
+	GSGLCameraPerspective(gl, gl->engine->width, gl->engine->height);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	GBGLCameraSet(gl);
+	GSGLCameraSet(gl);
 }

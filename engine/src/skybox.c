@@ -1,10 +1,10 @@
-#include <GearBox/SkyBox.h>
+#include <GearSrc/SkyBox.h>
 
-#include <GearBox/GL.h>
-#include <GearBox/String.h>
+#include <GearSrc/GL.h>
+#include <GearSrc/String.h>
 
-GBSkyBox GBSkyBoxOpen(GBClient client, const char* base) {
-	GBSkyBox skybox = malloc(sizeof(*skybox));
+GSSkyBox GSSkyBoxOpen(GSClient client, const char* base) {
+	GSSkyBox skybox = malloc(sizeof(*skybox));
 	char*	 p;
 	void*	 ptr[12];
 	int	 i;
@@ -27,10 +27,10 @@ GBSkyBox GBSkyBoxOpen(GBClient client, const char* base) {
 	ptr[11] = "/down.png";
 
 	for(i = 0; i < 12; i += 2) {
-		p = GBStringConcat(base, ptr[i + 1]);
-		if(!GBGLTextureLoadFile(client->gl, ptr[i], NULL, NULL, p)) {
+		p = GSStringConcat(base, ptr[i + 1]);
+		if(!GSGLTextureLoadFile(client->gl, ptr[i], NULL, NULL, p)) {
 			free(p);
-			GBSkyBoxClose(skybox);
+			GSSkyBoxClose(skybox);
 			return NULL;
 		}
 		free(p);
@@ -39,12 +39,12 @@ GBSkyBox GBSkyBoxOpen(GBClient client, const char* base) {
 	return skybox;
 }
 
-void GBSkyBoxDraw(GBSkyBox skybox) {
-	GBGL	  gl = skybox->engine->client->gl;
+void GSSkyBoxDraw(GSSkyBox skybox) {
+	GSGL	  gl = skybox->engine->client->gl;
 	int	  i;
-	GBVector3 v[4];
-	GBVector2 t[4];
-	GBNumber  s = 0.0001;
+	GSVector3 v[4];
+	GSVector2 t[4];
+	GSNumber  s = 0.0001;
 
 	t[0][0] = 0, t[0][1] = 0;
 
@@ -54,8 +54,8 @@ void GBSkyBoxDraw(GBSkyBox skybox) {
 
 	t[3][0] = 1, t[3][1] = 0;
 
-	GBGLIgnoreDepth(gl);
-	GBGLShadowDisable(gl);
+	GSGLIgnoreDepth(gl);
+	GSGLShadowDisable(gl);
 
 	for(i = 0; i < 6; i++) {
 		GLuint tex;
@@ -107,23 +107,23 @@ void GBSkyBoxDraw(GBSkyBox skybox) {
 
 		for(j = 0; j < 4; j++) {
 			for(k = 0; k < 3; k++) {
-				v[j][k] *= GBGLMaxDistance / 2;
+				v[j][k] *= GSGLMaxDistance / 2;
 				v[j][k] += gl->engine->client->camera[k];
 			}
 		}
 
-		GBGLTextureSet(gl, tex);
+		GSGLTextureSet(gl, tex);
 
-		GBGLPolygon(gl, 4, v, t);
+		GSGLPolygon(gl, 4, v, t);
 	}
 
-	GBGLTextureSet(gl, 0);
+	GSGLTextureSet(gl, 0);
 
-	GBGLShadowEnable(gl);
-	GBGLCareDepth(gl);
+	GSGLShadowEnable(gl);
+	GSGLCareDepth(gl);
 }
 
-void GBSkyBoxClose(GBSkyBox skybox) {
-	if(skybox->left > 0) GBGLTextureDelete(skybox->engine->client->gl, skybox->left);
+void GSSkyBoxClose(GSSkyBox skybox) {
+	if(skybox->left > 0) GSGLTextureDelete(skybox->engine->client->gl, skybox->left);
 	free(skybox);
 }
