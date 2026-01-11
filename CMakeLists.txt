@@ -7,6 +7,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 include_directories(external/stb)
 
+set(INSTALL_HEADERS OFF)
 add_subdirectory(external/milsko)
 
 add_subdirectory(engine)
