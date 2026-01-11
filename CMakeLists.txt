@@ -5,10 +5,12 @@ include(GNUInstallDirs)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-include_directories(external/stb)
+include_directories(external/stb external/lz4)
 
 set(MW_INSTALL_HEADERS OFF)
 add_subdirectory(external/milsko)
+
+add_subdirectory(external/lz4)
 
 add_subdirectory(engine)
 

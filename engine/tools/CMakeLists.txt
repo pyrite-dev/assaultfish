@@ -14,5 +14,4 @@ file(GLOB lz4_SRC ../lz4/*.c)
 compile_tool(gs_dumpfont)
 compile_tool(gs_makepak)
 
-target_include_directories(gs_makepak PRIVATE ../lz4)
-target_sources(gs_makepak PRIVATE ${lz4_SRC})
+target_link_libraries(gs_makepak PRIVATE lz4)
