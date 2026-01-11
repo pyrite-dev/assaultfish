@@ -2,8 +2,8 @@
 
 #include <GearBox/Math.h>
 
-#define SHADOW_WIDTH 1024
-#define SHADOW_HEIGHT 1024
+#define SHADOW_WIDTH 512
+#define SHADOW_HEIGHT 512
 #define SHADOW_CULL
 
 void GBGLShadowInit(GBGL gl) {

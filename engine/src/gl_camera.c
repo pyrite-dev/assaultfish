@@ -9,7 +9,7 @@ void GBGLPerspective(GBGL gl, double width, double height) {
 	int	 i;
 	double	 fovy  = 60.0;
 	double	 znear = 0.01;
-	double	 zfar  = 10.0;
+	double	 zfar  = 100.0;
 
 	aspect = width / height;
 	f      = GBMathCot(fovy / 180 * GBMathPi / 2);

@@ -31,12 +31,30 @@ vec4 PhongShading(void)
 
 float ShadowCoef(void){
 	vec4 shadow_coord = vShadowCoord / vShadowCoord.w;
-	float view = shadow_coord.z;
-	float light = texture2D(depth_texture, shadow_coord.xy).z;
+	float view = shadow_coord.z - 0.0001;
+	vec2 d[4];
+	float light = 1.0;
 	float shadow_coef = 1.0;
+	int i;
 
-	if(vShadowCoord.w > 0.0){
-		shadow_coef = light < view ? 0.0 : 1.0;
+	d[0] = vec2(-0.94201624, -0.39906216);
+	d[1] = vec2(0.94558609, -0.76890725);
+	d[2] = vec2(-0.094184101, -0.92938870);
+	d[3] = vec2(0.34495938, 0.29387760);
+
+	light = texture2D(depth_texture, shadow_coord.xy).z;
+
+	for(i = 0; i < 4; i++){
+		vec2 p = shadow_coord.xy + d[i] / 700.0;
+
+		if(p.x < 0.0) continue;
+		if(p.y < 0.0) continue;
+		if(p.x > 1.0) continue;
+		if(p.y > 1.0) continue;
+
+		if(texture2D(depth_texture, p).z < view){
+			shadow_coef -= 0.2;
+		}
 	}
 
 	return shadow_coef;

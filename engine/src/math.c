@@ -46,7 +46,7 @@ void GBMathNormal3x3(GBVector3 r, GBVector3 v0, GBVector3 v1, GBVector3 v2) {
 	GBVector3 t0, t1;
 
 	GBMathSubtract3(t0, v1, v0);
-	GBMathSubtract3(t0, v2, v0);
+	GBMathSubtract3(t1, v2, v0);
 
 	GBMathCross3(r, t0, t1);
 
