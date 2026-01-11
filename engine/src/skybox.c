@@ -60,35 +60,35 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 	for(i = 0; i < 6; i++) {
 		GLuint tex;
 		int    j, k;
-
+		
 		if(i == 0) {
-			tex = skybox->front;
-
-			v[0][0] = -1 - s, v[0][1] = 1 + s, v[0][2] = -1;
-			v[1][0] = -1 - s, v[1][1] = -1 - s, v[1][2] = -1;
-			v[2][0] = 1 + s, v[2][1] = -1 - s, v[2][2] = -1;
-			v[3][0] = 1 + s, v[3][1] = 1 + s, v[3][2] = -1;
-		} else if(i == 1) {
-			tex = skybox->back;
-
-			v[0][0] = 1 + s, v[0][1] = 1 + s, v[0][2] = 1;
-			v[1][0] = 1 + s, v[1][1] = -1 - s, v[1][2] = 1;
-			v[2][0] = -1 - s, v[2][1] = -1 - s, v[2][2] = 1;
-			v[3][0] = -1 - s, v[3][1] = 1 + s, v[3][2] = 1;
-		} else if(i == 2) {
 			tex = skybox->left;
 
 			v[0][0] = -1, v[0][1] = 1 + s, v[0][2] = 1 + s;
 			v[1][0] = -1, v[1][1] = -1 - s, v[1][2] = 1 + s;
 			v[2][0] = -1, v[2][1] = -1 - s, v[2][2] = -1 - s;
 			v[3][0] = -1, v[3][1] = 1 + s, v[3][2] = -1 - s;
-		} else if(i == 3) {
+		} else if(i == 1) {
 			tex = skybox->right;
 
 			v[0][0] = 1, v[0][1] = 1 + s, v[0][2] = -1 - s;
 			v[1][0] = 1, v[1][1] = -1 - s, v[1][2] = -1 - s;
 			v[2][0] = 1, v[2][1] = -1 - s, v[2][2] = 1 + s;
 			v[3][0] = 1, v[3][1] = 1 + s, v[3][2] = 1 + s;
+		} else if(i == 2) {
+			tex = skybox->front;
+
+			v[0][0] = -1 - s, v[0][1] = 1 + s, v[0][2] = -1;
+			v[1][0] = -1 - s, v[1][1] = -1 - s, v[1][2] = -1;
+			v[2][0] = 1 + s, v[2][1] = -1 - s, v[2][2] = -1;
+			v[3][0] = 1 + s, v[3][1] = 1 + s, v[3][2] = -1;
+		} else if(i == 3) {
+			tex = skybox->back;
+
+			v[0][0] = 1 + s, v[0][1] = 1 + s, v[0][2] = 1;
+			v[1][0] = 1 + s, v[1][1] = -1 - s, v[1][2] = 1;
+			v[2][0] = -1 - s, v[2][1] = -1 - s, v[2][2] = 1;
+			v[3][0] = -1 - s, v[3][1] = 1 + s, v[3][2] = 1;
 		} else if(i == 4) {
 			tex = skybox->up;
 
@@ -124,6 +124,18 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 }
 
 void GSSkyBoxClose(GSSkyBox skybox) {
-	if(skybox->left > 0) GSGLTextureDelete(skybox->engine->client->gl, skybox->left);
+	GLuint* ptr[6];
+	int i;
+
+	ptr[0] = &skybox->left;
+	ptr[1] = &skybox->right;
+	ptr[2] = &skybox->front;
+	ptr[3] = &skybox->back;
+	ptr[4] = &skybox->up;
+	ptr[5] = &skybox->down;
+
+	for(i = 0; i < 6; i++){
+		if(*ptr[i] > 0) GSGLTextureDelete(skybox->engine->client->gl, *ptr[i]);
+	}
 	free(skybox);
 }
