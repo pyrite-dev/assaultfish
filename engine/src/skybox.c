@@ -44,6 +44,7 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 	int	  i;
 	GSVector3 v[4];
 	GSVector2 t[4];
+	GSVector3 n = {0, 0, 0};
 	GSNumber  s = 0.0001;
 
 	t[0][0] = 0, t[0][1] = 0;
@@ -60,7 +61,7 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 	for(i = 0; i < 6; i++) {
 		GLuint tex;
 		int    j, k;
-		
+
 		if(i == 0) {
 			tex = skybox->left;
 
@@ -114,7 +115,7 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 
 		GSGLTextureSet(gl, tex);
 
-		GSGLPolygon(gl, 4, v, t);
+		GSGLPolygon(gl, 4, v, t, n);
 	}
 
 	GSGLTextureSet(gl, 0);
@@ -125,7 +126,7 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 
 void GSSkyBoxClose(GSSkyBox skybox) {
 	GLuint* ptr[6];
-	int i;
+	int	i;
 
 	ptr[0] = &skybox->left;
 	ptr[1] = &skybox->right;
@@ -134,7 +135,7 @@ void GSSkyBoxClose(GSSkyBox skybox) {
 	ptr[4] = &skybox->up;
 	ptr[5] = &skybox->down;
 
-	for(i = 0; i < 6; i++){
+	for(i = 0; i < 6; i++) {
 		if(*ptr[i] > 0) GSGLTextureDelete(skybox->engine->client->gl, *ptr[i]);
 	}
 	free(skybox);

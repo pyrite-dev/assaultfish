@@ -37,7 +37,10 @@ GSDECL void GSGLClear(GSGL gl);
 GSDECL void GSGLIgnoreDepth(GSGL gl);
 GSDECL void GSGLCareDepth(GSGL gl);
 GSDECL void GSGLSetLight(GSGL gl);
-GSDECL void GSGLPolygon(GSGL gl, int pairs, GSVector3* vert, GSVector2* tex);
+GSDECL void GSGLPolygon(GSGL gl, int pairs, GSVector3* vert, GSVector2* tex, GSVector3 norm);
+GSDECL void GSGLPolygon2D(GSGL gl, int pairs, GSVector2* vert, GSVector2* tex);
+GSDECL void GSGLBegin2D(GSGL gl);
+GSDECL void GSGLEnd2D(GSGL gl);
 
 /* gl_camera.c */
 GSDECL void GSGLCameraPerspective(GSGL gl, GSNumber width, GSNumber height);

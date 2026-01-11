@@ -61,13 +61,52 @@ void GSGLSetLight(GSGL gl) {
 	glLightfv(GL_LIGHT0, GL_POSITION, f);
 }
 
-void GSGLPolygon(GSGL gl, int pairs, GSVector3* vert, GSVector2* tex) {
+void GSGLPolygon(GSGL gl, int pairs, GSVector3* vert, GSVector2* tex, GSVector3 norm) {
 	int i;
 
 	glBegin(GL_POLYGON);
+	glNormal3f(norm[0], norm[1], norm[2]);
 	for(i = 0; i < pairs; i++) {
 		if(tex != NULL) glTexCoord2f(tex[i][0], tex[i][1]);
 		glVertex3f(vert[i][0], vert[i][1], vert[i][2]);
 	}
 	glEnd();
+}
+
+void GSGLPolygon2D(GSGL gl, int pairs, GSVector2* vert, GSVector2* tex) {
+	int i;
+
+	glBegin(GL_POLYGON);
+	for(i = 0; i < pairs; i++) {
+		if(tex != NULL) glTexCoord2f(tex[i][0], tex[i][1]);
+		glVertex2f(vert[i][0], vert[i][1]);
+	}
+	glEnd();
+}
+
+void GSGLBegin2D(GSGL gl) {
+	GSGLIgnoreDepth(gl);
+	GSGLShadowDisable(gl);
+
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, gl->engine->width, gl->engine->height, 0, -1, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+}
+
+void GSGLEnd2D(GSGL gl) {
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+
+	glMatrixMode(GL_MODELVIEW);
+
+	GSGLShadowEnable(gl);
+	GSGLCareDepth(gl);
 }
