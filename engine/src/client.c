@@ -43,44 +43,6 @@ void GSClientDestroy(GSClient client) {
 }
 
 static void scene(GSClient client) {
-	int i;
-	static double r = 0;
-
-	GSGLTextureSet(client->gl, 2);
-
-	glBegin(GL_QUADS);
-		glNormal3f(0, 1, 0);
-		glTexCoord2f(0, 0);
-		glVertex3f(-2.5, -2, -2.5);
-		glTexCoord2f(0, 2.5);
-		glVertex3f(-2.5, -2, 2.5);
-		glTexCoord2f(2.5, 2.5);
-		glVertex3f(2.5, -2, 2.5);
-		glTexCoord2f(2.5, 0);
-		glVertex3f(2.5, -2, -2.5);
-	glEnd();
-
-	glPushMatrix();
-	glRotatef(r++, 1, 1, 1);
-	for(i = 0; i < 6; i++){
-		glBegin(GL_QUADS);
-		glNormal3f(0, 1, 0);
-		glTexCoord2f(0, 0);
-		glVertex3f(-1, 1, -1);
-		glTexCoord2f(0, 1);
-		glVertex3f(-1, 1, 1);
-		glTexCoord2f(1, 1);
-		glVertex3f(1, 1, 1);
-		glTexCoord2f(1, 0);
-		glVertex3f(1, 1, -1);
-		glEnd();
-		if(i < 3) glRotatef(90, 0, 0, 1);
-		if(i == 3) glRotatef(90, 1, 0, 0);
-		if(i == 4) glRotatef(180, 1, 0, 0);
-	}
-	glPopMatrix();
-
-	GSGLTextureSet(client->gl, 0);
 }
 
 void GSClientStep(GSClient client) {
