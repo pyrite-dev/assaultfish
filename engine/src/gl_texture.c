@@ -5,25 +5,6 @@
 #include <stb_image.h>
 
 void GBGLTexturePrepare(GBGL gl, GLuint* texture, unsigned char* rgba, int width, int height) {
-	int y;
-
-	/* image gets flipped here... because opengl coord system is quite confusing */
-	for(y = 0; y < height / 2; y++) {
-		int x;
-		for(x = 0; x < width; x++) {
-			int p;
-			for(p = 0; p < 4; p++) {
-				unsigned char* s1 = &rgba[(y * width + x) * 4 + p];
-				unsigned char* s2 = &rgba[((height - 1 - y) * width + x) * 4 + p];
-				unsigned char  p1 = *s1;
-				unsigned char  p2 = *s2;
-
-				*s2 = p1;
-				*s1 = p2;
-			}
-		}
-	}
-
 	glGenTextures(1, texture);
 	glBindTexture(GL_TEXTURE_2D, *texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);

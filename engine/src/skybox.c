@@ -46,13 +46,13 @@ void GBSkyBoxDraw(GBSkyBox skybox) {
 	GBVector2 t[4];
 	GBNumber  s = 0.0001;
 
-	t[0][0] = 0, t[0][1] = 1;
+	t[0][0] = 0, t[0][1] = 0;
 
-	t[1][0] = 0, t[1][1] = 0;
+	t[1][0] = 0, t[1][1] = 1;
 
-	t[2][0] = 1, t[2][1] = 0;
+	t[2][0] = 1, t[2][1] = 1;
 
-	t[3][0] = 1, t[3][1] = 1;
+	t[3][0] = 1, t[3][1] = 0;
 
 	GBGLIgnoreDepth(gl);
 	GBGLShadowDisable(gl);
