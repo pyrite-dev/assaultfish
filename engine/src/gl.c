@@ -39,3 +39,24 @@ void GBGLDestroy(GBGL gl) {
 
 	free(gl);
 }
+
+void GBGLClear(GBGL gl) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void GBGLIgnoreDepth(GBGL gl) {
+	glDisable(GL_DEPTH_TEST);
+}
+
+void GBGLCareDepth(GBGL gl) {
+	glEnable(GL_DEPTH_TEST);
+}
+
+void GBGLSetLight(GBGL gl) {
+	GLfloat f[4];
+	int	i;
+
+	for(i = 0; i < 4; i++) f[i] = gl->engine->client->light0[i];
+
+	glLightfv(GL_LIGHT0, GL_POSITION, f);
+}

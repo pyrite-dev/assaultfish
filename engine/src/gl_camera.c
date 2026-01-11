@@ -2,14 +2,14 @@
 
 #include <GearBox/Math.h>
 
-void GBGLPerspective(GBGL gl, double width, double height) {
-	double	 aspect;
-	double	 f;
+void GBGLCameraPerspective(GBGL gl, GBNumber width, GBNumber height) {
+	GBNumber aspect;
+	GBNumber f;
 	GLdouble matrix[16];
 	int	 i;
-	double	 fovy  = 60.0;
-	double	 znear = 0.01;
-	double	 zfar  = 100.0;
+	GBNumber fovy  = 60.0;
+	GBNumber znear = 0.01;
+	GBNumber zfar  = 100.0;
 
 	aspect = width / height;
 	f      = GBMathCot(fovy / 180 * GBMathPi / 2);
@@ -18,17 +18,17 @@ void GBGLPerspective(GBGL gl, double width, double height) {
 	matrix[4 * 0 + 0] = f / aspect;
 	matrix[4 * 1 + 1] = f;
 	matrix[4 * 2 + 2] = (zfar + znear) / (znear - zfar);
-	matrix[4 * 3 + 2] = ((double)2 * zfar * znear) / (znear - zfar);
+	matrix[4 * 3 + 2] = ((GLdouble)2 * zfar * znear) / (znear - zfar);
 	matrix[4 * 2 + 3] = -1;
 
 	glMultMatrixd(matrix);
 }
 
-void GBGLSetCamera(GBGL gl) {
-	GBGLLookAt(gl, gl->engine->client->camera, gl->engine->client->look_at);
+void GBGLCameraSet(GBGL gl) {
+	GBGLCameraLookAt(gl, gl->engine->client->camera, gl->engine->client->look_at);
 }
 
-void GBGLLookAt(GBGL gl, GBVector3 camera, GBVector3 look_at) {
+void GBGLCameraLookAt(GBGL gl, GBVector3 camera, GBVector3 look_at) {
 	GLdouble  matrix[16];
 	GBVector3 f;
 	GBVector3 up;
@@ -63,4 +63,14 @@ void GBGLLookAt(GBGL gl, GBVector3 camera, GBVector3 look_at) {
 
 	glMultMatrixd(matrix);
 	glTranslated(-camera[0], -camera[1], -camera[2]);
+}
+
+void GBGLCameraSetup(GBGL gl) {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	GBGLCameraPerspective(gl, gl->engine->width, gl->engine->height);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	GBGLCameraSet(gl);
 }

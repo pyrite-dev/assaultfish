@@ -7,15 +7,15 @@ void GBMathCross3(GBVector3 r, GBVector3 v0, GBVector3 v1) {
 }
 
 void GBMathNormalize3(GBVector3 vec) {
-	double l = 0;
-	int    i;
+	GBNumber l = 0;
+	int	 i;
 
 	for(i = 0; i < 3; i++) l += vec[i] * vec[i];
 
 	l = sqrt(l);
 
 	if(l > 0) {
-		l = (double)1 / l;
+		l = (GBNumber)1 / l;
 	} else {
 		l = 0;
 	}
@@ -69,13 +69,13 @@ void GBMathNormal3x4(GBVector3 r, GBVector3 v0, GBVector3 v1, GBVector3 v2, GBVe
 	GBMathNormalize3(r);
 }
 
-double GBMathCot(double x) {
-	return (double)1 / tan(x);
+GBNumber GBMathCot(GBNumber x) {
+	return (GBNumber)1 / tan(x);
 }
 
 void GBMathInvert4x4(GBMatrix4x4 out, GBMatrix4x4 in) {
-	double inv[16], det;
-	int    i;
+	GBNumber inv[16], det;
+	int	 i;
 
 	inv[0]	= in[5] * in[10] * in[15] - in[5] * in[11] * in[14] - in[9] * in[6] * in[15] + in[9] * in[7] * in[14] + in[13] * in[6] * in[11] - in[13] * in[7] * in[10];
 	inv[4]	= -in[4] * in[10] * in[15] + in[4] * in[11] * in[14] + in[8] * in[6] * in[15] - in[8] * in[7] * in[14] - in[12] * in[6] * in[11] + in[12] * in[7] * in[10];

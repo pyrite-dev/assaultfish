@@ -55,9 +55,10 @@ typedef void* GBFile;
 typedef void* GBResource;
 typedef void* GBGL;
 #endif
-typedef double GBVector3[3];
-typedef double GBVector4[4];
-typedef double GBMatrix4x4[16];
+typedef float	 GBNumber;
+typedef GBNumber GBVector3[3];
+typedef GBNumber GBVector4[4];
+typedef GBNumber GBMatrix4x4[16];
 
 typedef void (*GBGLSwapBufferCallback)(void);
 typedef void (*GBReadyCallback)(int width, int height);

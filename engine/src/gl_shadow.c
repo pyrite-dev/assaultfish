@@ -29,6 +29,7 @@ void GBGLShadowInit(GBGL gl) {
 		glUseProgram(gl->shadow_shader);
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "depth_texture"), 7);
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "current_texture"), 0);
+		glUniform1f(glGetUniformLocation(gl->shadow_shader, "enable_lighting"), 1);
 		glUseProgram(0);
 
 		gl->shadow_use_shader = 1;
@@ -44,21 +45,21 @@ int GBGLShadowBeforeMapping(GBGL gl) {
 
 	if(!gl->shadow_use_shader) return 0;
 
-	glClear(GL_DEPTH_BUFFER_BIT);
+	GBGLClear(gl);
 
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 
 	glMatrixMode(GL_PROJECTION);
 	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_old_projection);
 	glLoadIdentity();
-	GBGLPerspective(gl, SHADOW_WIDTH, SHADOW_HEIGHT);
+	GBGLCameraPerspective(gl, SHADOW_WIDTH, SHADOW_HEIGHT);
 
 	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_projection);
 
 	glMatrixMode(GL_MODELVIEW);
 	glGetDoublev(GL_MODELVIEW_MATRIX, gl->shadow_old_modelview);
 	glLoadIdentity();
-	GBGLLookAt(gl, gl->engine->client->light0, zero);
+	GBGLCameraLookAt(gl, gl->engine->client->light0, zero);
 
 	glGetDoublev(GL_MODELVIEW_MATRIX, gl->shadow_modelview);
 
@@ -125,20 +126,39 @@ void GBGLShadowAfterMapping(GBGL gl) {
 
 	glMatrixMode(GL_MODELVIEW);
 
-	glActiveTexture(GL_TEXTURE7);
-	glBindTexture(GL_TEXTURE_2D, gl->shadow_texture);
-	glEnable(GL_TEXTURE_2D);
-	glActiveTexture(GL_TEXTURE0);
+	GBGLClear(gl);
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	GBGLShadowEnable(gl);
+}
 
-	glUseProgram(gl->shadow_shader);
+void GBGLShadowDisable(GBGL gl) {
+	glDisable(GL_LIGHTING);
+	if(gl->shadow_use_shader) {
+		glUseProgram(0);
+
+		glActiveTexture(GL_TEXTURE7);
+		glDisable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glActiveTexture(GL_TEXTURE0);
+	}
+}
+
+void GBGLShadowEnable(GBGL gl) {
+	glEnable(GL_LIGHTING);
+	if(gl->shadow_use_shader) {
+		glUseProgram(gl->shadow_shader);
+
+		glActiveTexture(GL_TEXTURE7);
+		glBindTexture(GL_TEXTURE_2D, gl->shadow_texture);
+		glEnable(GL_TEXTURE_2D);
+		glActiveTexture(GL_TEXTURE0);
+	}
 }
 
 void GBGLShadowEnd(GBGL gl) {
 	if(!gl->shadow_use_shader) return;
 
-	glUseProgram(0);
+	GBGLShadowDisable(gl);
 
 	glActiveTexture(GL_TEXTURE7);
 	glDisable(GL_TEXTURE_2D);

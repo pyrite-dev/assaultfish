@@ -22,15 +22,21 @@ GBDECL int  GBGLShadowBeforeMapping(GBGL gl);
 GBDECL void GBGLShadowAfterMapping(GBGL gl);
 GBDECL void GBGLShadowEnd(GBGL gl);
 GBDECL void GBGLShadowDeinit(GBGL gl);
+GBDECL void GBGLShadowDisable(GBGL gl);
+GBDECL void GBGLShadowEnable(GBGL gl);
 
 /* gl.c */
 GBDECL GBGL GBGLCreate(GBClient client);
 GBDECL void GBGLDestroy(GBGL gl);
+GBDECL void GBGLClear(GBGL gl);
+GBDECL void GBGLIgnoreDepth(GBGL gl);
+GBDECL void GBGLCareDepth(GBGL gl);
 
 /* gl_camera.c */
-GBDECL void GBGLPerspective(GBGL gl, double width, double height);
-GBDECL void GBGLSetCamera(GBGL gl);
-GBDECL void GBGLLookAt(GBGL gl, GBVector3 camera, GBVector3 look_at);
+GBDECL void GBGLCameraPerspective(GBGL gl, GBNumber width, GBNumber height);
+GBDECL void GBGLCameraSet(GBGL gl);
+GBDECL void GBGLCameraLookAt(GBGL gl, GBVector3 camera, GBVector3 look_at);
+GBDECL void GBGLCameraSetup(GBGL gl);
 
 #ifdef __cplusplus
 }

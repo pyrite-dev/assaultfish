@@ -6,6 +6,7 @@ varying vec4 vShadowCoord;
 
 uniform sampler2D depth_texture;
 uniform sampler2D current_texture;
+uniform float enable_lighting;
 
 vec4 PhongShading(void)
 {
@@ -61,7 +62,7 @@ float ShadowCoef(void){
 }
 
 void main(void){
-	vec4 c = PhongShading();
+	vec4 c = enable_lighting > 0.5 ? PhongShading() : gl_Color;
 	vec4 ambient = gl_LightSource[0].ambient;
 	float shadow_coef = ShadowCoef();
 
