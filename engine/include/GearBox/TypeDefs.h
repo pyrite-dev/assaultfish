@@ -47,6 +47,7 @@ typedef struct _GBEngine*   GBEngine;
 typedef struct _GBFile*	    GBFile;
 typedef struct _GBResource* GBResource;
 typedef struct _GBGL*	    GBGL;
+typedef struct _GBSkyBox*   GBSkyBox;
 #else
 typedef void* GBClient;
 typedef void* GBServer;
@@ -54,8 +55,10 @@ typedef void* GBEngine;
 typedef void* GBFile;
 typedef void* GBResource;
 typedef void* GBGL;
+typedef void* GBSkyBox;
 #endif
 typedef float	 GBNumber;
+typedef GBNumber GBVector2[2];
 typedef GBNumber GBVector3[3];
 typedef GBNumber GBVector4[4];
 typedef GBNumber GBMatrix4x4[16];
@@ -93,6 +96,18 @@ struct _GBClient {
 	GBVector3 look_at;
 	GBVector3 camera;
 	GBVector4 light0;
+	GBSkyBox  skybox;
+};
+
+struct _GBSkyBox {
+	GBEngine engine;
+
+	GLuint left;
+	GLuint right;
+	GLuint front;
+	GLuint back;
+	GLuint up;
+	GLuint down;
 };
 
 struct _GBServer {

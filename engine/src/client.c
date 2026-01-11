@@ -2,6 +2,7 @@
 
 #include <GearBox/Log.h>
 #include <GearBox/GL.h>
+#include <GearBox/SkyBox.h>
 #include <GearBox/Math.h>
 
 GBClient GBClientCreate(GBEngine engine) {
@@ -11,12 +12,12 @@ GBClient GBClientCreate(GBEngine engine) {
 
 	client->engine = engine;
 
-	client->camera[0] = 5;
-	client->camera[1] = 5;
-	client->camera[2] = 5;
+	client->camera[0] = 0;
+	client->camera[1] = 0;
+	client->camera[2] = 0;
 
 	client->look_at[0] = 0;
-	client->look_at[1] = 0;
+	client->look_at[1] = 1;
 	client->look_at[2] = 0;
 
 	client->light0[0] = 5;
@@ -25,6 +26,8 @@ GBClient GBClientCreate(GBEngine engine) {
 	client->light0[3] = 1;
 
 	client->gl = GBGLCreate(client);
+
+	client->skybox = GBSkyBoxOpen(client, "base:/skybox");
 
 	GBLog(GBLogInfo, "Created client");
 
@@ -39,8 +42,6 @@ void GBClientDestroy(GBClient client) {
 	GBLog(GBLogInfo, "Destroyed client");
 }
 
-static double r = 0;
-
 static void scene(GBClient client) {
 }
 
@@ -54,13 +55,16 @@ void GBClientStep(GBClient client) {
 		GBGLShadowAfterMapping(client->gl);
 	}
 
+	if(client->skybox != NULL) GBSkyBoxDraw(client->skybox);
 	scene(client);
 	GBGLShadowEnd(client->gl);
 
 	client->engine->param->gl_swapbuffer();
 
-	client->camera[0] = cos(r) * 5;
-	client->camera[2] = sin(r) * 5;
+	static double r = 0;
+
+	client->look_at[0] = cos(r) * 5;
+	client->look_at[2] = sin(r) * 5;
 
 	r += 0.1;
 }

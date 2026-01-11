@@ -9,7 +9,7 @@ void GBGLCameraPerspective(GBGL gl, GBNumber width, GBNumber height) {
 	int	 i;
 	GBNumber fovy  = 60.0;
 	GBNumber znear = 0.01;
-	GBNumber zfar  = 100.0;
+	GBNumber zfar  = GBGLMaxDistance;
 
 	aspect = width / height;
 	f      = GBMathCot(fovy / 180 * GBMathPi / 2);

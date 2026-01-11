@@ -14,5 +14,6 @@
 #include <GearBox/File.h>
 #include <GearBox/Resource.h>
 #include <GearBox/Endian.h>
+#include <GearBox/SkyBox.h>
 
 #endif

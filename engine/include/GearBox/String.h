@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 GBDECL char* GBStringDuplicate(const char* str);
+GBDECL char* GBStringConcat(const char* str1, const char* str2);
 
 #ifdef __cplusplus
 }

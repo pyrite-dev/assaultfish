@@ -3,6 +3,7 @@
 varying vec4 vPos;
 varying vec3 vNrm;
 varying vec4 vShadowCoord;
+varying vec4 vColor;
 
 uniform sampler2D depth_texture;
 uniform sampler2D current_texture;
@@ -62,11 +63,11 @@ float ShadowCoef(void){
 }
 
 void main(void){
-	vec4 c = enable_lighting > 0.5 ? PhongShading() : gl_Color;
+	vec4 c = enable_lighting > 0.5 ? PhongShading() : vColor;
 	vec4 ambient = gl_LightSource[0].ambient;
 	float shadow_coef = ShadowCoef();
 
-	//c = c * texture2D(current_texture, gl_TexCoord[0].st);
+	c = c * texture2D(current_texture, gl_TexCoord[0].st);
 
 	gl_FragColor = ambient * shadow_coef * c + (1.0 - ambient) * c;
 	gl_FragColor.a = 1.0;

@@ -60,3 +60,14 @@ void GBGLSetLight(GBGL gl) {
 
 	glLightfv(GL_LIGHT0, GL_POSITION, f);
 }
+
+void GBGLPolygon(GBGL gl, int pairs, GBVector3* vert, GBVector2* tex) {
+	int i;
+
+	glBegin(GL_POLYGON);
+	for(i = 0; i < pairs; i++) {
+		if(tex != NULL) glTexCoord2f(tex[i][0], tex[i][1]);
+		glVertex3f(vert[i][0], vert[i][1], vert[i][2]);
+	}
+	glEnd();
+}

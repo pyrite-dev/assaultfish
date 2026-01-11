@@ -10,11 +10,16 @@
 extern "C" {
 #endif
 
+#define GBGLMaxDistance 100.0
+
 /* gl_shader.c */
 GBDECL int GBGLShaderPrepare(GBGL gl, GLuint* shader, const char* vs, const char* fs);
 
 /* gl_texture.c */
-GBDECL int GBGLTexturePrepare(GBGL gl, GLuint* texture, unsigned char* rgba, int width, int height);
+GBDECL void GBGLTexturePrepare(GBGL gl, GLuint* texture, unsigned char* rgba, int width, int height);
+GBDECL void GBGLTextureSet(GBGL gl, GLuint texture);
+GBDECL int  GBGLTextureLoadFile(GBGL gl, GLuint* texture, int* width, int* height, const char* filename);
+GBDECL void GBGLTextureDelete(GBGL gl, GLuint texture);
 
 /* gl_shadow.c */
 GBDECL void GBGLShadowInit(GBGL gl);
@@ -32,6 +37,7 @@ GBDECL void GBGLClear(GBGL gl);
 GBDECL void GBGLIgnoreDepth(GBGL gl);
 GBDECL void GBGLCareDepth(GBGL gl);
 GBDECL void GBGLSetLight(GBGL gl);
+GBDECL void GBGLPolygon(GBGL gl, int pairs, GBVector3* vert, GBVector2* tex);
 
 /* gl_camera.c */
 GBDECL void GBGLCameraPerspective(GBGL gl, GBNumber width, GBNumber height);
