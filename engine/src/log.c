@@ -5,6 +5,15 @@ void GSLog(int level, const char* fmt, ...) {
 	FILE*	out = stdout;
 
 #ifdef _WIN32
+	fprintf(out, "[GearSrc|");
+
+	if(level == GSLogInfo) {
+		fprintf(out, "INFO ");
+	} else if(level == GSLogWarn) {
+		fprintf(out, "WARN ");
+	} else if(level == GSLogError) {
+		fprintf(out, "ERROR");
+	}
 #else
 	fprintf(out, "[\x1b[mGearSrc\x1b[m|");
 

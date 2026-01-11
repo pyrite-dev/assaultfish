@@ -15,8 +15,6 @@ void GSInit(void) {
 	GSVersionGet(&version);
 
 	GSLog(GSLogInfo, "GearSrc Engine %s", version.string);
-
-	gload_init();
 }
 
 int GSEngineRegisterResource(GSEngine engine, const char* name, const char* path) {
@@ -44,6 +42,8 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 	if(param->ready != NULL && param->client) {
 		param->ready(engine->width, engine->height);
 	}
+
+	gload_init();
 
 	sh_new_strdup(engine->resource);
 

@@ -8,12 +8,8 @@ if [ "x$USE_WINE" = "x" ]; then
 	USE_WINE=false
 fi
 
-if $USE_WINE; then
-	if [ "x$WINE" = "x" ]; then
-		W=wine
-	else
-		W=$WINE
-	fi
+if [ ! "x$WINE" = "x" ]; then
+	W=$WINE
 	E=.exe
 fi
 
