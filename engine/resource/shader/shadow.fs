@@ -31,7 +31,7 @@ vec4 PhongShading(void)
 
 float ShadowCoef(void){
 	vec4 shadow_coord = vShadowCoord / vShadowCoord.w;
-	float view = shadow_coord.z - 0.0001;
+	float view = shadow_coord.z;
 	vec2 d[4];
 	float light = 1.0;
 	float shadow_coef = 1.0;
