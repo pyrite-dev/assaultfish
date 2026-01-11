@@ -31,6 +31,7 @@ GBDECL void GBGLDestroy(GBGL gl);
 GBDECL void GBGLClear(GBGL gl);
 GBDECL void GBGLIgnoreDepth(GBGL gl);
 GBDECL void GBGLCareDepth(GBGL gl);
+GBDECL void GBGLSetLight(GBGL gl);
 
 /* gl_camera.c */
 GBDECL void GBGLCameraPerspective(GBGL gl, GBNumber width, GBNumber height);
