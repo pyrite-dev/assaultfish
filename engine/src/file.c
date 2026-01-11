@@ -66,7 +66,11 @@ int GSFileRead(GSFile file, void* out, int size) {
 		memcpy(out, file->data + file->seek, len);
 
 		file->seek += len;
+
+		return len;
 	}
+
+	return 0;
 }
 
 void GSFileSeek(GSFile file, int pos) {

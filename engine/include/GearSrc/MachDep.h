@@ -7,10 +7,6 @@
 #include <stdarg.h>
 #include <math.h>
 
-#ifdef _GEARSRC
-#include <gbnet.h>
-#endif
-
 #if defined(_GEARSRC) && defined(_WIN32)
 #define GSDECL extern __declspec(dllexport)
 #elif defined(_WIN32)

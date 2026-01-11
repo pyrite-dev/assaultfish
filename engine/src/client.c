@@ -46,6 +46,8 @@ static void scene(GSClient client) {
 }
 
 void GSClientStep(GSClient client) {
+	static double r = 0;
+
 	GSGLClear(client->gl);
 	GSGLCameraSetup(client->gl);
 	GSGLSetLight(client->gl);
@@ -60,8 +62,6 @@ void GSClientStep(GSClient client) {
 	GSGLShadowEnd(client->gl);
 
 	client->engine->param->gl_swapbuffer();
-
-	static double r = 0;
 
 	client->look_at[0] = 5 + cos(r) * 5;
 	client->look_at[2] = 5 + sin(r) * 5;

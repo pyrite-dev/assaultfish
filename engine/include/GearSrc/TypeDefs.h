@@ -4,15 +4,15 @@
 #include <GearSrc/MachDep.h>
 
 #if defined(_MSC_VER) || defined(__WATCOMC__)
-typedef __int8_t  GSI8;
-typedef __int16_t GSI16;
-typedef __int32_t GSI32;
-typedef __int64_t GSI64;
+typedef __int8	GSI8;
+typedef __int16 GSI16;
+typedef __int32 GSI32;
+typedef __int64 GSI64;
 
-typedef unsigned __int8_t  GSU8;
-typedef unsigned __int16_t GSU16;
-typedef unsigned __int32_t GSU32;
-typedef unsigned __int64_t GSU64;
+typedef unsigned __int8	 GSU8;
+typedef unsigned __int16 GSU16;
+typedef unsigned __int32 GSU32;
+typedef unsigned __int64 GSU64;
 #elif __STDC_VERSION__ >= 199901L
 #include <stdint.h>
 
