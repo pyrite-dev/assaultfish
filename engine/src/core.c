@@ -122,12 +122,16 @@ void GSEngineLoop(GSEngine engine) {
 		if(wait_actually) {
 			int diff = (wait - more) - (engine->param->get_tick() - t);
 
+			printf("%d %d\n", more, diff);
+
 			if(diff > 0) {
 				engine->param->sleep(diff);
 			}
 
 			more -= diff;
 			if(more < 0) more = 0;
+
+			if(more > (wait * 10)) more = 0;
 
 			t = engine->param->get_tick();
 		}
