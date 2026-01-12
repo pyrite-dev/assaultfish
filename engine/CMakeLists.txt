@@ -25,6 +25,10 @@ if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	target_link_libraries(GearSrc PRIVATE m)
 endif()
 
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+	target_compile_definitions(GearSrc PRIVATE DEBUG)
+endif()
+
 install_target(GearSrc)
 install(
 	DIRECTORY include/

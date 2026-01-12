@@ -4,6 +4,10 @@ void GSLog(int level, const char* fmt, ...) {
 	va_list va;
 	FILE*	out = stdout;
 
+#ifndef DEBUG
+	if(level == GSLogDebug) return;
+#endif
+
 #ifdef _WIN32
 	fprintf(out, "[GearSrc|");
 
