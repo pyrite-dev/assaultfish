@@ -48,7 +48,6 @@ typedef struct _GSFile*	    GSFile;
 typedef struct _GSResource* GSResource;
 typedef struct _GSGL*	    GSGL;
 typedef struct _GSSkyBox*   GSSkyBox;
-typedef xemil_t*	    GSXML;
 #else
 typedef void* GSClient;
 typedef void* GSServer;
@@ -57,7 +56,6 @@ typedef void* GSFile;
 typedef void* GSResource;
 typedef void* GSGL;
 typedef void* GSSkyBox;
-typedef void* GSXML;
 #endif
 typedef float	 GSNumber;
 typedef GSNumber GSVector2[2];
