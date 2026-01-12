@@ -22,6 +22,8 @@
  *     4 bytes: seek pos
  *   } else {
  *     2 bytes: number of entries
+ *     4 bytes: total size
+ *     n bytes: entries
  *   }
  */
 
