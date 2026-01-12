@@ -8,10 +8,6 @@
 
 MwWidget window, opengl;
 
-static void* gl_getprocaddress(const char* name){
-	return MwOpenGLGetProcAddress(opengl, name);
-}
-
 static void gl_swapbuffer(void){
 	MwOpenGLSwapBuffer(opengl);
 }
