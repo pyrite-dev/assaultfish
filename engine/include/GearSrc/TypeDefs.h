@@ -74,7 +74,6 @@ typedef void (*GSSleepCallback)(int ms);
 struct _GSResourceKV {
 	char*	   key;
 	GSResource value;
-	GSXML	   xml;
 };
 
 #ifdef _GEARSRC

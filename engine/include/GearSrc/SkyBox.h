@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 GSDECL GSSkyBox GSSkyBoxOpen(GSClient client, const char* base);
+GSDECL GSSkyBox GSSkyBoxTry(GSClient client, const char* name);
 GSDECL void	GSSkyBoxDraw(GSSkyBox skybox);
 GSDECL void	GSSkyBoxClose(GSSkyBox skybox);
 

@@ -5,7 +5,6 @@
 #include <GearSrc/Client.h>
 #include <GearSrc/Server.h>
 #include <GearSrc/Resource.h>
-#include <GearSrc/XML.h>
 #include <GearSrc/String.h>
 
 #include <stb_ds.h>
@@ -21,25 +20,7 @@ void GSInit(void) {
 int GSEngineRegisterResource(GSEngine engine, const char* name, const char* path) {
 	GSResource resource;
 	if((resource = GSResourceOpen(engine, path)) != NULL) {
-		GSXML xl;
-		char* s = GSStringConcat(name, ":/manifest.xml");
-		int   ind;
-
 		shput(engine->resource, name, resource);
-
-		if((xl = GSXMLOpen(engine, s)) == NULL) {
-			free(s);
-
-			GSResourceClose(resource);
-
-			shdel(engine->resource, name);
-
-			return 0;
-		}
-		free(s);
-
-		ind			  = shgeti(engine->resource, name);
-		engine->resource[ind].xml = xl;
 
 		return 1;
 	}
@@ -95,7 +76,6 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 void GSEngineDestroy(GSEngine engine) {
 	int i;
 	for(i = 0; i < shlen(engine->resource); i++) {
-		GSXMLClose(engine->resource[i].xml);
 		GSResourceClose(engine->resource[i].value);
 	}
 	shfree(engine->resource);

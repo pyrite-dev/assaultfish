@@ -39,6 +39,26 @@ GSSkyBox GSSkyBoxOpen(GSClient client, const char* base) {
 	return skybox;
 }
 
+GSSkyBox GSSkyBoxTry(GSClient client, const char* name){
+	const char* ns[] = {"game", "base"};
+	int i;
+	GSSkyBox sb = NULL;
+
+	for(i = 0; i < 2; i++){
+		char* b = GSStringConcat(ns[i], ":/skybox/");
+		char* s = GSStringConcat(b, name);
+
+		sb = GSSkyBoxOpen(client, s);
+
+		free(s);
+		free(b);
+
+		if(sb != NULL) break;
+	}
+
+	return sb;
+}
+
 void GSSkyBoxDraw(GSSkyBox skybox) {
 	GSGL	  gl = skybox->engine->client->gl;
 	int	  i;

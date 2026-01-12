@@ -27,7 +27,7 @@ GSClient GSClientCreate(GSEngine engine) {
 
 	client->gl = GSGLCreate(client);
 
-	client->skybox = GSSkyBoxOpen(client, "base:/skybox");
+	client->skybox = GSSkyBoxTry(client, "default");
 
 	GSLog(GSLogInfo, "Created client");
 
