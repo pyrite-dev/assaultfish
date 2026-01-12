@@ -101,7 +101,6 @@ void GSEngineParamInit(GSEngineParam* param) {
 void GSEngineLoop(GSEngine engine) {
 	long t		   = 0;
 	int  wait_actually = 0;
-	int  more	   = 0;
 	long wait	   = 1000 / 50.0;
 
 	if(engine->param->sleep == NULL || engine->param->get_tick == NULL) {
@@ -120,16 +119,10 @@ void GSEngineLoop(GSEngine engine) {
 		if(engine->param->tick != NULL) engine->param->tick();
 
 		if(wait_actually) {
-			int diff = (wait - more) - (engine->param->get_tick() - t);
+			int diff = (engine->param->get_tick() - t);
 
-			if(diff > 0) {
-				engine->param->sleep(diff);
-			}
-
-			more -= diff;
-			if(more < 0) more = 0;
-
-			if(more > (wait * 10)) more = 0;
+			if ( wait > diff )
+				engine->param->sleep(wait-diff);
 
 			t = engine->param->get_tick();
 		}
