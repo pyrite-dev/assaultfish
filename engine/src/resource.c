@@ -3,8 +3,27 @@
 #include <GearSrc/File.h>
 #include <GearSrc/Log.h>
 #include <GearSrc/Endian.h>
+#include <GearSrc/CRC.h>
+#include <GearSrc/String.h>
 
 #include <lz4.h>
+
+/**
+ * signature: 0x7F PAK
+ *
+ * entry:
+ *   1 byte: type
+ *   4 bytes: name crc32
+ *   1 byte: name len
+ *   n bytes: name
+ *   if file {
+ *     4 bytes: actual size
+ *     4 bytes: compressed size
+ *     4 bytes: seek pos
+ *   } else {
+ *     2 bytes: number of entries
+ *   }
+ */
 
 static unsigned char res_sig[4] = {
     0x7f,
@@ -37,45 +56,134 @@ GSResource GSResourceOpen(GSEngine engine, const char* path) {
 	return resource;
 }
 
-void* GSResourceGet(GSResource resource, const char* name, unsigned int* size) {
-	char fn[129];
+int find_entry(GSFile f, const char* name, int max, GSU32* totsz, GSU32* actsz, GSU32* cmpsz, GSU32* seekpos) {
+	GSU32 crc = GSEndianSwapU32BE(GSCRC32((void*)name, strlen(name)));
+	int   i;
 
-	fn[128] = 0;
+	for(i = 0; i < max; i++) {
+		unsigned char dir;
+		unsigned char len;
+		char*	      fn;
+		GSU32	      t;
+
+		if(GSFileRead(f, &dir, 1) < 1) return -1;
+		if(GSFileRead(f, &t, 4) < 4) return -1;
+		if(GSFileRead(f, &len, 1) < 1) return -1;
+
+		fn = malloc(len + 1);
+		if(len > 0) {
+			if(GSFileRead(f, fn, len) < len) {
+				free(fn);
+				return -1;
+			}
+		}
+		fn[len] = 0;
+
+		if(dir) {
+			GSU16 n;
+			GSU32 tsz;
+
+			if(GSFileRead(f, &n, 2) < 2) {
+				free(fn);
+				return -1;
+			}
+
+			if(GSFileRead(f, &tsz, 4) < 4) {
+				free(fn);
+				return -1;
+			}
+
+			n   = GSEndianSwapU16BE(n);
+			tsz = GSEndianSwapU32BE(tsz);
+
+			if(totsz != NULL) *totsz = tsz;
+
+			if(crc == t && strcmp(fn, name) == 0) {
+				GSLog(GSLogDebug, "Directory %s/ found", fn);
+				free(fn);
+				return n;
+			}
+
+			GSFileSeekFromCurrent(f, tsz);
+		} else {
+			if(GSFileRead(f, actsz, 4) < 4) {
+				free(fn);
+				return -1;
+			}
+
+			if(GSFileRead(f, cmpsz, 4) < 4) {
+				free(fn);
+				return -1;
+			}
+
+			if(GSFileRead(f, seekpos, 4) < 4) {
+				free(fn);
+				return -1;
+			}
+
+			*actsz	 = GSEndianSwapU32BE(*actsz);
+			*cmpsz	 = GSEndianSwapU32BE(*cmpsz);
+			*seekpos = GSEndianSwapU32BE(*seekpos);
+
+			if(crc == t && strcmp(fn, name) == 0) {
+				GSLog(GSLogDebug, "File %s found", fn);
+				free(fn);
+				return -2;
+			}
+		}
+
+		free(fn);
+	}
+
+	return -1;
+}
+
+void* GSResourceGet(GSResource resource, const char* name, unsigned int* size) {
+	char*	       p = GSStringDuplicate(name);
+	char*	       s = p;
+	char*	       f = s;
+	int	       m = 1;
+	GSU32	       totsz;
+	GSU32	       actsz;
+	GSU32	       cmpsz;
+	GSU32	       seekpos;
+	unsigned char* d = NULL;
 
 	GSFileSeek(resource->file, 4);
 
-	while(!(GSFileRead(resource->file, fn, 128) < 128 || fn[0] == 0)) {
-		GSU32 actsz = 0;
-		GSU32 cmpsz = 0;
-		int   i;
-		void* d;
+	while(1) {
+		s = strchr(s, '/');
 
-		if(GSFileRead(resource->file, &actsz, 4) < 4) return NULL;
-		if(GSFileRead(resource->file, &cmpsz, 4) < 4) return NULL;
+		if(s != NULL) s[0] = 0;
 
-		actsz = GSEndianSwapU32BE(actsz);
-		cmpsz = GSEndianSwapU32BE(cmpsz);
+		m = find_entry(resource->file, f, m, strlen(f) == 0 ? &totsz : NULL, &actsz, &cmpsz, &seekpos);
+		if(m == -1) break;
+		if(m == -2) {
+			unsigned char* cmp = malloc(cmpsz);
 
-		*size = actsz;
+			if(actsz > cmpsz * 255) actsz = cmpsz * 255;
 
-		d = malloc(cmpsz);
-		if(GSFileRead(resource->file, d, cmpsz) < cmpsz) {
-			free(d);
-			return NULL;
+			d = malloc(actsz);
+
+			GSFileSeek(resource->file, 4 + 1 + 4 + 1 + 2 + 4 + totsz + seekpos);
+			GSFileRead(resource->file, cmp, cmpsz);
+
+			LZ4_decompress_safe(cmp, d, cmpsz, actsz);
+
+			free(cmp);
+
+			*size = actsz;
+			break;
 		}
-		if(strcmp(fn, name) == 0) {
-			unsigned char* r = malloc(actsz);
-			LZ4_decompress_safe(d, r, cmpsz, actsz);
 
-			free(d);
-
-			return r;
-		} else {
-			free(d);
-		}
+		if(s == NULL) break;
+		s++;
+		f = s;
 	}
 
-	return NULL;
+	free(p);
+
+	return d;
 }
 
 void GSResourceClose(GSResource resource) {

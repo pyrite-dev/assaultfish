@@ -13,6 +13,8 @@ void GSLog(int level, const char* fmt, ...) {
 		fprintf(out, "WARN ");
 	} else if(level == GSLogError) {
 		fprintf(out, "ERROR");
+	} else if(level == GSLogDebug) {
+		fprintf(out, "DEBUG");
 	}
 #else
 	fprintf(out, "[\x1b[mGearSrc\x1b[m|");
@@ -23,6 +25,8 @@ void GSLog(int level, const char* fmt, ...) {
 		fprintf(out, "\x1b[1m\x1b[33mWARN\x1b[m ");
 	} else if(level == GSLogError) {
 		fprintf(out, "\x1b[1m\x1b[31mERROR\x1b[m");
+	} else if(level == GSLogDebug) {
+		fprintf(out, "\x1b[1m\x1b[34mDEBUG\x1b[m");
 	}
 #endif
 

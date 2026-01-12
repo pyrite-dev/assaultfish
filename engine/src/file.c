@@ -30,8 +30,7 @@ GSFile GSFileOpen(GSEngine engine, const char* path) {
 		int i;
 
 		nam[0] = 0;
-		nam[1] = 0;
-		nam += 2;
+		nam += 1;
 
 		for(i = 0; i < shlen(engine->resource); i++) {
 			if(strcmp(engine->resource[i].key, s) == 0) {
@@ -76,6 +75,11 @@ int GSFileRead(GSFile file, void* out, int size) {
 void GSFileSeek(GSFile file, int pos) {
 	if(file->fp != NULL) fseek(file->fp, pos, SEEK_SET);
 	file->seek = pos;
+}
+
+void GSFileSeekFromCurrent(GSFile file, int pos) {
+	if(file->fp != NULL) fseek(file->fp, pos, SEEK_CUR);
+	file->seek += pos;
 }
 
 unsigned int GSFileSize(GSFile file) {

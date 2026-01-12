@@ -11,7 +11,8 @@ extern "C" {
 enum GSLogLevel {
 	GSLogInfo = 0,
 	GSLogWarn,
-	GSLogError
+	GSLogError,
+	GSLogDebug
 };
 
 GSDECL void GSLog(int level, const char* fmt, ...);
