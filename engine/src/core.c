@@ -22,10 +22,24 @@ int GSEngineRegisterResource(GSEngine engine, const char* name, const char* path
 	if((resource = GSResourceOpen(engine, path)) != NULL) {
 		shput(engine->resource, name, resource);
 
+		GSLog(GSLogInfo, "Registered resource %s as %s", path, name);
+
 		return 1;
 	}
 
 	return 0;
+}
+
+void GSEngineUnregisterResource(GSEngine engine, const char* name) {
+	int ind = shgeti(engine->resource, name);
+
+	if(ind != -1) {
+		GSResourceClose(engine->resource[ind].value);
+
+		GSLog(GSLogInfo, "Unregistered resource %s", name);
+
+		shdel(engine->resource, name);
+	}
 }
 
 GSEngine GSEngineCreate(GSEngineParam* param) {
@@ -121,8 +135,8 @@ void GSEngineLoop(GSEngine engine) {
 		if(wait_actually) {
 			int diff = (engine->param->get_tick() - t);
 
-			if ( wait > diff )
-				engine->param->sleep(wait-diff);
+			if(wait > diff)
+				engine->param->sleep(wait - diff);
 
 			t = engine->param->get_tick();
 		}

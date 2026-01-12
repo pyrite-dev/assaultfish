@@ -110,3 +110,35 @@ void GSGLEnd2D(GSGL gl) {
 	GSGLShadowEnable(gl);
 	GSGLCareDepth(gl);
 }
+
+void GSGLSetPosition(GSGL gl, GSVector3 pos, GSVector3 rot) {
+	glTranslatef(pos[0], pos[1], pos[2]);
+	glRotatef(rot[0], 1, 0, 0);
+	glRotatef(rot[1], 0, 1, 0);
+	glRotatef(rot[2], 0, 0, 1);
+}
+
+void GSGLPushMatrix(GSGL gl) {
+	glPushMatrix();
+}
+
+void GSGLPopMatrix(GSGL gl) {
+	glPopMatrix();
+}
+
+GLuint GSGLBeginList(GSGL gl) {
+	GLuint list;
+
+	list = glGenLists(1);
+	glNewList(list, GL_COMPILE);
+
+	return list;
+}
+
+void GSGLEndList(GSGL gl) {
+	glEndList();
+}
+
+void GSGLCallList(GSGL gl, GLuint list) {
+	glCallList(list);
+}

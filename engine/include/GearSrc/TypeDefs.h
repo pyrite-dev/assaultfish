@@ -48,6 +48,9 @@ typedef struct _GSFile*	    GSFile;
 typedef struct _GSResource* GSResource;
 typedef struct _GSGL*	    GSGL;
 typedef struct _GSSkyBox*   GSSkyBox;
+typedef struct _GSModel*    GSModel;
+
+typedef struct _GSModelFace GSModelFace;
 #else
 typedef void* GSClient;
 typedef void* GSServer;
@@ -56,6 +59,7 @@ typedef void* GSFile;
 typedef void* GSResource;
 typedef void* GSGL;
 typedef void* GSSkyBox;
+typedef void* GSModel;
 #endif
 typedef float	 GSNumber;
 typedef GSNumber GSVector2[2];
@@ -108,6 +112,24 @@ struct _GSSkyBox {
 	GLuint back;
 	GLuint up;
 	GLuint down;
+};
+
+struct _GSModelFace {
+	int	   count;
+	GSVector3  normal;
+	GSVector3* vertex;
+	GSVector2* texcoord;
+};
+
+struct _GSModel {
+	GSEngine engine;
+
+	GLuint texture;
+	GLuint call_list;
+
+	float*	     vertex;
+	float*	     texcoord;
+	GSModelFace* face;
 };
 
 struct _GSServer {

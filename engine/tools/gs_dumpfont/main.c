@@ -1,10 +1,10 @@
+#include <stb_image_write.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <GearSrc/File.h>
-
-#include <stb_image_write.h>
 
 #define CHECK(s) ((linelen > strlen(s)) && memcmp(line, s, strlen(s)) == 0)
 

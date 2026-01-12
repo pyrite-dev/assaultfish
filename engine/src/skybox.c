@@ -76,7 +76,7 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 	GSVector3 v[4];
 	GSVector2 t[4];
 	GSVector3 n = {0, 0, 0};
-	GSNumber  s = 0.0001;
+	GSNumber  s = 0.001;
 
 	t[0][0] = 0, t[0][1] = 0;
 

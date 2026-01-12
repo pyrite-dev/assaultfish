@@ -31,16 +31,22 @@ GSDECL void GSGLShadowDisable(GSGL gl);
 GSDECL void GSGLShadowEnable(GSGL gl);
 
 /* gl.c */
-GSDECL GSGL GSGLCreate(GSClient client);
-GSDECL void GSGLDestroy(GSGL gl);
-GSDECL void GSGLClear(GSGL gl);
-GSDECL void GSGLIgnoreDepth(GSGL gl);
-GSDECL void GSGLCareDepth(GSGL gl);
-GSDECL void GSGLSetLight(GSGL gl);
-GSDECL void GSGLPolygon(GSGL gl, int pairs, GSVector3* vert, GSVector2* tex, GSVector3 norm);
-GSDECL void GSGLPolygon2D(GSGL gl, int pairs, GSVector2* vert, GSVector2* tex);
-GSDECL void GSGLBegin2D(GSGL gl);
-GSDECL void GSGLEnd2D(GSGL gl);
+GSDECL GSGL   GSGLCreate(GSClient client);
+GSDECL void   GSGLDestroy(GSGL gl);
+GSDECL void   GSGLClear(GSGL gl);
+GSDECL void   GSGLIgnoreDepth(GSGL gl);
+GSDECL void   GSGLCareDepth(GSGL gl);
+GSDECL void   GSGLSetLight(GSGL gl);
+GSDECL void   GSGLPolygon(GSGL gl, int pairs, GSVector3* vert, GSVector2* tex, GSVector3 norm);
+GSDECL void   GSGLPolygon2D(GSGL gl, int pairs, GSVector2* vert, GSVector2* tex);
+GSDECL void   GSGLBegin2D(GSGL gl);
+GSDECL void   GSGLEnd2D(GSGL gl);
+GSDECL void   GSGLSetPosition(GSGL gl, GSVector3 pos, GSVector3 rot);
+GSDECL void   GSGLPushMatrix(GSGL gl);
+GSDECL void   GSGLPopMatrix(GSGL gl);
+GSDECL GLuint GSGLBeginList(GSGL gl);
+GSDECL void   GSGLEndList(GSGL gl);
+GSDECL void   GSGLCallList(GSGL gl, GLuint list);
 
 /* gl_camera.c */
 GSDECL void GSGLCameraPerspective(GSGL gl, GSNumber width, GSNumber height);

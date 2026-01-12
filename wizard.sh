@@ -13,5 +13,9 @@ if [ ! "x$WINE" = "x" ]; then
 	E=.exe
 fi
 
+ls -d ../resource/model/* | while read a; do
+	N=`echo $a | rev | cut -d/ -f1 | rev`
+	$W ./engine/tools/gs_makepak$E ../data/mdl/$N.mdl ../resource/model/$N
+done
 $W ./engine/tools/gs_makepak$E base.pak ../engine/data
 $W ./engine/tools/gs_makepak$E game.pak ../data

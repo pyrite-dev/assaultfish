@@ -22,6 +22,8 @@ GSDECL GSI64 GSEndianSwapI64BE(GSI64 in);
 GSDECL GSU16 GSEndianSwapU16BE(GSU16 in);
 GSDECL GSU32 GSEndianSwapU32BE(GSU32 in);
 GSDECL GSU64 GSEndianSwapU64BE(GSU64 in);
+
+GSDECL GSNumber GSEndianSwapNumberBE(GSNumber in);
 #else
 #define GSEndianSwapI16BE(in) (in)
 #define GSEndianSwapI32BE(in) (in)
@@ -30,6 +32,8 @@ GSDECL GSU64 GSEndianSwapU64BE(GSU64 in);
 #define GSEndianSwapU16BE(in) (in)
 #define GSEndianSwapU32BE(in) (in)
 #define GSEndianSwapU64BE(in) (in)
+
+#define GSEndianSwapNumberBE(in) (in)
 #endif
 
 #ifdef __cplusplus

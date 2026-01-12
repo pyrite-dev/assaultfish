@@ -16,5 +16,6 @@
 #include <GearSrc/Endian.h>
 #include <GearSrc/SkyBox.h>
 #include <GearSrc/CRC.h>
+#include <GearSrc/Model.h>
 
 #endif

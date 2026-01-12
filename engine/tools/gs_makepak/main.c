@@ -1,5 +1,6 @@
 #include <stb_ds.h>
 #include <lz4.h>
+
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -254,7 +255,7 @@ static void recursive(file_t* parent) {
 }
 
 int main(int argc, char** argv) {
-	unsigned char dat[128];
+	unsigned char dat[4];
 
 	printf("GearSrc Engine resource packer\n");
 	if(argc >= 2) {

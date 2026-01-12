@@ -61,4 +61,12 @@ GSU64 GSEndianSwapU64BE(GSU64 in) {
 
 	return out;
 }
+
+GSNumber GSEndianSwapNumberBE(GSNumber in) {
+	GSNumber out;
+
+	SWAP(in, out);
+
+	return out;
+}
 #endif
