@@ -92,6 +92,7 @@ object {
 			0.1
 		}
 	}
+	rotate <0, 0, -clock * 4 * 90>
 	translate <0, 0.55, 0>
 	pigment {
 		color rgb <1, 0, 0>
@@ -100,7 +101,7 @@ object {
 
 object {
 	text {
-		ttf "../font/IBMPlexSans-Bold.ttf"
+		ttf "resource/font/IBMPlexSans-Bold.ttf"
 		"GearSrc"
 		1, 0
 	}
