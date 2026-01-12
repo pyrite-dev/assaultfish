@@ -285,7 +285,7 @@ int main(int argc, char** argv) {
 	recursive(root);
 	recursive_write(root);
 
-	printf("total %u files added, compressed %u -> %u bytes\n", total, totalact, totalcmp);
+	printf("Total %u files added, compressed %u -> %u bytes\n", total, totalact, totalcmp);
 
 	fclose(out);
 }
