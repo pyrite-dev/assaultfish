@@ -58,9 +58,9 @@ static void scene(GSClient client) {
 	for(i = -a; i <= a; i++) {
 		int j;
 
-		pos[0] = i * 2;
+		pos[0] = i * 1.5;
 		for(j = -a; j <= a; j++) {
-			pos[2] = j * 2;
+			pos[2] = j * 1.5;
 			GSModelDraw(m, pos, rot);
 		}
 	}
