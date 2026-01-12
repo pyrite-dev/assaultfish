@@ -14,26 +14,37 @@ GSSkyBox GSSkyBoxOpen(GSClient client, const char* base) {
 	skybox->engine = client->engine;
 
 	ptr[0]	= &skybox->left;
-	ptr[1]	= "/left.png";
+	ptr[1]	= "/left.";
 	ptr[2]	= &skybox->right;
-	ptr[3]	= "/right.png";
+	ptr[3]	= "/right.";
 	ptr[4]	= &skybox->front;
-	ptr[5]	= "/front.png";
+	ptr[5]	= "/front.";
 	ptr[6]	= &skybox->back;
-	ptr[7]	= "/back.png";
+	ptr[7]	= "/back.";
 	ptr[8]	= &skybox->up;
-	ptr[9]	= "/up.png";
+	ptr[9]	= "/up.";
 	ptr[10] = &skybox->down;
-	ptr[11] = "/down.png";
+	ptr[11] = "/down.";
 
 	for(i = 0; i < 12; i += 2) {
-		p = GSStringConcat(base, ptr[i + 1]);
-		if(!GSGLTextureLoadFile(client->gl, ptr[i], NULL, NULL, p)) {
+		char*	    b = GSStringConcat(base, ptr[i + 1]);
+		int	    j;
+		const char* fmt[] = {"png", "bmp", "jpg", "jpeg"};
+
+		for(j = 0; j < 4; j++) {
+			p = GSStringConcat(b, fmt[j]);
+			if(GSGLTextureLoadFile(client->gl, ptr[i], NULL, NULL, p)) {
+				free(p);
+				break;
+			}
 			free(p);
+		}
+		if(j == 4) {
 			GSSkyBoxClose(skybox);
 			return NULL;
 		}
-		free(p);
+
+		free(b);
 	}
 
 	return skybox;
