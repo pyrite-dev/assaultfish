@@ -18,8 +18,11 @@ GSDECL int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char
 /* gl_texture.c */
 GSDECL void GSGLTexturePrepare(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height);
 GSDECL void GSGLTextureSet(GSGL gl, GLuint texture);
-GSDECL int  GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename);
 GSDECL void GSGLTextureDelete(GSGL gl, GLuint texture);
+
+/* gl_common.c */
+GSDECL int GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename);
+GSDECL int GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix);
 
 /* gl_shadow.c */
 GSDECL void GSGLShadowInit(GSGL gl);

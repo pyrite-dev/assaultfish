@@ -5,6 +5,7 @@
 #include <GearSrc/File.h>
 #include <GearSrc/Log.h>
 #include <GearSrc/Math.h>
+#include <GearSrc/String.h>
 
 #include <stb_ds.h>
 
@@ -25,13 +26,18 @@ static void parse_obj(GSModel model, char* txt) {
 		if(strlen(f) > 0 && f[0] != '#') {
 			char* arg;
 
-			if(f[strlen(f) - 1] == '\n') f[strlen(f) - 1] = 0;
+			if(f[strlen(f) - 1] == '\r') f[strlen(f) - 1] = 0;
 
 			if((arg = strchr(f, ' ')) != NULL) {
 				arg[0] = 0;
 				arg++;
 
-				if(strcmp(f, "v") == 0) {
+				if(strcmp(f, "usemtl") == 0) {
+					int   k = arrlen(model->face);
+					char* v = GSStringDuplicate(arg);
+
+					hmput(model->usemtl, k, v);
+				} else if(strcmp(f, "v") == 0) {
 					float v0, v1, v2;
 
 					sscanf(arg, "%f %f %f", &v0, &v1, &v2);
@@ -154,12 +160,54 @@ static void parse_obj(GSModel model, char* txt) {
 	}
 }
 
+static void parse_mtl(GSModel model, char* txt) {
+	char* f = txt;
+	char* m = NULL;
+
+	while(1) {
+		char* s = strchr(f, '\n');
+
+		if(s != NULL) s[0] = 0;
+
+		if(strlen(f) > 0 && f[0] != '#') {
+			char* arg;
+
+			if(f[strlen(f) - 1] == '\r') f[strlen(f) - 1] = 0;
+
+			if((arg = strchr(f, ' ')) != NULL) {
+				arg[0] = 0;
+				arg++;
+
+				if(strcmp(f, "newmtl") == 0) {
+					GLuint v = 0;
+
+					shput(model->material, arg, v);
+
+					if(m != NULL) free(m);
+					m = GSStringDuplicate(arg);
+				} else if(strcmp(f, "map_Kd") == 0 && m != NULL) {
+					GLuint t = 0;
+					char*  p = GSStringConcat("model-ws:/", arg);
+
+					if(GSGLTextureTry(model->engine->client->gl, &t, NULL, NULL, p)) {
+						shput(model->material, m, t);
+					}
+				}
+			}
+		}
+
+		if(s == NULL) break;
+		f = s + 1;
+	}
+
+	if(m != NULL) free(m);
+}
+
 GSModel GSModelOpen(GSEngine engine, const char* path) {
 	GSModel	     model = malloc(sizeof(*model));
 	GSFile	     f;
 	char*	     buffer;
 	unsigned int size;
-	int	     w, h;
 	GSGL	     gl = NULL;
 
 	if(engine->client != NULL) gl = engine->client->gl;
@@ -173,19 +221,27 @@ GSModel GSModelOpen(GSEngine engine, const char* path) {
 		return NULL;
 	}
 
+	model->material = NULL;
+	sh_new_strdup(model->material);
+
+	model->usemtl = NULL;
+
+	if(gl != NULL) {
+		GLuint t = 0;
+
+		GSGLTextureTry(gl, &t, NULL, NULL, "model-ws:/model");
+
+		if(t != 0) {
+			char* k = "default";
+			shput(model->material, k, t);
+		}
+	}
+
 	if((f = GSFileOpen(engine, "model-ws:/model.obj")) == NULL) {
 		GSEngineUnregisterResource(engine, "model-ws");
 
 		GSModelClose(model);
 		return NULL;
-	}
-
-	if(gl != NULL) {
-		if(GSGLTextureLoadFile(gl, &model->texture, &w, &h, "model-ws:/model.png")) {
-		} else if(GSGLTextureLoadFile(gl, &model->texture, &w, &h, "model-ws:/model.bmp")) {
-		} else if(GSGLTextureLoadFile(gl, &model->texture, &w, &h, "model-ws:/model.jpg")) {
-		} else if(GSGLTextureLoadFile(gl, &model->texture, &w, &h, "model-ws:/model.jpeg")) {
-		}
 	}
 
 	size	     = GSFileSize(f);
@@ -198,6 +254,19 @@ GSModel GSModelOpen(GSEngine engine, const char* path) {
 	parse_obj(model, buffer);
 
 	free(buffer);
+
+	if(gl != NULL && (f = GSFileOpen(engine, "model-ws:/model.mtl")) != NULL) {
+		size	     = GSFileSize(f);
+		buffer	     = malloc(size + 1);
+		buffer[size] = 0;
+
+		GSFileRead(f, buffer, size);
+		GSFileClose(f);
+
+		parse_mtl(model, buffer);
+
+		free(buffer);
+	}
 
 	GSEngineUnregisterResource(engine, "model-ws");
 
@@ -225,9 +294,17 @@ void GSModelDraw(GSModel model, GSVector3 pos, GSVector3 rot) {
 	GSGLSetPosition(gl, pos, rot);
 
 	if(model->call_list == 0) {
-		GSGLTextureSet(gl, model->texture);
+		char* k = "default";
+
+		GSGLTextureSet(gl, shget(model->material, k));
 
 		for(i = 0; i < arrlen(model->face); i++) {
+			int ind = hmgeti(model->usemtl, i);
+
+			if(ind != -1) {
+				GSGLTextureSet(gl, shget(model->material, model->usemtl[ind].value));
+			}
+
 			GSGLPolygon(gl, model->face[i].count, model->face[i].vertex, model->face[i].texcoord, model->face[i].normal);
 		}
 
@@ -247,10 +324,18 @@ void GSModelClose(GSModel model) {
 	}
 	arrfree(model->face);
 
+	for(i = 0; i < shlen(model->material); i++) {
+		GSGLTextureDelete(model->engine->client->gl, model->material[i].value);
+	}
+	shfree(model->material);
+
+	for(i = 0; i < hmlen(model->usemtl); i++) {
+		free(model->usemtl[i].value);
+	}
+	hmfree(model->usemtl);
+
 	arrfree(model->vertex);
 	arrfree(model->texcoord);
-
-	if(model->texture != 0) GSGLTextureDelete(model->engine->client->gl, model->texture);
 
 	free(model);
 }

@@ -1,9 +1,5 @@
 #include <GearSrc/GL.h>
 
-#include <GearSrc/File.h>
-
-#include <stb_image.h>
-
 void GSGLTexturePrepare(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height) {
 	glGenTextures(1, texture);
 	glBindTexture(GL_TEXTURE_2D, *texture);
@@ -21,38 +17,6 @@ void GSGLTextureEnable(GSGL gl, GLuint texture) {
 void GSGLTextureDisable(GSGL gl, GLuint texture) {
 	glDisable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-int GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename) {
-	GSFile	       f = GSFileOpen(gl->engine, filename);
-	unsigned char* data;
-	unsigned char* rgba;
-	unsigned long  sz;
-	int	       ch;
-	int	       st = 1;
-	int	       w, h;
-	if(f == NULL) return 0;
-
-	sz = GSFileSize(f);
-
-	data = malloc(sz);
-	GSFileRead(f, data, sz);
-	GSFileClose(f);
-
-	if((rgba = stbi_load_from_memory(data, sz, &w, &h, &ch, 4)) == NULL) {
-		st = 0;
-	} else {
-		GSGLTexturePrepare(gl, texture, rgba, w, h);
-
-		free(rgba);
-	}
-
-	if(width != NULL) *width = w;
-	if(height != NULL) *height = h;
-
-	free(data);
-
-	return st;
 }
 
 void GSGLTextureSet(GSGL gl, GLuint texture) {

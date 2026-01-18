@@ -50,7 +50,9 @@ typedef struct _GSGL*	    GSGL;
 typedef struct _GSSkyBox*   GSSkyBox;
 typedef struct _GSModel*    GSModel;
 
-typedef struct _GSModelFace GSModelFace;
+typedef struct _GSModelFace	   GSModelFace;
+typedef struct _GSModelMaterial	   GSModelMaterial;
+typedef struct _GSModelUseMaterial GSModelUseMaterial;
 #else
 typedef void* GSClient;
 typedef void* GSServer;
@@ -121,11 +123,23 @@ struct _GSModelFace {
 	GSVector2* texcoord;
 };
 
+struct _GSModelMaterial {
+	char*  key;
+	GLuint value;
+};
+
+struct _GSModelUseMaterial {
+	int   key;
+	char* value;
+};
+
 struct _GSModel {
 	GSEngine engine;
 
-	GLuint texture;
 	GLuint call_list;
+
+	GSModelMaterial*    material;
+	GSModelUseMaterial* usemtl;
 
 	float*	     vertex;
 	float*	     texcoord;
