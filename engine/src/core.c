@@ -61,8 +61,8 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 
 	sh_new_strdup(engine->resource);
 
-	GSEngineRegisterResource(engine, "base", "base.gpak");
-	GSEngineRegisterResource(engine, "game", "game.gpak");
+	GSEngineRegisterResource(engine, "base", "base.gsp");
+	GSEngineRegisterResource(engine, "game", "game.gsp");
 
 	if(engine != NULL && param->client && (engine->client = GSClientCreate(engine)) == NULL) {
 		GSLog(GSLogError, "Failed to create client");
