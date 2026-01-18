@@ -52,7 +52,7 @@ static void scene(GSClient client) {
 	int	      i;
 	int	      a = 1;
 
-	if(m == NULL) m = GSModelOpen(client->engine, "game:/mdl/tetopear.mdl");
+	if(m == NULL) m = GSModelOpen(client->engine, "game:/mdl/tetopear.gmdl");
 
 	rot[1] = r;
 	for(i = -a; i <= a; i++) {
