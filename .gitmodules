@@ -1,6 +1,6 @@
 [submodule "submodule/milsko"]
 	path = submodule/milsko
 	url = https://gitea.nishi.boats/pyrite-dev/milsko
-[submodule "submodule/ode"]
+[submodule "external/submodule/ode"]
 	path = engine/submodule/ode
 	url = https://github.com/thomasmarsh/ODE
