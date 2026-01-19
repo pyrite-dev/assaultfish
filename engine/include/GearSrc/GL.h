@@ -44,7 +44,8 @@ GSDECL void   GSGLPolygon(GSGL gl, int pairs, GSVector3* vert, GSVector2* tex, G
 GSDECL void   GSGLPolygon2D(GSGL gl, int pairs, GSVector2* vert, GSVector2* tex);
 GSDECL void   GSGLBegin2D(GSGL gl);
 GSDECL void   GSGLEnd2D(GSGL gl);
-GSDECL void   GSGLSetPosition(GSGL gl, GSVector3 pos, GSVector3 rot);
+GSDECL void   GSGLSetPosition(GSGL gl, GSVector3 pos);
+GSDECL void   GSGLSetRotation(GSGL gl, GSVector3 rot);
 GSDECL void   GSGLPushMatrix(GSGL gl);
 GSDECL void   GSGLPopMatrix(GSGL gl);
 GSDECL GLuint GSGLBeginList(GSGL gl);

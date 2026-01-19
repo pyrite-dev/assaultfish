@@ -111,8 +111,11 @@ void GSGLEnd2D(GSGL gl) {
 	GSGLCareDepth(gl);
 }
 
-void GSGLSetPosition(GSGL gl, GSVector3 pos, GSVector3 rot) {
+void GSGLSetPosition(GSGL gl, GSVector3 pos) {
 	glTranslatef(pos[0], pos[1], pos[2]);
+}
+
+void GSGLSetRotation(GSGL gl, GSVector3 rot) {
 	glRotatef(rot[0], 1, 0, 0);
 	glRotatef(rot[1], 0, 1, 0);
 	glRotatef(rot[2], 0, 0, 1);

@@ -135,9 +135,9 @@ static void parse_obj(GSModel model, char* txt) {
 					if(c == 3 || c == 4) {
 						for(i = 0; i < c; i++) {
 							if(arrlen(model->vertex) > varr[i] * 3) {
-								face.vertex[i][0] = model->vertex[varr[i] * 3 + 0] / sc;
-								face.vertex[i][1] = (model->vertex[varr[i] * 3 + 1] + dm) / sc;
-								face.vertex[i][2] = model->vertex[varr[i] * 3 + 2] / sc;
+								face.vertex[i][0] = (model->vertex[varr[i] * 3 + 0] - lm - lr / 2) / sc;
+								face.vertex[i][1] = (model->vertex[varr[i] * 3 + 1] - dm - ud / 2) / sc;
+								face.vertex[i][2] = (model->vertex[varr[i] * 3 + 2] - bm - bf / 2) / sc;
 							}
 
 							if(arrlen(model->texcoord) > tarr[i] * 2) {
@@ -274,10 +274,8 @@ GSModel GSModelOpen(GSEngine engine, const char* path) {
 
 	/* TODO: check for animation */
 	if(gl != NULL) {
-		GSVector3 pos  = {0, 0, 0};
-		GSVector3 rot  = {0, 0, 0};
 		GLuint	  list = GSGLBeginList(gl);
-		GSModelDraw(model, pos, rot);
+		GSModelDraw(model);
 		GSGLEndList(gl);
 
 		model->call_list = list;
@@ -286,12 +284,9 @@ GSModel GSModelOpen(GSEngine engine, const char* path) {
 	return model;
 }
 
-void GSModelDraw(GSModel model, GSVector3 pos, GSVector3 rot) {
+void GSModelDraw(GSModel model) {
 	GSGL gl = model->engine->client->gl;
 	int  i;
-
-	GSGLPushMatrix(gl);
-	GSGLSetPosition(gl, pos, rot);
 
 	if(model->call_list == 0) {
 		char* k = "default";
@@ -312,8 +307,6 @@ void GSModelDraw(GSModel model, GSVector3 pos, GSVector3 rot) {
 	} else {
 		GSGLCallList(gl, model->call_list);
 	}
-
-	GSGLPopMatrix(gl);
 }
 
 void GSModelClose(GSModel model) {

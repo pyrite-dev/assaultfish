@@ -14,7 +14,7 @@ GSClient GSClientCreate(GSEngine engine) {
 	client->engine = engine;
 
 	client->camera[0] = 0;
-	client->camera[1] = 1;
+	client->camera[1] = 2;
 	client->camera[2] = 5;
 
 	client->look_at[0] = 0;
@@ -52,7 +52,7 @@ static void scene(GSClient client) {
 	int	      i;
 	int	      a = 1;
 
-	if(m == NULL) m = GSModelOpen(client->engine, "game:/mdl/tetopear.gsm");
+	if(m == NULL) m = GSModelOpen(client->engine, "game:/mdl/crate.gsm");
 
 	rot[1] = r;
 	for(i = -a; i <= a; i++) {
@@ -61,7 +61,12 @@ static void scene(GSClient client) {
 		pos[0] = i * 1.5;
 		for(j = -a; j <= a; j++) {
 			pos[2] = j * 1.5;
-			GSModelDraw(m, pos, rot);
+
+			GSGLPushMatrix(client->gl);
+			GSGLSetPosition(client->gl, pos);
+			GSGLSetRotation(client->gl, rot);
+			GSModelDraw(m);
+			GSGLPopMatrix(client->gl);
 		}
 	}
 	r++;

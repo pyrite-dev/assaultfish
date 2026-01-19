@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 GSDECL GSModel GSModelOpen(GSEngine engine, const char* path);
-GSDECL void    GSModelDraw(GSModel model, GSVector3 pos, GSVector3 rot);
+GSDECL void    GSModelDraw(GSModel model);
 GSDECL void    GSModelClose(GSModel model);
 
 #ifdef __cplusplus
