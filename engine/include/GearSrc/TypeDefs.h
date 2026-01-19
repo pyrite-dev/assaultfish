@@ -36,6 +36,10 @@ typedef unsigned short GSU16;
 typedef unsigned int   GSU32;
 typedef unsigned long  GSU64;
 #endif
+typedef GSU8 GSBool;
+
+#define GSTrue ((GSBool)1)
+#define GSFalse ((GSBool)0)
 
 typedef struct _GSVersion     GSVersion;
 typedef struct _GSEngineParam GSEngineParam;

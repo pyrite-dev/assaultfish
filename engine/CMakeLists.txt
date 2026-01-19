@@ -16,7 +16,9 @@ endmacro()
 
 add_subdirectory(external/lz4)
 add_subdirectory(external/ode)
+
 include_directories(external/stb)
+include_directories(external/jar)
 
 file(GLOB GearSrc_SRC src/*.c)
 
