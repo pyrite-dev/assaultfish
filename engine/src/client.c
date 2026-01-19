@@ -43,7 +43,20 @@ void GSClientDestroy(GSClient client) {
 	GSLog(GSLogInfo, "Destroyed client");
 }
 
+GSModel m = NULL;
+GSVector3 rot = {0, 0, 0};
+
 static void scene(GSClient client) {
+	if(m == NULL) m = GSModelOpen(client->engine, "game:/mdl/crate.gsm");
+
+	rot[0]++;
+	rot[1]++;
+	rot[2]++;
+
+	GSGLPushMatrix(client->gl);
+	GSGLSetRotation(client->gl, rot);
+	GSModelDraw(m);
+	GSGLPopMatrix(client->gl);
 }
 
 void GSClientStep(GSClient client) {
