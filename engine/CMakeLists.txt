@@ -14,6 +14,10 @@ macro(install_target name)
 	)
 endmacro()
 
+add_subdirectory(external/lz4)
+add_subdirectory(external/ode)
+include_directories(external/stb)
+
 file(GLOB GearSrc_SRC src/*.c)
 
 add_library(GearSrc SHARED ${GearSrc_SRC})

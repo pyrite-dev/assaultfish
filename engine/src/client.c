@@ -14,7 +14,7 @@ GSClient GSClientCreate(GSEngine engine) {
 	client->engine = engine;
 
 	client->camera[0] = 0;
-	client->camera[1] = 2;
+	client->camera[1] = 0;
 	client->camera[2] = 5;
 
 	client->look_at[0] = 0;
@@ -43,33 +43,7 @@ void GSClientDestroy(GSClient client) {
 	GSLog(GSLogInfo, "Destroyed client");
 }
 
-GSModel m = NULL;
-
 static void scene(GSClient client) {
-	static double r	  = 0;
-	GSVector3     pos = {0, 0, 0};
-	GSVector3     rot = {0, 0, 0};
-	int	      i;
-	int	      a = 1;
-
-	if(m == NULL) m = GSModelOpen(client->engine, "game:/mdl/crate.gsm");
-
-	rot[1] = r;
-	for(i = -a; i <= a; i++) {
-		int j;
-
-		pos[0] = i * 1.5;
-		for(j = -a; j <= a; j++) {
-			pos[2] = j * 1.5;
-
-			GSGLPushMatrix(client->gl);
-			GSGLSetPosition(client->gl, pos);
-			GSGLSetRotation(client->gl, rot);
-			GSModelDraw(m);
-			GSGLPopMatrix(client->gl);
-		}
-	}
-	r++;
 }
 
 void GSClientStep(GSClient client) {
