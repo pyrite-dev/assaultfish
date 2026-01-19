@@ -15,7 +15,10 @@ fi
 
 ls -d ../resource/model/* | while read a; do
 	N=`echo $a | rev | cut -d/ -f1 | rev`
+	echo "----- $N.gsm"
 	$W ./engine/tools/gs_makepak$E ../data/mdl/$N.gsm ../resource/model/$N
 done
+echo "----- base.gsp"
 $W ./engine/tools/gs_makepak$E base.gsp ../engine/data
+echo "----- game.gsp"
 $W ./engine/tools/gs_makepak$E game.gsp ../data
