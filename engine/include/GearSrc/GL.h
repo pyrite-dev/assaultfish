@@ -13,7 +13,7 @@ extern "C" {
 #define GSGLMaxDistance 100.0
 
 /* gl_shader.c */
-GSDECL int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs);
+GSDECL GSBool GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs);
 
 /* gl_texture.c */
 GSDECL void GSGLTexturePrepare(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height);
@@ -21,12 +21,12 @@ GSDECL void GSGLTextureSet(GSGL gl, GLuint texture);
 GSDECL void GSGLTextureDelete(GSGL gl, GLuint texture);
 
 /* gl_common.c */
-GSDECL int GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename);
-GSDECL int GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix);
+GSDECL GSBool GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename);
+GSDECL GSBool GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix);
 
 /* gl_shadow.c */
 GSDECL void GSGLShadowInit(GSGL gl);
-GSDECL int  GSGLShadowBeforeMapping(GSGL gl);
+GSDECL GSBool GSGLShadowBeforeMapping(GSGL gl);
 GSDECL void GSGLShadowAfterMapping(GSGL gl);
 GSDECL void GSGLShadowEnd(GSGL gl);
 GSDECL void GSGLShadowDeinit(GSGL gl);

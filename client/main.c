@@ -33,6 +33,22 @@ static void tick(void){
 	while(!window->close && MwPending(window)) MwStep(window);
 }
 
+static GSVector3 rot = {0, 0, 0};
+static GSModel model = NULL;
+
+static void render(GSEngine engine){
+	GSGL gl = GSClientGetGL(GSEngineGetClient(engine));
+
+	GSGLPushMatrix(gl);
+	GSGLSetRotation(gl, rot);
+	if(model != NULL) GSModelDraw(model);
+	GSGLPopMatrix(gl);
+}
+
+static void after_render(GSEngine engine){
+	rot[0] = rot[1] = rot[2]++;
+}
+
 int main(int argc, char** argv){
 	GSEngineParam param;
 	GSEngine engine;
@@ -43,10 +59,16 @@ int main(int argc, char** argv){
 	param.get_tick = MwTimeGetTick;
 	param.sleep = MwTimeSleep;
 	param.gl_swapbuffer = gl_swapbuffer;
+	param.render = render;
+	param.after_render = after_render;
 
 	GSInit();
 
 	if((engine = GSEngineCreate(&param)) != NULL){
+		model = GSModelOpen(engine, "game:/mdl/crate.gsm");
+
+		GSClientToggleSkybox(GSEngineGetClient(engine), GSTrue);
+
 		GSEngineLoop(engine);
 		GSEngineDestroy(engine);
 	}

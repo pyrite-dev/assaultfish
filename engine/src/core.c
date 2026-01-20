@@ -17,17 +17,17 @@ void GSInit(void) {
 	GSLog(GSLogInfo, "GearSrc Engine %s", version.string);
 }
 
-int GSEngineRegisterResource(GSEngine engine, const char* name, const char* path) {
+GSBool GSEngineRegisterResource(GSEngine engine, const char* name, const char* path) {
 	GSResource resource;
 	if((resource = GSResourceOpen(engine, path)) != NULL) {
 		shput(engine->resource, name, resource);
 
 		GSLog(GSLogInfo, "Registered resource %s as %s", path, name);
 
-		return 1;
+		return GSTrue;
 	}
 
-	return 0;
+	return GSFalse;
 }
 
 void GSEngineUnregisterResource(GSEngine engine, const char* name) {

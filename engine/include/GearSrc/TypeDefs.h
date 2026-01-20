@@ -78,6 +78,8 @@ typedef void (*GSReadyCallback)(int width, int height);
 typedef void (*GSTickCallback)(void);
 typedef long (*GSGetTickCallback)(void);
 typedef void (*GSSleepCallback)(int ms);
+typedef void (*GSRenderCallback)(GSEngine engine);
+typedef void (*GSAfterRenderCallback)(GSEngine engine);
 
 struct _GSResourceKV {
 	char*	   key;
@@ -107,6 +109,7 @@ struct _GSClient {
 	GSVector3 camera;
 	GSVector4 light0;
 	GSSkyBox  skybox;
+	GSBool skybox_enabled;
 };
 
 struct _GSSkyBox {
@@ -190,6 +193,8 @@ struct _GSEngineParam {
 	GSTickCallback	       tick;
 	GSGetTickCallback      get_tick;
 	GSSleepCallback	       sleep;
+	GSRenderCallback render;
+	GSAfterRenderCallback after_render;
 };
 
 #endif

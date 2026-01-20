@@ -40,10 +40,10 @@ void GSGLShadowInit(GSGL gl) {
 	}
 }
 
-int GSGLShadowBeforeMapping(GSGL gl) {
+GSBool GSGLShadowBeforeMapping(GSGL gl) {
 	GSVector3 zero = {0, 0, 0};
 
-	if(!gl->shadow_use_shader) return 0;
+	if(!gl->shadow_use_shader) return GSFalse;
 
 	GSGLClear(gl);
 
@@ -76,7 +76,7 @@ int GSGLShadowBeforeMapping(GSGL gl) {
 	glPolygonOffset(1.1f, 4.0f);
 	glEnable(GL_POLYGON_OFFSET_FILL);
 
-	return 1;
+	return GSTrue;
 }
 
 void GSGLShadowAfterMapping(GSGL gl) {

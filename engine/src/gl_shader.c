@@ -19,7 +19,7 @@ static void err(const char* path, GLuint shader) {
 	free(e);
 }
 
-int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
+GSBool GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
 	GLuint vsi;
 	GLuint fsi;
 	GSFile f;
@@ -29,7 +29,7 @@ int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
 	char*  fss;
 	GLint  st;
 
-	if(glUseProgram == NULL) return 0;
+	if(glUseProgram == NULL) return GSFalse;
 
 	if((f = GSFileOpen(gl->engine, vs)) != NULL) {
 		int sz = GSFileSize(f);
@@ -40,7 +40,7 @@ int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
 
 		GSFileClose(f);
 	} else {
-		return 0;
+		return GSFalse;
 	}
 
 	if((f = GSFileOpen(gl->engine, fs)) != NULL) {
@@ -54,7 +54,7 @@ int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
 	} else {
 		free(vss);
 
-		return 0;
+		return GSFalse;
 	}
 
 	vsi = glCreateShader(GL_VERTEX_SHADER);
@@ -72,7 +72,7 @@ int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
 		glDeleteShader(fsi);
 		free(vss);
 		free(fss);
-		return 0;
+		return GSFalse;
 	}
 
 	glCompileShader(fsi);
@@ -84,7 +84,7 @@ int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
 		glDeleteShader(fsi);
 		free(vss);
 		free(fss);
-		return 0;
+		return GSFalse;
 	}
 
 	free(vss);
@@ -102,8 +102,8 @@ int GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs) {
 	glGetProgramiv(*shader, GL_LINK_STATUS, &st);
 	if(!st) {
 		glDeleteProgram(*shader);
-		return 0;
+		return GSFalse;
 	}
 
-	return 1;
+	return GSTrue;
 }

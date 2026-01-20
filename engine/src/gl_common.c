@@ -5,15 +5,15 @@
 
 #include <stb_image.h>
 
-int GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename) {
+GSBool GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename) {
 	GSFile	       f = GSFileOpen(gl->engine, filename);
 	unsigned char* data;
 	unsigned char* rgba;
 	unsigned long  sz;
 	int	       ch;
-	int	       st = 1;
+	GSBool	       st = GSTrue;
 	int	       w, h;
-	if(f == NULL) return 0;
+	if(f == NULL) return GSFalse;
 
 	sz = GSFileSize(f);
 
@@ -22,7 +22,7 @@ int GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const
 	GSFileClose(f);
 
 	if((rgba = stbi_load_from_memory(data, sz, &w, &h, &ch, 4)) == NULL) {
-		st = 0;
+		st = GSFalse;
 	} else {
 		GSGLTexturePrepare(gl, texture, rgba, w, h);
 
@@ -37,12 +37,12 @@ int GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const
 	return st;
 }
 
-int GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix) {
+GSBool GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix) {
 	char* png  = GSStringConcat(prefix, ".png");
 	char* bmp  = GSStringConcat(prefix, ".bmp");
 	char* jpg  = GSStringConcat(prefix, ".jpg");
 	char* jpeg = GSStringConcat(prefix, ".jpeg");
-	int   st   = 1;
+	GSBool   st   = GSTrue;
 
 	if(GSGLTextureLoadFile(gl, texture, width, height, prefix)) {
 	} else if(GSGLTextureLoadFile(gl, texture, width, height, png)) {
@@ -50,7 +50,7 @@ int GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char
 	} else if(GSGLTextureLoadFile(gl, texture, width, height, jpg)) {
 	} else if(GSGLTextureLoadFile(gl, texture, width, height, jpeg)) {
 	} else {
-		st = 0;
+		st = GSFalse;
 	}
 
 	free(jpeg);

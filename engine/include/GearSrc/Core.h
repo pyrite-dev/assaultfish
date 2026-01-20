@@ -16,7 +16,7 @@ GSDECL void	GSEngineParamInit(GSEngineParam* param);
 GSDECL void	GSEngineLoop(GSEngine engine);
 GSDECL GSClient GSEngineGetClient(GSEngine engine);
 GSDECL GSServer GSEngineGetServer(GSEngine engine);
-GSDECL int	GSEngineRegisterResource(GSEngine engine, const char* name, const char* path);
+GSDECL GSBool	GSEngineRegisterResource(GSEngine engine, const char* name, const char* path);
 GSDECL void	GSEngineUnregisterResource(GSEngine engine, const char* name);
 
 #ifdef __cplusplus
