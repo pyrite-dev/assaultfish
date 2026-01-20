@@ -6,4 +6,5 @@ void GSVersionGet(GSVersion* version) {
 	version->patchlevel = 0;
 
 	sprintf(version->string, "%d.%d.%d", version->majorlevel, version->minorlevel, version->patchlevel);
+	strcpy(version->copyright, "Copyright (C) 2026 Pyrite development team");
 }

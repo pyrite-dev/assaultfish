@@ -50,8 +50,8 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 	engine->param = malloc(sizeof(*engine->param));
 	memcpy(engine->param, param, sizeof(*param));
 
-	engine->width  = 1024;
-	engine->height = 768;
+	engine->width  = 800;
+	engine->height = 600;
 
 	if(param->ready != NULL && param->client) {
 		param->ready(engine->width, engine->height);

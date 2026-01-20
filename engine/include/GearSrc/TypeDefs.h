@@ -105,6 +105,9 @@ struct _GSClient {
 	GSEngine engine;
 
 	GSGL	  gl;
+	GLuint font;
+	int font_width;
+	int font_height;
 	GSVector3 look_at;
 	GSVector3 camera;
 	GSVector4 light0;
@@ -180,6 +183,7 @@ struct _GSResource {
 
 struct _GSVersion {
 	char string[64];
+	char copyright[256];
 	int  majorlevel;
 	int  minorlevel;
 	int  patchlevel;

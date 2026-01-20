@@ -5,6 +5,7 @@
 #include <GearSrc/SkyBox.h>
 #include <GearSrc/Math.h>
 #include <GearSrc/Model.h>
+#include <GearSrc/Version.h>
 
 GSClient GSClientCreate(GSEngine engine) {
 	GSClient client = malloc(sizeof(*client));
@@ -32,12 +33,20 @@ GSClient GSClientCreate(GSEngine engine) {
 
 	client->skybox = GSSkyBoxTry(client, "default");
 
+	if(GSGLTextureTry(client->gl, &client->font, &client->font_width, &client->font_height, "game:/font")){
+	}else if(GSGLTextureTry(client->gl, &client->font, &client->font_width, &client->font_height, "base:/font")){
+	}else{
+		client->font = 0;
+	}
+
 	GSLog(GSLogInfo, "Created client");
 
 	return client;
 }
 
 void GSClientDestroy(GSClient client) {
+	if(client->font != 0) GSGLTextureDelete(client->gl, client->font);
+
 	GSGLDestroy(client->gl);
 
 	free(client);
@@ -50,7 +59,15 @@ static void scene(GSClient client) {
 }
 
 void GSClientStep(GSClient client) {
-	static double r = 0;
+	int tw, th;
+	int tw2, th2;
+	int sw, sh;
+	char buf[512];
+	char buf2[512];
+	GSVersion ver;
+	GSVector4 white = {1, 1, 1, 1};
+	GSVector4 half = {0, 0, 0, 0.5};
+	GSVector2 sq[4];
 
 	GSGLClear(client->gl);
 	GSGLCameraSetup(client->gl);
@@ -67,6 +84,36 @@ void GSClientStep(GSClient client) {
 	scene(client);
 	GSGLShadowEnd(client->gl);
 
+
+	GSVersionGet(&ver);
+	
+	sprintf(buf, "GearSrc Engine %s", ver.string);
+	
+	tw = GSGLTextWidth(client->gl, buf);
+	th = GSGLTextHeight(client->gl, buf);
+
+	sprintf(buf2, "%s", ver.copyright);
+	
+	tw2 = GSGLTextWidth(client->gl, buf2);
+	th2 = GSGLTextHeight(client->gl, buf2);
+
+	sw = tw > tw2 ? tw : tw2;
+	sh = th + th2;
+
+	sq[0][0] = client->engine->width - sw, sq[0][1] = client->engine->height - sh;
+	sq[1][0] = client->engine->width - sw, sq[1][1] = client->engine->height;
+	sq[2][0] = client->engine->width, sq[2][1] = client->engine->height;
+	sq[3][0] = client->engine->width, sq[3][1] = client->engine->height - sh;
+
+	GSGLSetColor(client->gl, half);
+	GSGLBegin2D(client->gl);
+	GSGLPolygon2D(client->gl, 4, sq, NULL);
+	GSGLEnd2D(client->gl);
+
+	GSGLSetColor(client->gl, white);
+	GSGLText(client->gl, client->engine->width - tw, client->engine->height - th * 2, buf);
+	GSGLText(client->gl, client->engine->width - tw2, client->engine->height - th2, buf2);
+	
 	client->engine->param->gl_swapbuffer();
 
 	if(client->engine->param->after_render != NULL) client->engine->param->after_render(client->engine);
