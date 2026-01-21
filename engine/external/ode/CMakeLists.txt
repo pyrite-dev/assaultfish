@@ -10,8 +10,10 @@ file(GLOB ODE_SRC
 	../../submodule/ode/libccd/src/*.c
 )
 add_library(ode ${ODE_SRC})
-target_include_directories(ode PRIVATE
+target_include_directories(ode PUBLIC
 	../../submodule/ode/include
+)
+target_include_directories(ode PRIVATE
 	../../submodule/ode/ode/src
 	../../submodule/ode/ode/src/joints
 	../../submodule/ode/OPCODE
