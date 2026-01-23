@@ -132,7 +132,7 @@ void GSEngineLoop(GSEngine engine) {
 
 		if(engine->param->tick != NULL) engine->param->tick();
 
-		if(wait_actually) {
+		if(wait_actually && !engine->param->client) {
 			int diff = (engine->param->get_tick() - t);
 
 			if(wait > diff)

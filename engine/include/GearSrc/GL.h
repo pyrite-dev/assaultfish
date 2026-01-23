@@ -23,19 +23,19 @@ GSDECL void GSGLTextureDelete(GSGL gl, GLuint texture);
 /* gl_common.c */
 GSDECL GSBool GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename);
 GSDECL GSBool GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix);
-GSDECL void GSGLTextEx(GSGL gl, double x, double y, double sx, double sy, const char* text);
-GSDECL void GSGLText(GSGL gl, double x, double y, const char* text);
+GSDECL void   GSGLTextEx(GSGL gl, double x, double y, double sx, double sy, const char* text);
+GSDECL void   GSGLText(GSGL gl, double x, double y, const char* text);
 GSDECL double GSGLTextWidth(GSGL gl, const char* text);
 GSDECL double GSGLTextHeight(GSGL gl, const char* text);
 
 /* gl_shadow.c */
-GSDECL void GSGLShadowInit(GSGL gl);
+GSDECL void   GSGLShadowInit(GSGL gl);
 GSDECL GSBool GSGLShadowBeforeMapping(GSGL gl);
-GSDECL void GSGLShadowAfterMapping(GSGL gl);
-GSDECL void GSGLShadowEnd(GSGL gl);
-GSDECL void GSGLShadowDeinit(GSGL gl);
-GSDECL void GSGLShadowDisable(GSGL gl);
-GSDECL void GSGLShadowEnable(GSGL gl);
+GSDECL void   GSGLShadowAfterMapping(GSGL gl);
+GSDECL void   GSGLShadowEnd(GSGL gl);
+GSDECL void   GSGLShadowDeinit(GSGL gl);
+GSDECL void   GSGLShadowDisable(GSGL gl);
+GSDECL void   GSGLShadowEnable(GSGL gl);
 
 /* gl.c */
 GSDECL GSGL   GSGLCreate(GSClient client);
@@ -55,7 +55,7 @@ GSDECL void   GSGLPopMatrix(GSGL gl);
 GSDECL GLuint GSGLBeginList(GSGL gl);
 GSDECL void   GSGLEndList(GSGL gl);
 GSDECL void   GSGLCallList(GSGL gl, GLuint list);
-GSDECL void GSGLSetColor(GSGL gl, GSVector4 color);
+GSDECL void   GSGLSetColor(GSGL gl, GSVector4 color);
 
 /* gl_camera.c */
 GSDECL void GSGLCameraPerspective(GSGL gl, GSNumber width, GSNumber height);

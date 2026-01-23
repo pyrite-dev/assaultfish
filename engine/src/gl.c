@@ -146,6 +146,6 @@ void GSGLCallList(GSGL gl, GLuint list) {
 	glCallList(list);
 }
 
-void GSGLSetColor(GSGL gl, GSVector4 color){
+void GSGLSetColor(GSGL gl, GSVector4 color) {
 	glColor4f(color[0], color[1], color[2], color[3]);
 }

@@ -274,7 +274,7 @@ GSModel GSModelOpen(GSEngine engine, const char* path) {
 
 	/* TODO: check for animation */
 	if(gl != NULL) {
-		GLuint	  list = GSGLBeginList(gl);
+		GLuint list = GSGLBeginList(gl);
 		GSModelDraw(model);
 		GSGLEndList(gl);
 

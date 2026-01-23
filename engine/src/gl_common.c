@@ -38,11 +38,11 @@ GSBool GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, co
 }
 
 GSBool GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix) {
-	char* png  = GSStringConcat(prefix, ".png");
-	char* bmp  = GSStringConcat(prefix, ".bmp");
-	char* jpg  = GSStringConcat(prefix, ".jpg");
-	char* jpeg = GSStringConcat(prefix, ".jpeg");
-	GSBool   st   = GSTrue;
+	char*  png  = GSStringConcat(prefix, ".png");
+	char*  bmp  = GSStringConcat(prefix, ".bmp");
+	char*  jpg  = GSStringConcat(prefix, ".jpg");
+	char*  jpeg = GSStringConcat(prefix, ".jpeg");
+	GSBool st   = GSTrue;
 
 	if(GSGLTextureLoadFile(gl, texture, width, height, prefix)) {
 	} else if(GSGLTextureLoadFile(gl, texture, width, height, png)) {
@@ -61,21 +61,21 @@ GSBool GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const c
 	return st;
 }
 
-void GSGLTextEx(GSGL gl, double x, double y, double sx, double sy, const char* text){
+void GSGLTextEx(GSGL gl, double x, double y, double sx, double sy, const char* text) {
 	double px = x;
 	double py = y;
-	int i;
+	int    i;
 	double gw = gl->engine->client->font_width / 16 * sx;
 	double gh = gl->engine->client->font_height / 16 * sy;
 
 	GSGLBegin2D(gl);
 	GSGLTextureSet(gl, gl->engine->client->font);
 
-	for(i = 0; text[i] != 0; i++){
+	for(i = 0; text[i] != 0; i++) {
 		GSVector2 v[4];
 		GSVector2 t[4];
-		double gx = text[i] % 16;
-		double gy = text[i] / 16;
+		double	  gx = text[i] % 16;
+		double	  gy = text[i] / 16;
 
 		gx = gx / 16;
 		gy = gy / 16;
@@ -102,14 +102,14 @@ void GSGLTextEx(GSGL gl, double x, double y, double sx, double sy, const char* t
 	GSGLEnd2D(gl);
 }
 
-void GSGLText(GSGL gl, double x, double y, const char* text){
+void GSGLText(GSGL gl, double x, double y, const char* text) {
 	GSGLTextEx(gl, x, y, 1, 1, text);
 }
 
-double GSGLTextWidth(GSGL gl, const char* text){
+double GSGLTextWidth(GSGL gl, const char* text) {
 	return gl->engine->client->font_width / 16 * strlen(text);
 }
 
-double GSGLTextHeight(GSGL gl, const char* text){
+double GSGLTextHeight(GSGL gl, const char* text) {
 	return gl->engine->client->font_height / 16;
 }

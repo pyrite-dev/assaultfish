@@ -44,6 +44,7 @@ typedef GSU8 GSBool;
 typedef struct _GSVersion     GSVersion;
 typedef struct _GSEngineParam GSEngineParam;
 typedef struct _GSResourceKV  GSResourceKV;
+typedef struct _GSBox	      GSBox;
 #ifdef _GEARSRC
 typedef struct _GSClient*   GSClient;
 typedef struct _GSServer*   GSServer;
@@ -81,6 +82,11 @@ typedef void (*GSSleepCallback)(int ms);
 typedef void (*GSRenderCallback)(GSEngine engine);
 typedef void (*GSAfterRenderCallback)(GSEngine engine);
 
+struct _GSBox {
+	GSVector3 a;
+	GSVector3 b;
+};
+
 struct _GSResourceKV {
 	char*	   key;
 	GSResource value;
@@ -105,14 +111,14 @@ struct _GSClient {
 	GSEngine engine;
 
 	GSGL	  gl;
-	GLuint font;
-	int font_width;
-	int font_height;
+	GLuint	  font;
+	int	  font_width;
+	int	  font_height;
 	GSVector3 look_at;
 	GSVector3 camera;
 	GSVector4 light0;
 	GSSkyBox  skybox;
-	GSBool skybox_enabled;
+	GSBool	  skybox_enabled;
 };
 
 struct _GSSkyBox {
@@ -197,8 +203,8 @@ struct _GSEngineParam {
 	GSTickCallback	       tick;
 	GSGetTickCallback      get_tick;
 	GSSleepCallback	       sleep;
-	GSRenderCallback render;
-	GSAfterRenderCallback after_render;
+	GSRenderCallback       render;
+	GSAfterRenderCallback  after_render;
 };
 
 #endif

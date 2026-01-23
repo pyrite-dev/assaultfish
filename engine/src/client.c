@@ -33,9 +33,9 @@ GSClient GSClientCreate(GSEngine engine) {
 
 	client->skybox = GSSkyBoxTry(client, "default");
 
-	if(GSGLTextureTry(client->gl, &client->font, &client->font_width, &client->font_height, "game:/font")){
-	}else if(GSGLTextureTry(client->gl, &client->font, &client->font_width, &client->font_height, "base:/font")){
-	}else{
+	if(GSGLTextureTry(client->gl, &client->font, &client->font_width, &client->font_height, "game:/font")) {
+	} else if(GSGLTextureTry(client->gl, &client->font, &client->font_width, &client->font_height, "base:/font")) {
+	} else {
 		client->font = 0;
 	}
 
@@ -59,14 +59,14 @@ static void scene(GSClient client) {
 }
 
 void GSClientStep(GSClient client) {
-	int tw, th;
-	int tw2, th2;
-	int sw, sh;
-	char buf[512];
-	char buf2[512];
+	int	  tw, th;
+	int	  tw2, th2;
+	int	  sw, sh;
+	char	  buf[512];
+	char	  buf2[512];
 	GSVersion ver;
 	GSVector4 white = {1, 1, 1, 1};
-	GSVector4 half = {0, 0, 0, 0.5};
+	GSVector4 half	= {0, 0, 0, 0.5};
 	GSVector2 sq[4];
 
 	GSGLClear(client->gl);
@@ -78,22 +78,21 @@ void GSClientStep(GSClient client) {
 		GSGLShadowAfterMapping(client->gl);
 	}
 
-	if(client->skybox_enabled){
+	if(client->skybox_enabled) {
 		if(client->skybox != NULL) GSSkyBoxDraw(client->skybox);
 	}
 	scene(client);
 	GSGLShadowEnd(client->gl);
 
-
 	GSVersionGet(&ver);
-	
+
 	sprintf(buf, "GearSrc Engine %s", ver.string);
-	
+
 	tw = GSGLTextWidth(client->gl, buf);
 	th = GSGLTextHeight(client->gl, buf);
 
 	sprintf(buf2, "%s", ver.copyright);
-	
+
 	tw2 = GSGLTextWidth(client->gl, buf2);
 	th2 = GSGLTextHeight(client->gl, buf2);
 
@@ -113,16 +112,16 @@ void GSClientStep(GSClient client) {
 	GSGLSetColor(client->gl, white);
 	GSGLText(client->gl, client->engine->width - tw, client->engine->height - th * 2, buf);
 	GSGLText(client->gl, client->engine->width - tw2, client->engine->height - th2, buf2);
-	
+
 	client->engine->param->gl_swapbuffer();
 
 	if(client->engine->param->after_render != NULL) client->engine->param->after_render(client->engine);
 }
 
-GSGL GSClientGetGL(GSClient client){
+GSGL GSClientGetGL(GSClient client) {
 	return client->gl;
 }
 
-void GSClientToggleSkybox(GSClient client, GSBool toggle){
+void GSClientToggleSkybox(GSClient client, GSBool toggle) {
 	client->skybox_enabled = toggle;
 }
