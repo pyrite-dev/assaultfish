@@ -113,9 +113,10 @@ void GSEngineParamInit(GSEngineParam* param) {
 }
 
 void GSEngineLoop(GSEngine engine) {
-	long t		   = 0;
-	int  wait_actually = 0;
-	long wait	   = 1000 / 50.0;
+	long	 t	       = 0;
+	int	 wait_actually = 0;
+	GSNumber tps	       = 50;
+	long	 wait	       = 1000 / tps;
 
 	if(engine->param->sleep == NULL || engine->param->get_tick == NULL) {
 		GSLog(GSLogWarn, "sleep and/or get_tick parameter are missing!");
@@ -126,17 +127,23 @@ void GSEngineLoop(GSEngine engine) {
 		wait_actually = 1;
 	}
 
+	engine->tps = tps;
+
 	while(1) {
 		if(engine->client != NULL) GSClientStep(engine->client);
 		if(engine->server != NULL) GSServerStep(engine->server);
 
 		if(engine->param->tick != NULL) engine->param->tick();
 
-		if(wait_actually && !engine->param->client) {
-			int diff = (engine->param->get_tick() - t);
+		if(wait_actually) {
+			if(!engine->param->client) {
+				int diff = (engine->param->get_tick() - t);
 
-			if(wait > diff)
-				engine->param->sleep(wait - diff);
+				if(wait > diff)
+					engine->param->sleep(wait - diff);
+			}
+
+			engine->tps = 1000.0 / (engine->param->get_tick() - t);
 
 			t = engine->param->get_tick();
 		}

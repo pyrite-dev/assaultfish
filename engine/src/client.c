@@ -19,13 +19,13 @@ GSClient GSClientCreate(GSEngine engine) {
 	client->camera[2] = 5;
 
 	client->look_at[0] = 0;
-	client->look_at[1] = 0;
+	client->look_at[1] = 1;
 	client->look_at[2] = 0;
 
 	client->light0[0] = 2.5;
 	client->light0[1] = 5;
 	client->light0[2] = 5;
-	client->light0[3] = 1;
+	client->light0[3] = 0;
 
 	client->skybox_enabled = GSFalse;
 
@@ -116,6 +116,10 @@ void GSClientStep(GSClient client) {
 	client->engine->param->gl_swapbuffer();
 
 	if(client->engine->param->after_render != NULL) client->engine->param->after_render(client->engine);
+
+	static double r = 0;
+
+	r += 0.1;
 }
 
 GSGL GSClientGetGL(GSClient client) {

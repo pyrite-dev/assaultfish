@@ -130,6 +130,11 @@ struct _GSSkyBox {
 	GLuint back;
 	GLuint up;
 	GLuint down;
+
+	GLuint cloud0;
+	GLuint cloud1;
+
+	GSNumber tick;
 };
 
 struct _GSModelFace {
@@ -173,6 +178,7 @@ struct _GSEngine {
 	GSResourceKV*  resource;
 	int	       width;
 	int	       height;
+	GSNumber       tps;
 };
 
 struct _GSFile {

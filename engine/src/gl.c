@@ -52,6 +52,10 @@ void GSGLCareDepth(GSGL gl) {
 	glEnable(GL_DEPTH_TEST);
 }
 
+void GSGLClearDepth(GSGL gl) {
+	glClear(GL_DEPTH_BUFFER_BIT);
+}
+
 void GSGLSetLight(GSGL gl) {
 	GLfloat f[4];
 	int	i;
