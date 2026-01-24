@@ -65,7 +65,7 @@ int main(int argc, char** argv){
 	GSInit();
 
 	if((engine = GSEngineCreate(&param)) != NULL){
-		model = GSModelOpen(engine, "game:/mdl/crate.gsm");
+		model = GSModelOpen(engine, "game:/mdl/fish.gsm");
 
 		GSClientToggleSkybox(GSEngineGetClient(engine), GSTrue);
 
