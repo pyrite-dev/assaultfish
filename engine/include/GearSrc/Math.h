@@ -18,6 +18,7 @@ GSDECL void	GSMathNormal3x3(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v
 GSDECL void	GSMathNormal3x4(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2, GSVector3 v3);
 GSDECL void	GSMathInvert4x4(GSMatrix4x4 out, GSMatrix4x4 in);
 GSDECL GSNumber GSMathCot(GSNumber x);
+GSDECL GSNumber GSMathClosestPOT(GSNumber x);
 
 #ifdef __cplusplus
 }

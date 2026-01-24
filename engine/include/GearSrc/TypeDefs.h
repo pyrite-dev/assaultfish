@@ -114,6 +114,8 @@ struct _GSClient {
 	GLuint	  font;
 	int	  font_width;
 	int	  font_height;
+	int	  glyph_width;
+	int	  glyph_height;
 	GSVector3 look_at;
 	GSVector3 camera;
 	GSVector4 light0;

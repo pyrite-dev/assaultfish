@@ -18,8 +18,9 @@ int main() {
 	int	       p = 0;
 	int	       y = 0;
 	int	       w, h;
+	GSFile	       file = GSFileOpen(NULL, "/dev/stdin");
 
-	while((linelen = GSFileGetLine(&line, &linesize, stdin)) != -1) {
+	while((linelen = GSFileGetLine(file, &line, &linesize)) != -1) {
 		linelen--;
 
 		line[linelen] = 0;
@@ -30,8 +31,9 @@ int main() {
 
 			if(font != NULL) free(font);
 
-			iw   = w * 16;
-			ih   = h * 16;
+			iw = w * 16;
+			ih = h * 16;
+
 			font = malloc(iw * ih * 4);
 			memset(font, 0, iw * ih * 4);
 		} else if(CHECK("ENCODING ")) {

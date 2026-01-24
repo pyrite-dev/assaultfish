@@ -33,11 +33,16 @@ GSClient GSClientCreate(GSEngine engine) {
 
 	client->skybox = GSSkyBoxTry(client, "default");
 
-	if(GSGLTextureTry(client->gl, &client->font, &client->font_width, &client->font_height, "game:/font")) {
-	} else if(GSGLTextureTry(client->gl, &client->font, &client->font_width, &client->font_height, "base:/font")) {
+	if(GSGLTextureTryEx(client->gl, &client->font, &client->glyph_width, &client->glyph_height, "game:/font", 0)) {
+	} else if(GSGLTextureTryEx(client->gl, &client->font, &client->glyph_width, &client->glyph_height, "base:/font", 0)) {
 	} else {
 		client->font = 0;
 	}
+
+	client->font_width  = GSMathClosestPOT(client->glyph_width);
+	client->font_height = GSMathClosestPOT(client->glyph_height);
+	client->glyph_width /= 16;
+	client->glyph_height /= 16;
 
 	GSLog(GSLogInfo, "Created client");
 

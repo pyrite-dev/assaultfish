@@ -17,7 +17,7 @@ GSDECL unsigned int GSFileSize(GSFile file);
 GSDECL void	    GSFileClose(GSFile file);
 
 /* getline.c */
-GSDECL int GSFileGetLine(char** lineptr, int* n, FILE* fp);
+GSDECL int GSFileGetLine(GSFile file, char** lineptr, int* n);
 
 #ifdef __cplusplus
 }

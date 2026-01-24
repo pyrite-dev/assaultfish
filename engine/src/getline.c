@@ -2,13 +2,13 @@
 
 #define GETLINE_MINSIZE 16
 
-int GSFileGetLine(char** lineptr, int* n, FILE* fp) {
-	int   ch;
+int GSFileGetLine(GSFile file, char** lineptr, int* n) {
+	char  ch;
 	int   i		  = 0;
 	char  free_on_err = 0;
 	char* p;
 
-	if(lineptr == NULL || n == NULL || fp == NULL) {
+	if(lineptr == NULL || n == NULL || file == NULL) {
 		return -1;
 	}
 	if(*lineptr == NULL) {
@@ -21,7 +21,7 @@ int GSFileGetLine(char** lineptr, int* n, FILE* fp) {
 	}
 
 	for(i = 0;; i++) {
-		ch = fgetc(fp);
+		int r = GSFileRead(file, &ch, 1);
 		while(i >= (*n) - 2) {
 			*n *= 2;
 			p = realloc(*lineptr, sizeof(char) * (*n));
@@ -32,7 +32,7 @@ int GSFileGetLine(char** lineptr, int* n, FILE* fp) {
 			}
 			*lineptr = p;
 		}
-		if(ch == EOF) {
+		if(r < 1) {
 			if(i == 0) {
 				if(free_on_err)
 					free(*lineptr);

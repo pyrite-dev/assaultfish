@@ -16,15 +16,19 @@ extern "C" {
 GSDECL GSBool GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs);
 
 /* gl_texture.c */
-GSDECL void GSGLTexturePrepare(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height);
+GSDECL void GSGLTextureLoad(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height); /* you probably don't want this. use GSGLTexturePrepare */
 GSDECL void GSGLTextureSet(GSGL gl, GLuint texture);
 GSDECL void GSGLTextureDelete(GSGL gl, GLuint texture);
 
 /* gl_common.c */
+GSDECL void   GSGLTexturePrepareEx(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height, int expand);
+GSDECL void   GSGLTexturePrepare(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height);
 GSDECL GSBool GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* height, const char* filename);
+GSDECL GSBool GSGLTextureLoadFileEx(GSGL gl, GLuint* texture, int* width, int* height, const char* filename, int expand);
 GSDECL GSBool GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix);
-GSDECL void   GSGLTextEx(GSGL gl, double x, double y, double sx, double sy, const char* text);
-GSDECL void   GSGLText(GSGL gl, double x, double y, const char* text);
+GSDECL GSBool GSGLTextureTryEx(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix, int expand);
+GSDECL void   GSGLTextEx(GSGL gl, GSNumber x, GSNumber y, const char* text, GSNumber sx, GSNumber sy);
+GSDECL void   GSGLText(GSGL gl, GSNumber x, GSNumber y, const char* text);
 GSDECL double GSGLTextWidth(GSGL gl, const char* text);
 GSDECL double GSGLTextHeight(GSGL gl, const char* text);
 

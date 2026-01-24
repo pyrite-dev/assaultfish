@@ -103,3 +103,11 @@ void GSMathInvert4x4(GSMatrix4x4 out, GSMatrix4x4 in) {
 	for(i = 0; i < 16; i++)
 		out[i] = inv[i] * det;
 }
+
+GSNumber GSMathClosestPOT(GSNumber x) {
+	GSNumber r = 2;
+
+	while(r < x) r *= 2;
+
+	return r;
+}

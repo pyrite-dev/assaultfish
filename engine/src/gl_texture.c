@@ -1,6 +1,6 @@
 #include <GearSrc/GL.h>
 
-void GSGLTexturePrepare(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height) {
+void GSGLTextureLoad(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height) {
 	glGenTextures(1, texture);
 	glBindTexture(GL_TEXTURE_2D, *texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
