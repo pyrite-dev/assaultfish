@@ -205,6 +205,10 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 	GSGLClearDepth(gl);
 	GSGLShadowEnable(gl);
 
+	/* this overflows in:
+	 * 3.402823466e+38/60/60/24/365 = 1.0790282426433283e+31
+	 * years. which would NEVER happen.
+	 */
 	skybox->tick += 1 / skybox->engine->tps;
 }
 
