@@ -27,6 +27,7 @@ GSDECL GSBool GSGLTextureLoadFile(GSGL gl, GLuint* texture, int* width, int* hei
 GSDECL GSBool GSGLTextureLoadFileEx(GSGL gl, GLuint* texture, int* width, int* height, const char* filename, int expand);
 GSDECL GSBool GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix);
 GSDECL GSBool GSGLTextureTryEx(GSGL gl, GLuint* texture, int* width, int* height, const char* prefix, int expand);
+GSDECL void   GSGLTextBold(GSGL gl, GSBool bold);
 GSDECL void   GSGLTextEx(GSGL gl, GSNumber x, GSNumber y, const char* text, GSNumber sx, GSNumber sy);
 GSDECL void   GSGLText(GSGL gl, GSNumber x, GSNumber y, const char* text);
 GSDECL double GSGLTextWidth(GSGL gl, const char* text);

@@ -116,6 +116,8 @@ void GSEngineLoop(GSEngine engine) {
 	long	 t	       = 0;
 	int	 wait_actually = 0;
 	GSNumber tps	       = 50;
+	GSNumber tick	       = 1;
+	int	 f	       = 5;
 	long	 wait	       = 1000 / tps;
 
 	if(engine->param->sleep == NULL || engine->param->get_tick == NULL) {
@@ -127,7 +129,8 @@ void GSEngineLoop(GSEngine engine) {
 		wait_actually = 1;
 	}
 
-	engine->tps = tps;
+	engine->tps	    = tps;
+	engine->tps_sampled = tps;
 
 	while(1) {
 		if(engine->client != NULL) GSClientStep(engine->client);
@@ -144,6 +147,20 @@ void GSEngineLoop(GSEngine engine) {
 			}
 
 			engine->tps = 1000.0 / (engine->param->get_tick() - t);
+
+			if(f > 0) {
+				engine->tps_sampled = engine->tps;
+
+				f--;
+			}
+
+			tick += 1.0 / engine->tps;
+			if(tick >= 1) {
+				engine->tps_sampled += engine->tps;
+				engine->tps_sampled /= 2;
+
+				tick = tick - 1;
+			}
 
 			t = engine->param->get_tick();
 		}

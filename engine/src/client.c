@@ -9,6 +9,24 @@
 
 GSClient GSClientCreate(GSEngine engine) {
 	GSClient client = malloc(sizeof(*client));
+	void*	 ptr[]	= {
+		"game:/font/normal",	      /**/
+		"base:/font/normal",	      /**/
+		&client->font_normal,	      /**/
+		&client->glyph_normal_width,  /**/
+		&client->glyph_normal_height, /**/
+		&client->font_normal_width,   /**/
+		&client->font_normal_height,  /**/
+		/**/
+		"game:/font/bold",	    /**/
+		"base:/font/bold",	    /**/
+		&client->font_bold,	    /**/
+		&client->glyph_bold_width,  /**/
+		&client->glyph_bold_height, /**/
+		&client->font_bold_width,   /**/
+		&client->font_bold_height   /**/
+	    };
+	int i;
 
 	memset(client, 0, sizeof(*client));
 
@@ -33,16 +51,22 @@ GSClient GSClientCreate(GSEngine engine) {
 
 	client->skybox = GSSkyBoxTry(client, "default");
 
-	if(GSGLTextureTryEx(client->gl, &client->font, &client->glyph_width, &client->glyph_height, "game:/font", 0)) {
-	} else if(GSGLTextureTryEx(client->gl, &client->font, &client->glyph_width, &client->glyph_height, "base:/font", 0)) {
-	} else {
-		client->font = 0;
-	}
+	GSGLTextBold(client->gl, 0);
 
-	client->font_width  = GSMathClosestPOT(client->glyph_width);
-	client->font_height = GSMathClosestPOT(client->glyph_height);
-	client->glyph_width /= 16;
-	client->glyph_height /= 16;
+	for(i = 0; i < sizeof(ptr) / sizeof(ptr[0]); i += 7) {
+		if(GSGLTextureTryEx(client->gl, ptr[i + 2], ptr[i + 3], ptr[i + 4], ptr[i], 0)) {
+		} else if(GSGLTextureTryEx(client->gl, ptr[i + 2], ptr[i + 3], ptr[i + 4], ptr[i + 1], 0)) {
+		} else {
+			*((GLuint*)ptr[i + 2]) = 0;
+		}
+
+		if(*((GLuint*)ptr[i + 2]) > 0) {
+			*((int*)ptr[i + 5]) = GSMathClosestPOT(*((int*)ptr[i + 3]));
+			*((int*)ptr[i + 6]) = GSMathClosestPOT(*((int*)ptr[i + 4]));
+			*((int*)ptr[i + 3]) /= 16;
+			*((int*)ptr[i + 4]) /= 16;
+		}
+	}
 
 	GSLog(GSLogInfo, "Created client");
 
@@ -50,7 +74,8 @@ GSClient GSClientCreate(GSEngine engine) {
 }
 
 void GSClientDestroy(GSClient client) {
-	if(client->font != 0) GSGLTextureDelete(client->gl, client->font);
+	if(client->font_normal != 0) GSGLTextureDelete(client->gl, client->font_normal);
+	if(client->font_bold != 0) GSGLTextureDelete(client->gl, client->font_bold);
 
 	GSGLDestroy(client->gl);
 
@@ -70,13 +95,16 @@ void GSClientStep(GSClient client) {
 	char	  buf[512];
 	char	  buf2[512];
 	GSVersion ver;
-	GSVector4 white = {1, 1, 1, 1};
-	GSVector4 half	= {0, 0, 0, 0.5};
+	GSVector4 white	 = {1, 1, 1, 1};
+	GSVector4 yellow = {1, 1, 0, 1};
+	GSVector4 half	 = {0, 0, 0, 0.5};
 	GSVector2 sq[4];
 
 	GSGLClear(client->gl);
 	GSGLCameraSetup(client->gl);
 	GSGLSetLight(client->gl);
+
+	GSGLTextBold(client->gl, 0);
 
 	if(GSGLShadowBeforeMapping(client->gl)) {
 		scene(client);
@@ -89,9 +117,29 @@ void GSClientStep(GSClient client) {
 	scene(client);
 	GSGLShadowEnd(client->gl);
 
+	sprintf(buf, "%.1f FPS", client->engine->tps_sampled);
+
+	tw = GSGLTextWidth(client->gl, buf);
+	th = GSGLTextHeight(client->gl, buf);
+
+	sq[0][0] = client->engine->width - tw, sq[0][1] = 0;
+	sq[1][0] = client->engine->width - tw, sq[1][1] = th;
+	sq[2][0] = client->engine->width, sq[2][1] = th;
+	sq[3][0] = client->engine->width, sq[3][1] = 0;
+
+	GSGLSetColor(client->gl, half);
+	GSGLBegin2D(client->gl);
+	GSGLPolygon2D(client->gl, 4, sq, NULL);
+	GSGLEnd2D(client->gl);
+
+	GSGLSetColor(client->gl, yellow);
+	GSGLTextBold(client->gl, 1);
+	GSGLText(client->gl, client->engine->width - tw, 0, buf);
+	GSGLTextBold(client->gl, 0);
+
 	GSVersionGet(&ver);
 
-	sprintf(buf, "GearSrc Engine %s", ver.string);
+	sprintf(buf, "Engine version %s", ver.string);
 
 	tw = GSGLTextWidth(client->gl, buf);
 	th = GSGLTextHeight(client->gl, buf);

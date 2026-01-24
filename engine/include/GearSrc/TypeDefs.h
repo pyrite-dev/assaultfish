@@ -105,17 +105,27 @@ struct _GSGL {
 	GLdouble shadow_projection[16];
 	GLdouble shadow_old_projection[16];
 	GLdouble shadow_old_modelview[16];
+
+	GSBool bold;
 };
 
 struct _GSClient {
 	GSEngine engine;
 
-	GSGL	  gl;
-	GLuint	  font;
-	int	  font_width;
-	int	  font_height;
-	int	  glyph_width;
-	int	  glyph_height;
+	GSGL gl;
+
+	GLuint font_normal;
+	int    font_normal_width;
+	int    font_normal_height;
+	int    glyph_normal_width;
+	int    glyph_normal_height;
+
+	GLuint font_bold;
+	int    font_bold_width;
+	int    font_bold_height;
+	int    glyph_bold_width;
+	int    glyph_bold_height;
+
 	GSVector3 look_at;
 	GSVector3 camera;
 	GSVector4 light0;
@@ -181,6 +191,7 @@ struct _GSEngine {
 	int	       width;
 	int	       height;
 	GSNumber       tps;
+	GSNumber       tps_sampled;
 };
 
 struct _GSFile {

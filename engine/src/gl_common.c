@@ -70,18 +70,22 @@ GSBool GSGLTextureTry(GSGL gl, GLuint* texture, int* width, int* height, const c
 	return GSGLTextureTryEx(gl, texture, width, height, prefix, 1);
 }
 
+void GSGLTextBold(GSGL gl, GSBool bold) {
+	gl->bold = bold;
+}
+
 void GSGLTextEx(GSGL gl, GSNumber x, GSNumber y, const char* text, GSNumber sx, GSNumber sy) {
 	GSNumber px = x;
 	GSNumber py = y;
 	int	 i;
 	GSClient client = gl->engine->client;
-	GSNumber gw	= client->glyph_width * sx;
-	GSNumber gh	= client->glyph_height * sy;
-	GSNumber sw	= (GSNumber)client->glyph_width / client->font_width;
-	GSNumber sh	= (GSNumber)client->glyph_height / client->font_height;
+	GSNumber gw	= (gl->bold ? client->glyph_bold_width : client->glyph_normal_width) * sx;
+	GSNumber gh	= (gl->bold ? client->glyph_bold_height : client->glyph_normal_height) * sy;
+	GSNumber sw	= (GSNumber)(gl->bold ? client->glyph_bold_width : client->glyph_normal_width) / (gl->bold ? client->font_bold_width : client->font_normal_width);
+	GSNumber sh	= (GSNumber)(gl->bold ? client->glyph_bold_height : client->glyph_normal_height) / (gl->bold ? client->font_bold_height : client->font_normal_height);
 
 	GSGLBegin2D(gl);
-	GSGLTextureSet(gl, client->font);
+	GSGLTextureSet(gl, gl->bold ? client->font_bold : client->font_normal);
 
 	for(i = 0; text[i] != 0; i++) {
 		GSVector2 v[4];
@@ -116,11 +120,11 @@ void GSGLText(GSGL gl, GSNumber x, GSNumber y, const char* text) {
 }
 
 double GSGLTextWidth(GSGL gl, const char* text) {
-	return gl->engine->client->glyph_width * strlen(text);
+	return (gl->bold ? gl->engine->client->glyph_bold_width : gl->engine->client->glyph_normal_width) * strlen(text);
 }
 
 double GSGLTextHeight(GSGL gl, const char* text) {
-	return gl->engine->client->glyph_height;
+	return (gl->bold ? gl->engine->client->glyph_bold_height : gl->engine->client->glyph_normal_height);
 }
 
 void GSGLTexturePrepareEx(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height, int expand) {
