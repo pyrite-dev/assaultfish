@@ -9,15 +9,15 @@ GSServer GSServerCreate(GSEngine engine) {
 
 	server->engine = engine;
 
-	GSLog(GSLogInfo, "Created server");
+	GSLog(engine, GSLogInfo, "Created server");
 
 	return server;
 }
 
 void GSServerDestroy(GSServer server) {
-	free(server);
+	GSLog(server->engine, GSLogInfo, "Destroyed server");
 
-	GSLog(GSLogInfo, "Destroyed server");
+	free(server);
 }
 
 void GSServerStep(GSServer server) {

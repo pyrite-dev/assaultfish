@@ -39,6 +39,8 @@ GSResource GSResourceOpen(GSEngine engine, const char* path) {
 
 	memset(resource, 0, sizeof(*resource));
 
+	resource->engine = engine;
+
 	if((resource->file = GSFileOpen(engine, path)) == NULL) {
 		GSResourceClose(resource);
 		return NULL;
@@ -50,7 +52,7 @@ GSResource GSResourceOpen(GSEngine engine, const char* path) {
 	}
 
 	if(memcmp(sig, res_sig, 4) != 0) {
-		GSLog(GSLogError, "%s: Resource has wrong signature", path);
+		GSLog(engine, GSLogError, "%s: Resource has wrong signature", path);
 		GSResourceClose(resource);
 		return NULL;
 	}
@@ -58,7 +60,7 @@ GSResource GSResourceOpen(GSEngine engine, const char* path) {
 	return resource;
 }
 
-int find_entry(GSFile f, const char* name, int max, GSU32* totsz, GSU32* actsz, GSU32* cmpsz, GSU32* seekpos) {
+int find_entry(GSEngine engine, GSFile f, const char* name, int max, GSU32* totsz, GSU32* actsz, GSU32* cmpsz, GSU32* seekpos) {
 	GSU32 crc = GSEndianSwapU32BE(GSCRC32((void*)name, strlen(name)));
 	int   i;
 
@@ -101,7 +103,7 @@ int find_entry(GSFile f, const char* name, int max, GSU32* totsz, GSU32* actsz, 
 			if(totsz != NULL) *totsz = tsz;
 
 			if(crc == t && strcmp(fn, name) == 0) {
-				GSLog(GSLogDebug, "Directory %s/ found", fn);
+				GSLog(engine, GSLogDebug, "Directory %s/ found", fn);
 				free(fn);
 				return n;
 			}
@@ -128,7 +130,7 @@ int find_entry(GSFile f, const char* name, int max, GSU32* totsz, GSU32* actsz, 
 			*seekpos = GSEndianSwapU32BE(*seekpos);
 
 			if(crc == t && strcmp(fn, name) == 0) {
-				GSLog(GSLogDebug, "File %s found", fn);
+				GSLog(engine, GSLogDebug, "File %s found", fn);
 				free(fn);
 				return -2;
 			}
@@ -158,7 +160,7 @@ void* GSResourceGet(GSResource resource, const char* name, unsigned int* size) {
 
 		if(s != NULL) s[0] = 0;
 
-		m = find_entry(resource->file, f, m, strlen(f) == 0 ? &totsz : NULL, &actsz, &cmpsz, &seekpos);
+		m = find_entry(resource->engine, resource->file, f, m, strlen(f) == 0 ? &totsz : NULL, &actsz, &cmpsz, &seekpos);
 		if(m == -1) break;
 		if(m == -2) {
 			unsigned char* cmp = malloc(cmpsz);

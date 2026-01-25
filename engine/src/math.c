@@ -6,6 +6,15 @@ void GSMathCross3(GSVector3 r, GSVector3 v0, GSVector3 v1) {
 	r[2] = v0[0] * v1[1] - v0[1] * v1[0];
 }
 
+GSNumber GSMathInner3(GSVector3 v0, GSVector3 v1) {
+	GSNumber r = 0;
+	int	 i;
+
+	for(i = 0; i < 3; i++) r += v0[i] * v1[i];
+
+	return r;
+}
+
 void GSMathNormalize3(GSVector3 vec) {
 	GSNumber l = 0;
 	int	 i;

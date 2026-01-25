@@ -3,7 +3,7 @@
 #include <GearSrc/File.h>
 #include <GearSrc/Log.h>
 
-static void err(const char* path, GLuint shader) {
+static void err(GSEngine engine, const char* path, GLuint shader) {
 	GLint len, ret;
 	char* e;
 
@@ -14,7 +14,7 @@ static void err(const char* path, GLuint shader) {
 
 	glGetShaderInfoLog(shader, len, &ret, e);
 
-	GSLog(GSLogError, "%s: %s\n", path, e);
+	GSLog(engine, GSLogError, "%s: %s\n", path, e);
 
 	free(e);
 }
@@ -66,7 +66,7 @@ GSBool GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs
 	glCompileShader(vsi);
 	glGetShaderiv(vsi, GL_COMPILE_STATUS, &st);
 	if(!st) {
-		err(vs, vsi);
+		err(gl->engine, vs, vsi);
 
 		glDeleteShader(vsi);
 		glDeleteShader(fsi);
@@ -78,7 +78,7 @@ GSBool GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs
 	glCompileShader(fsi);
 	glGetShaderiv(fsi, GL_COMPILE_STATUS, &st);
 	if(!st) {
-		err(fs, fsi);
+		err(gl->engine, fs, fsi);
 
 		glDeleteShader(vsi);
 		glDeleteShader(fsi);

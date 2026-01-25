@@ -15,7 +15,7 @@ enum GSLogLevel {
 	GSLogDebug
 };
 
-GSDECL void GSLog(int level, const char* fmt, ...);
+GSDECL void GSLog(GSEngine engine, int level, const char* fmt, ...);
 
 #ifdef __cplusplus
 }

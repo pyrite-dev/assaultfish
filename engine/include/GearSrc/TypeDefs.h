@@ -202,6 +202,8 @@ struct _GSFile {
 };
 
 struct _GSResource {
+	GSEngine engine;
+
 	GSFile file;
 };
 #endif

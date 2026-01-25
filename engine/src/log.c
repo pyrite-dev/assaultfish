@@ -1,6 +1,6 @@
 #include <GearSrc/Log.h>
 
-void GSLog(int level, const char* fmt, ...) {
+void GSLog(GSEngine engine, int level, const char* fmt, ...) {
 	va_list va;
 	FILE*	out = stdout;
 

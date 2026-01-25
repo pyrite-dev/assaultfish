@@ -68,7 +68,7 @@ GSClient GSClientCreate(GSEngine engine) {
 		}
 	}
 
-	GSLog(GSLogInfo, "Created client");
+	GSLog(engine, GSLogInfo, "Created client");
 
 	return client;
 }
@@ -79,9 +79,9 @@ void GSClientDestroy(GSClient client) {
 
 	GSGLDestroy(client->gl);
 
-	free(client);
+	GSLog(client->engine, GSLogInfo, "Destroyed client");
 
-	GSLog(GSLogInfo, "Destroyed client");
+	free(client);
 }
 
 static void scene(GSClient client) {

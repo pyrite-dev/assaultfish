@@ -14,7 +14,7 @@ void GSInit(void) {
 
 	GSVersionGet(&version);
 
-	GSLog(GSLogInfo, "GearSrc Engine %s", version.string);
+	GSLog(NULL, GSLogInfo, "GearSrc Engine %s", version.string);
 }
 
 GSBool GSEngineRegisterResource(GSEngine engine, const char* name, const char* path) {
@@ -22,7 +22,7 @@ GSBool GSEngineRegisterResource(GSEngine engine, const char* name, const char* p
 	if((resource = GSResourceOpen(engine, path)) != NULL) {
 		shput(engine->resource, name, resource);
 
-		GSLog(GSLogInfo, "Registered resource %s as %s", path, name);
+		GSLog(engine, GSLogInfo, "Registered resource %s as %s", path, name);
 
 		return GSTrue;
 	}
@@ -36,7 +36,7 @@ void GSEngineUnregisterResource(GSEngine engine, const char* name) {
 	if(ind != -1) {
 		GSResourceClose(engine->resource[ind].value);
 
-		GSLog(GSLogInfo, "Unregistered resource %s", name);
+		GSLog(engine, GSLogInfo, "Unregistered resource %s", name);
 
 		shdel(engine->resource, name);
 	}
@@ -65,7 +65,7 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 	GSEngineRegisterResource(engine, "game", "game.gsp");
 
 	if(engine != NULL && param->client && (engine->client = GSClientCreate(engine)) == NULL) {
-		GSLog(GSLogError, "Failed to create client");
+		GSLog(engine, GSLogError, "Failed to create client");
 
 		GSEngineDestroy(engine);
 
@@ -73,7 +73,7 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 	}
 
 	if(engine != NULL && param->server && (engine->server = GSServerCreate(engine)) == NULL) {
-		GSLog(GSLogError, "Failed to create server");
+		GSLog(engine, GSLogError, "Failed to create server");
 
 		GSEngineDestroy(engine);
 
@@ -81,7 +81,7 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 	}
 
 	if(engine == NULL) {
-		GSLog(GSLogError, "Failed to create engine");
+		GSLog(engine, GSLogError, "Failed to create engine");
 	}
 
 	return engine;
@@ -121,8 +121,8 @@ void GSEngineLoop(GSEngine engine) {
 	long	 wait	       = 1000 / tps;
 
 	if(engine->param->sleep == NULL || engine->param->get_tick == NULL) {
-		GSLog(GSLogWarn, "sleep and/or get_tick parameter are missing!");
-		GSLog(GSLogWarn, "This will result game to be crazy fast!!!");
+		GSLog(engine, GSLogWarn, "sleep and/or get_tick parameter are missing!");
+		GSLog(engine, GSLogWarn, "This will result game to be crazy fast!!!");
 	} else {
 		t = engine->param->get_tick();
 

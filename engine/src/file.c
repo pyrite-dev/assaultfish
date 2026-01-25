@@ -20,7 +20,7 @@ GSFile GSFileOpen(GSEngine engine, const char* path) {
 		file->size = ftell(file->fp);
 		fseek(file->fp, 0, SEEK_SET);
 
-		GSLog(GSLogInfo, "Opened %s", path);
+		GSLog(engine, GSLogInfo, "Opened %s", path);
 
 		return file;
 	}
@@ -37,7 +37,7 @@ GSFile GSFileOpen(GSEngine engine, const char* path) {
 				if((file->data = GSResourceGet(engine->resource[i].value, nam, &file->size)) != NULL) {
 					free(s);
 
-					GSLog(GSLogInfo, "Opened %s", path);
+					GSLog(engine, GSLogInfo, "Opened %s", path);
 					return file;
 				}
 				break;
@@ -46,7 +46,7 @@ GSFile GSFileOpen(GSEngine engine, const char* path) {
 	}
 	free(s);
 
-	GSLog(GSLogError, "Could not open %s", path);
+	GSLog(engine, GSLogError, "Could not open %s", path);
 	GSFileClose(file);
 	return NULL;
 }

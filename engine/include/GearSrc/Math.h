@@ -11,6 +11,7 @@ extern "C" {
 #define GSMathPi 3.14159265358979323846
 
 GSDECL void	GSMathCross3(GSVector3 r, GSVector3 v0, GSVector3 v1);
+GSDECL GSNumber GSMathInner3(GSVector3 v0, GSVector3 v1);
 GSDECL void	GSMathNormalize3(GSVector3 vec);
 GSDECL void	GSMathSubtract3(GSVector3 r, GSVector3 v0, GSVector3 v1);
 GSDECL void	GSMathAdd3(GSVector3 r, GSVector3 v0, GSVector3 v1);
