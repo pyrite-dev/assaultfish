@@ -7,6 +7,8 @@
 #include <GearSrc/Model.h>
 #include <GearSrc/Version.h>
 
+#include <stb_ds.h>
+
 GSClient GSClientCreate(GSEngine engine) {
 	GSClient client = malloc(sizeof(*client));
 	void*	 ptr[]	= {
@@ -99,10 +101,12 @@ void GSClientStep(GSClient client) {
 	GSVector4 yellow = {1, 1, 0, 1};
 	GSVector4 half	 = {0, 0, 0, 0.5};
 	GSVector2 sq[4];
+	int	  i, j, k, c;
 
 	GSGLClear(client->gl);
 	GSGLCameraSetup(client->gl);
 	GSGLSetLight(client->gl);
+	GSGLSetColor(client->gl, white);
 
 	GSGLTextBold(client->gl, 0);
 
@@ -116,27 +120,6 @@ void GSClientStep(GSClient client) {
 	}
 	scene(client);
 	GSGLShadowEnd(client->gl);
-
-	sprintf(buf, "%.1f FPS", client->engine->tps_sampled);
-	sprintf(buf2, "%s%s", client->engine->tps_sampled < 10 ? " " : "", buf);
-
-	tw = GSGLTextWidth(client->gl, buf2);
-	th = GSGLTextHeight(client->gl, buf2);
-
-	sq[0][0] = client->engine->width - tw, sq[0][1] = 0;
-	sq[1][0] = client->engine->width - tw, sq[1][1] = th;
-	sq[2][0] = client->engine->width, sq[2][1] = th;
-	sq[3][0] = client->engine->width, sq[3][1] = 0;
-
-	GSGLSetColor(client->gl, half);
-	GSGLBegin2D(client->gl);
-	GSGLPolygon2D(client->gl, 4, sq, NULL);
-	GSGLEnd2D(client->gl);
-
-	GSGLSetColor(client->gl, yellow);
-	GSGLTextBold(client->gl, 1);
-	GSGLText(client->gl, client->engine->width - tw, 0, buf2);
-	GSGLTextBold(client->gl, 0);
 
 	GSVersionGet(&ver);
 
@@ -154,9 +137,9 @@ void GSClientStep(GSClient client) {
 	sh = th + th2;
 
 	sq[0][0] = client->engine->width - sw, sq[0][1] = client->engine->height - sh;
-	sq[1][0] = client->engine->width - sw, sq[1][1] = client->engine->height;
-	sq[2][0] = client->engine->width, sq[2][1] = client->engine->height;
-	sq[3][0] = client->engine->width, sq[3][1] = client->engine->height - sh;
+	sq[1][0] = sq[0][0], sq[1][1] = client->engine->height;
+	sq[2][0] = client->engine->width, sq[2][1] = sq[1][1];
+	sq[3][0] = sq[2][0], sq[3][1] = sq[0][1];
 
 	GSGLSetColor(client->gl, half);
 	GSGLBegin2D(client->gl);
@@ -167,13 +150,90 @@ void GSClientStep(GSClient client) {
 	GSGLText(client->gl, client->engine->width - tw, client->engine->height - th * 2, buf);
 	GSGLText(client->gl, client->engine->width - tw2, client->engine->height - th2, buf2);
 
+	for(k = 0; k < 2; k++) {
+		c = 0;
+		for(i = arrlen(client->engine->log) - 1, j = 0; i >= 0 && j < 10; i--, j++) {
+			if(client->engine->param->get_tick != NULL) {
+				if((client->engine->param->get_tick() - client->engine->log[i].tick) > 3000) continue;
+			}
+
+			if(k == 1) {
+				GSNumber  y = c * GSGLTextHeight(client->gl, "M");
+				GSNumber  w = 0;
+				char	  str[6];
+				int	  level = client->engine->log[i].level;
+				GSVector4 col	= {0, 0, 0, 1};
+
+				str[0] = 0;
+
+				if(level == GSLogInfo) {
+					strcpy(str, "INFO");
+
+					col[0] = col[1] = col[2] = 1;
+				} else if(level == GSLogWarn) {
+					strcpy(str, "WARN");
+
+					col[0] = col[2] = 1;
+				} else if(level == GSLogError) {
+					strcpy(str, "ERROR");
+
+					col[0] = 1;
+				} else if(level == GSLogDebug) {
+					strcpy(str, "DEBUG");
+
+					col[2] = 1;
+				}
+				GSGLSetColor(client->gl, col);
+
+				GSGLTextBold(client->gl, 1);
+				GSGLText(client->gl, (5 - strlen(str)) * GSGLTextWidth(client->gl, "M") / 2, y, str);
+				GSGLTextBold(client->gl, 0);
+
+				GSGLSetColor(client->gl, white);
+				GSGLText(client->gl, 0, y, "     |");
+				GSGLText(client->gl, GSGLTextWidth(client->gl, "M") * 6, y, client->engine->log[i].log);
+			}
+
+			c++;
+		}
+
+		if(k == 0) {
+			sq[0][0] = 0, sq[0][1] = 0;
+			sq[1][0] = 0, sq[1][1] = c * GSGLTextHeight(client->gl, "M");
+			sq[2][0] = client->engine->width, sq[2][1] = sq[1][1];
+			sq[3][0] = sq[2][0], sq[3][1] = 0;
+
+			GSGLSetColor(client->gl, half);
+			GSGLBegin2D(client->gl);
+			GSGLPolygon2D(client->gl, 4, sq, NULL);
+			GSGLEnd2D(client->gl);
+		}
+	}
+
+	sprintf(buf, "%.1f FPS", client->engine->tps_sampled);
+	sprintf(buf2, "%s%s", client->engine->tps_sampled < 10 ? " " : "", buf);
+
+	tw = GSGLTextWidth(client->gl, buf2);
+	th = GSGLTextHeight(client->gl, buf2);
+
+	sq[0][0] = client->engine->width - tw, sq[0][1] = 0;
+	sq[1][0] = sq[0][0], sq[1][1] = th;
+	sq[2][0] = client->engine->width, sq[2][1] = sq[1][1];
+	sq[3][0] = sq[2][0], sq[3][1] = 0;
+
+	GSGLSetColor(client->gl, half);
+	GSGLBegin2D(client->gl);
+	GSGLPolygon2D(client->gl, 4, sq, NULL);
+	GSGLEnd2D(client->gl);
+
+	GSGLSetColor(client->gl, yellow);
+	GSGLTextBold(client->gl, 1);
+	GSGLText(client->gl, client->engine->width - tw, 0, buf2);
+	GSGLTextBold(client->gl, 0);
+
 	client->engine->param->gl_swapbuffer();
 
 	if(client->engine->param->after_render != NULL) client->engine->param->after_render(client->engine);
-
-	static double r = 0;
-
-	r += 0.1;
 }
 
 GSGL GSClientGetGL(GSClient client) {

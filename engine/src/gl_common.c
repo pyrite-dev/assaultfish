@@ -97,14 +97,14 @@ void GSGLTextEx(GSGL gl, GSNumber x, GSNumber y, const char* text, GSNumber sx, 
 		gy = gy * sh;
 
 		v[0][0] = px, v[0][1] = py;
-		v[1][0] = px, v[1][1] = py + gh;
-		v[2][0] = px + gw, v[2][1] = py + gh;
-		v[3][0] = px + gw, v[3][1] = py;
+		v[1][0] = v[0][0], v[1][1] = py + gh;
+		v[2][0] = px + gw, v[2][1] = v[1][1];
+		v[3][0] = v[2][0], v[3][1] = v[0][1];
 
 		t[0][0] = gx, t[0][1] = gy;
-		t[1][0] = gx, t[1][1] = gy + sh;
-		t[2][0] = gx + sw, t[2][1] = gy + sh;
-		t[3][0] = gx + sw, t[3][1] = gy;
+		t[1][0] = t[0][0], t[1][1] = gy + sh;
+		t[2][0] = gx + sw, t[2][1] = t[1][1];
+		t[3][0] = t[2][0], t[3][1] = t[0][1];
 
 		GSGLPolygon2D(gl, 4, v, t);
 

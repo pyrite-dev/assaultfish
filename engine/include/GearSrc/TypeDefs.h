@@ -58,6 +58,7 @@ typedef struct _GSModel*    GSModel;
 typedef struct _GSModelFace	   GSModelFace;
 typedef struct _GSModelMaterial	   GSModelMaterial;
 typedef struct _GSModelUseMaterial GSModelUseMaterial;
+typedef struct _GSEngineLog	   GSEngineLog;
 #else
 typedef void* GSClient;
 typedef void* GSServer;
@@ -183,6 +184,12 @@ struct _GSServer {
 	GSEngine engine;
 };
 
+struct _GSEngineLog {
+	char log[1024];
+	int  level;
+	long tick;
+};
+
 struct _GSEngine {
 	GSEngineParam* param;
 	GSClient       client;
@@ -192,6 +199,8 @@ struct _GSEngine {
 	int	       height;
 	GSNumber       tps;
 	GSNumber       tps_sampled;
+
+	GSEngineLog* log;
 };
 
 struct _GSFile {

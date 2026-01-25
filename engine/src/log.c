@@ -1,5 +1,7 @@
 #include <GearSrc/Log.h>
 
+#include <stb_ds.h>
+
 void GSLog(GSEngine engine, int level, const char* fmt, ...) {
 	va_list va;
 	FILE*	out = stdout;
@@ -39,6 +41,25 @@ void GSLog(GSEngine engine, int level, const char* fmt, ...) {
 	va_start(va, fmt);
 	vfprintf(out, fmt, va);
 	va_end(va);
+
+	if(engine != NULL) {
+		GSEngineLog log;
+		char	    str[6];
+
+		log.level = level;
+
+		va_start(va, fmt);
+		vsprintf(log.log, fmt, va);
+		va_end(va);
+
+		if(engine->param->get_tick == NULL) {
+			log.tick = 0;
+		} else {
+			log.tick = engine->param->get_tick();
+		}
+
+		arrput(engine->log, log);
+	}
 
 	fprintf(out, "\n");
 }
