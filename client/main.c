@@ -46,7 +46,7 @@ static void render(GSEngine engine){
 }
 
 static void after_render(GSEngine engine){
-	rot[0] = rot[1] = rot[2]++;
+	rot[0] = rot[1] = rot[2] += (1.0 / GSEngineGetTPS(engine)) * 90;
 }
 
 int main(int argc, char** argv){

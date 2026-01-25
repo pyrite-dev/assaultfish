@@ -88,7 +88,10 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 	t[2][0] = 1, t[2][1] = 1;
 	t[3][0] = 1, t[3][1] = 0;
 
+	GSGLPushMatrix(gl);
 	GSGLShadowDisable(gl);
+
+	GSGLInitialTranslation(gl);
 
 	for(i = 0; i < 6; i++) {
 		GLuint tex;
@@ -141,7 +144,6 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 		for(j = 0; j < 4; j++) {
 			for(k = 0; k < 3; k++) {
 				v[j][k] *= GSGLMaxDistance / 2;
-				v[j][k] += gl->engine->client->camera[k];
 			}
 		}
 
@@ -188,10 +190,6 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 				}
 
 				vc[j][1] = 0.05;
-
-				for(k = 0; k < 3; k++) {
-					vc[j][k] += gl->engine->client->camera[k];
-				}
 			}
 
 			GSGLTextureSet(gl, t);
@@ -204,6 +202,7 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 
 	GSGLClearDepth(gl);
 	GSGLShadowEnable(gl);
+	GSGLPopMatrix(gl);
 
 	/* this overflows in:
 	 * 3.402823466e+38/60/60/24/365 = 1.0790282426433283e+31

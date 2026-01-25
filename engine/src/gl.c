@@ -153,3 +153,15 @@ void GSGLCallList(GSGL gl, GLuint list) {
 void GSGLSetColor(GSGL gl, GSVector4 color) {
 	glColor4f(color[0], color[1], color[2], color[3]);
 }
+
+void GSGLInitialTranslation(GSGL gl) {
+	GLdouble matrix[16];
+
+	glGetDoublev(GL_MODELVIEW_MATRIX, matrix);
+
+	matrix[4 * 3 + 0] = 0;
+	matrix[4 * 3 + 1] = 0;
+	matrix[4 * 3 + 2] = 0;
+
+	glLoadMatrixd(matrix);
+}

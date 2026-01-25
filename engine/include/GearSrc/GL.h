@@ -62,6 +62,7 @@ GSDECL void   GSGLEndList(GSGL gl);
 GSDECL void   GSGLCallList(GSGL gl, GLuint list);
 GSDECL void   GSGLSetColor(GSGL gl, GSVector4 color);
 GSDECL void   GSGLClearDepth(GSGL gl);
+GSDECL void   GSGLInitialTranslation(GSGL gl);
 
 /* gl_camera.c */
 GSDECL void GSGLCameraPerspective(GSGL gl, GSNumber width, GSNumber height);

@@ -18,6 +18,7 @@ GSDECL GSClient GSEngineGetClient(GSEngine engine);
 GSDECL GSServer GSEngineGetServer(GSEngine engine);
 GSDECL GSBool	GSEngineRegisterResource(GSEngine engine, const char* name, const char* path);
 GSDECL void	GSEngineUnregisterResource(GSEngine engine, const char* name);
+GSDECL GSNumber GSEngineGetTPS(GSEngine engine);
 
 #ifdef __cplusplus
 }

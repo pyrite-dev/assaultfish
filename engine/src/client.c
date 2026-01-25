@@ -33,12 +33,12 @@ GSClient GSClientCreate(GSEngine engine) {
 	client->engine = engine;
 
 	client->camera[0] = 0;
-	client->camera[1] = 0;
+	client->camera[1] = 1.5;
 	client->camera[2] = 5;
 
 	client->look_at[0] = 0;
 	client->look_at[1] = 1;
-	client->look_at[2] = 0;
+	client->look_at[2] = 5 - 1;
 
 	client->light0[0] = 2.5;
 	client->light0[1] = 5;
@@ -118,9 +118,10 @@ void GSClientStep(GSClient client) {
 	GSGLShadowEnd(client->gl);
 
 	sprintf(buf, "%.1f FPS", client->engine->tps_sampled);
+	sprintf(buf2, "%s%s", client->engine->tps_sampled < 10 ? " " : "", buf);
 
-	tw = GSGLTextWidth(client->gl, buf);
-	th = GSGLTextHeight(client->gl, buf);
+	tw = GSGLTextWidth(client->gl, buf2);
+	th = GSGLTextHeight(client->gl, buf2);
 
 	sq[0][0] = client->engine->width - tw, sq[0][1] = 0;
 	sq[1][0] = client->engine->width - tw, sq[1][1] = th;
@@ -134,7 +135,7 @@ void GSClientStep(GSClient client) {
 
 	GSGLSetColor(client->gl, yellow);
 	GSGLTextBold(client->gl, 1);
-	GSGLText(client->gl, client->engine->width - tw, 0, buf);
+	GSGLText(client->gl, client->engine->width - tw, 0, buf2);
 	GSGLTextBold(client->gl, 0);
 
 	GSVersionGet(&ver);

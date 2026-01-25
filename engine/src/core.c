@@ -174,3 +174,7 @@ GSClient GSEngineGetClient(GSEngine engine) {
 GSServer GSEngineGetServer(GSEngine engine) {
 	return engine->server;
 }
+
+GSNumber GSEngineGetTPS(GSEngine engine) {
+	return engine->tps;
+}
