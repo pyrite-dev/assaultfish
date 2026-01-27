@@ -13,7 +13,7 @@ GSDECL void	     GSClientDestroy(GSClient client);
 GSDECL void	     GSClientStep(GSClient client);
 GSDECL GSGL	     GSClientGetGL(GSClient client);
 GSDECL GSSoundEngine GSClientGetSoundEngine(GSClient client);
-GSDECL void	     GSClientToggleSkybox(GSClient client, GSBool toggle);
+GSDECL void	     GSClientSetSkybox(GSClient client, GSBool toggle);
 
 #ifdef __cplusplus
 }

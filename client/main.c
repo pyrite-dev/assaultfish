@@ -84,10 +84,10 @@ int main(int argc, char** argv){
 
 		model = GSModelOpen(engine, "game:/mdl/fish.gsm");
 
-		GSClientToggleSkybox(GSEngineGetClient(engine), GSTrue);
+		GSClientSetSkybox(GSEngineGetClient(engine), GSTrue);
 		
 		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/shanghai.mp3")) != NULL){
-			GSSoundToggleLoop(sound, 1);
+			GSSoundSetLoop(sound, 1);
 			GSSoundStart(sound);
 		}
 

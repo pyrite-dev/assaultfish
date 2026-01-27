@@ -108,7 +108,7 @@ void GSSoundClose(GSSound sound) {
 	free(sound);
 }
 
-void GSSoundToggleLoop(GSSound sound, GSBool toggle) {
+void GSSoundSetLoop(GSSound sound, GSBool toggle) {
 	GSSoundLock(sound);
 	sound->loop = toggle;
 	GSSoundUnlock(sound);
