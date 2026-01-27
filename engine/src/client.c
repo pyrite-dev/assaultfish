@@ -41,7 +41,7 @@ GSClient GSClientCreate(GSEngine engine) {
 
 	client->look_at[0] = 0;
 	client->look_at[1] = 1;
-	client->look_at[2] = 5 - 1;
+	client->look_at[2] = 0;
 
 	client->light0[0] = 2.5;
 	client->light0[1] = 5;
