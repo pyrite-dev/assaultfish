@@ -52,17 +52,17 @@ void GSGLCameraLookAt(GSGL gl, GSVector3 camera, GSVector3 look_at) {
 	for(i = 0; i < 16; i++) matrix[i] = 0;
 	matrix[4 * 0 + 0] = s[0];
 	matrix[4 * 1 + 0] = s[1];
-	matrix[4 * 2 + 0] = s[2];
+	matrix[4 * 2 + 0] = -s[2];
 	matrix[4 * 0 + 1] = u[0];
 	matrix[4 * 1 + 1] = u[1];
-	matrix[4 * 2 + 1] = u[2];
+	matrix[4 * 2 + 1] = -u[2];
 	matrix[4 * 0 + 2] = -f[0];
 	matrix[4 * 1 + 2] = -f[1];
-	matrix[4 * 2 + 2] = -f[2];
+	matrix[4 * 2 + 2] = f[2];
 	matrix[4 * 3 + 3] = 1;
 
 	glMultMatrixd(matrix);
-	glTranslated(-camera[0], -camera[1], -camera[2]);
+	glTranslated(-camera[0], -camera[1], camera[2]);
 }
 
 void GSGLCameraSetup(GSGL gl) {

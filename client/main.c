@@ -39,12 +39,24 @@ static void tick(void){
 }
 
 static GSVector3 rot = {0, 0, 0};
+static GSVector3 pos = {0, 0, 0};
 static GSModel model = NULL;
 
 static void render(GSEngine self){
 	GSGL gl = GSClientGetGL(GSEngineGetClient(self));
 
+	pos[1] = 0;
+
 	GSGLPushMatrix(gl);
+	GSGLSetPosition(gl, pos);
+	GSGLSetRotation(gl, rot);
+	if(model != NULL) GSModelDraw(model);
+	GSGLPopMatrix(gl);
+
+	pos[1] = 1;
+
+	GSGLPushMatrix(gl);
+	GSGLSetPosition(gl, pos);
 	GSGLSetRotation(gl, rot);
 	if(model != NULL) GSModelDraw(model);
 	GSGLPopMatrix(gl);
@@ -52,6 +64,9 @@ static void render(GSEngine self){
 
 static void after_render(GSEngine self){
 	rot[0] = rot[1] = rot[2] += (1.0 / GSEngineGetTPS(self)) * 90;
+
+	pos[0] = cos(rot[0] / 180 * GSMathPi);
+	pos[2] = sin(rot[0] / 180 * GSMathPi);
 }
 
 #ifndef _WIN32
@@ -86,7 +101,7 @@ int main(int argc, char** argv){
 
 		GSClientSetSkybox(GSEngineGetClient(engine), GSTrue);
 		
-		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/shanghai.mp3")) != NULL){
+		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/df97.xm")) != NULL){
 			GSSoundSetLoop(sound, 1);
 			GSSoundStart(sound);
 		}

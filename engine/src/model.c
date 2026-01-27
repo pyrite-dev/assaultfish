@@ -137,7 +137,7 @@ static void parse_obj(GSModel model, char* txt) {
 							if(arrlen(model->vertex) > varr[i] * 3) {
 								face.vertex[i][0] = (model->vertex[varr[i] * 3 + 0] - lm - lr / 2) / sc;
 								face.vertex[i][1] = (model->vertex[varr[i] * 3 + 1] - dm - ud / 2) / sc;
-								face.vertex[i][2] = (model->vertex[varr[i] * 3 + 2] - bm - bf / 2) / sc;
+								face.vertex[i][2] = -(model->vertex[varr[i] * 3 + 2] - bm - bf / 2) / sc;
 							}
 
 							if(arrlen(model->texcoord) > tarr[i] * 2) {
@@ -147,8 +147,8 @@ static void parse_obj(GSModel model, char* txt) {
 						}
 					}
 
-					if(c == 3) GSMathNormal3x3(face.normal, face.vertex[0], face.vertex[1], face.vertex[2]);
-					if(c == 4) GSMathNormal3x4(face.normal, face.vertex[0], face.vertex[1], face.vertex[2], face.vertex[3]);
+					if(c == 3) GSMathNormal3x3(face.normal, face.vertex[2], face.vertex[1], face.vertex[0]);
+					if(c == 4) GSMathNormal3x4(face.normal, face.vertex[3], face.vertex[2], face.vertex[1], face.vertex[0]);
 
 					arrput(model->face, face);
 				}
