@@ -256,6 +256,6 @@ GSSoundEngine GSClientGetSoundEngine(GSClient client) {
 	return client->sengine;
 }
 
-void GSClientToggleSkybox(GSClient client, GSBool toggle) {
+void GSClientSetSkybox(GSClient client, GSBool toggle) {
 	client->skybox_enabled = toggle;
 }
