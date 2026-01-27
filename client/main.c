@@ -69,14 +69,23 @@ int main(int argc, char** argv){
 	GSInit();
 
 	if((engine = GSEngineCreate(&param)) != NULL){
+		GSSound sound;
+
 		signal(SIGINT, shutdown_engine);
 		signal(SIGTERM, shutdown_engine);
 
 		model = GSModelOpen(engine, "game:/mdl/fish.gsm");
 
 		GSClientToggleSkybox(GSEngineGetClient(engine), GSTrue);
+		
+		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/fracture.mod")) != NULL){
+			GSSoundToggleLoop(sound, 1);
+			GSSoundStart(sound);
+		}
 
 		GSEngineLoop(engine);
+
+		if(sound != NULL) GSSoundClose(sound);
 		GSEngineDestroy(engine);
 	}
 }

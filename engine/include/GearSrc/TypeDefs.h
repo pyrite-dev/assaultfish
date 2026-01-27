@@ -46,15 +46,17 @@ typedef struct _GSEngineParam GSEngineParam;
 typedef struct _GSResourceKV  GSResourceKV;
 typedef struct _GSBox	      GSBox;
 #ifdef _GEARSRC
-typedef struct _GSClient*   GSClient;
-typedef struct _GSServer*   GSServer;
-typedef struct _GSEngine*   GSEngine;
-typedef struct _GSFile*	    GSFile;
-typedef struct _GSResource* GSResource;
-typedef struct _GSGL*	    GSGL;
-typedef struct _GSSkyBox*   GSSkyBox;
-typedef struct _GSModel*    GSModel;
-typedef struct _GSSound*    GSSound;
+typedef struct _GSClient*      GSClient;
+typedef struct _GSServer*      GSServer;
+typedef struct _GSEngine*      GSEngine;
+typedef struct _GSFile*	       GSFile;
+typedef struct _GSResource*    GSResource;
+typedef struct _GSGL*	       GSGL;
+typedef struct _GSSkyBox*      GSSkyBox;
+typedef struct _GSModel*       GSModel;
+typedef struct _GSSoundDriver* GSSoundDriver;
+typedef struct _GSSoundEngine* GSSoundEngine;
+typedef struct _GSSound*       GSSound;
 
 typedef struct _GSModelFace	   GSModelFace;
 typedef struct _GSModelMaterial	   GSModelMaterial;
@@ -69,6 +71,8 @@ typedef void* GSResource;
 typedef void* GSGL;
 typedef void* GSSkyBox;
 typedef void* GSModel;
+typedef void* GSSoundDriver;
+typedef void* GSSoundEngine;
 typedef void* GSSound;
 #endif
 typedef float	 GSNumber;
@@ -84,6 +88,12 @@ typedef long (*GSGetTickCallback)(void);
 typedef void (*GSSleepCallback)(int ms);
 typedef void (*GSRenderCallback)(GSEngine engine);
 typedef void (*GSAfterRenderCallback)(GSEngine engine);
+
+typedef void (*GSSoundDriverReadCallback)(void* opaque, GSI16* out, int frame);
+
+typedef void (*GSSoundResetCallback)(GSSound audio);
+typedef int (*GSSoundReadCallback)(GSSound audio, GSI16* out, int frame);
+typedef void (*GSSoundCloseCallback)(GSSound audio);
 
 struct _GSBox {
 	GSVector3 a;
@@ -162,8 +172,41 @@ struct _GSModel {
 struct _GSSound {
 	GSEngine engine;
 
+	GSBool paused;
+	GSBool loop;
+
+	ma_mutex mutex;
+
+	GSFile file;
+
+	void* opaque1;
+	void* opaque2;
+
+	GSSoundResetCallback reset;
+	GSSoundReadCallback  read;
+	GSSoundCloseCallback close;
+};
+
+struct _GSSoundDriver {
+	GSEngine engine;
+
 	ma_device	 device;
 	ma_device_config config;
+
+	int ready;
+
+	GSSoundDriverReadCallback callback;
+	void*			  opaque;
+};
+
+struct _GSSoundEngine {
+	GSEngine engine;
+
+	GSSoundDriver driver;
+
+	ma_mutex mutex;
+
+	GSSound* sound;
 };
 
 struct _GSClient {
@@ -189,7 +232,7 @@ struct _GSClient {
 	GSSkyBox  skybox;
 	GSBool	  skybox_enabled;
 
-	GSSound sound;
+	GSSoundEngine sengine;
 };
 
 struct _GSServer {

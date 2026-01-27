@@ -1,48 +1,108 @@
 #include <GearSrc/Sound.h>
 
+#include <GearSrc/File.h>
+#include <GearSrc/SoundEngine.h>
+#include <GearSrc/Sound.h>
 #include <GearSrc/Log.h>
 
+#include <stb_ds.h>
 #include <miniaudio.h>
 
-static void data_callback(ma_device* device, void* output, const void* input, ma_uint32 frame) {
-}
-
-GSSound GSSoundOpen(GSClient client) {
+GSSound GSSoundNew(GSSoundEngine sengine) {
 	GSSound sound = malloc(sizeof(*sound));
 
 	memset(sound, 0, sizeof(*sound));
 
-	sound->engine = client->engine;
+	sound->engine = sengine->engine;
 
-	sound->config			= ma_device_config_init(ma_device_type_playback);
-	sound->config.playback.format	= ma_format_s16;
-	sound->config.playback.channels = 2;
-	sound->config.sampleRate	= GSSoundRate;
-	sound->config.dataCallback	= data_callback;
-	sound->config.pUserData		= sound;
+	sound->paused = 1;
+	sound->loop   = 0;
 
-	if(ma_device_init(NULL, &sound->config, &sound->device) != MA_SUCCESS) {
-		free(sound);
-		GSLog(client->engine, GSLogInfo, "Failed to open sound");
-		return NULL;
-	}
+	ma_mutex_init(&sound->mutex);
 
-	if(ma_device_start(&sound->device) != MA_SUCCESS) {
-		ma_device_uninit(&sound->device);
-		free(sound);
-		GSLog(client->engine, GSLogInfo, "Failed to open sound");
-		return NULL;
-	}
-
-	GSLog(client->engine, GSLogInfo, "Opened sound");
+	GSSoundEngineLock(sengine);
+	arrput(sengine->sound, sound);
+	GSSoundEngineUnlock(sengine);
 
 	return sound;
 }
 
-void GSSoundClose(GSSound sound) {
-	ma_device_uninit(&sound->device);
+GSSound GSSoundOpen(GSSoundEngine sengine, const char* path) {
+	GSSound s;
+	GSFile	f;
 
-	GSLog(sound->engine, GSLogInfo, "Closed sound");
+	if((f = GSFileOpen(sengine->engine, path)) == NULL) return NULL;
+	if((s = GSSoundOpenXM(sengine, f)) != NULL) {
+		s->file = f;
+		GSLog(sengine->engine, GSLogInfo, "%s: Opened as XM", path);
+		return s;
+	}
+
+	if((s = GSSoundOpenMOD(sengine, f)) != NULL) {
+		s->file = f;
+		GSLog(sengine->engine, GSLogInfo, "%s: Opened as MOD", path);
+		return s;
+	}
+
+	GSLog(sengine->engine, GSLogError, "%s: Unrecognized format", path);
+
+	GSFileClose(f);
+
+	return NULL;
+}
+
+void GSSoundClose(GSSound sound) {
+	int	      i;
+	GSSoundEngine sengine = sound->engine->client->sengine;
+
+	GSSoundEngineLock(sengine);
+	for(i = 0; i < arrlen(sengine->sound); i++) {
+		if(sengine->sound[i] == sound) {
+			arrdel(sengine->sound, i);
+			break;
+		}
+	}
+	GSSoundEngineUnlock(sengine);
+
+	if(sound->close != NULL) sound->close(sound);
+
+	ma_mutex_uninit(&sound->mutex);
+
+	if(sound->file != NULL) GSFileClose(sound->file);
 
 	free(sound);
+}
+
+void GSSoundToggleLoop(GSSound sound, GSBool toggle) {
+	GSSoundLock(sound);
+	sound->loop = toggle;
+	GSSoundUnlock(sound);
+}
+
+void GSSoundStart(GSSound sound) {
+	GSSoundLock(sound);
+	if(sound->reset != NULL) sound->reset(sound);
+	GSSoundUnlock(sound);
+
+	GSSoundResume(sound);
+}
+
+void GSSoundResume(GSSound sound) {
+	GSSoundLock(sound);
+	sound->paused = 0;
+	GSSoundUnlock(sound);
+}
+
+void GSSoundPause(GSSound sound) {
+	GSSoundLock(sound);
+	sound->paused = 1;
+	GSSoundUnlock(sound);
+}
+
+void GSSoundLock(GSSound sound) {
+	ma_mutex_lock(&sound->mutex);
+}
+
+void GSSoundUnlock(GSSound sound) {
+	ma_mutex_unlock(&sound->mutex);
 }

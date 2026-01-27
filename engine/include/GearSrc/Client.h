@@ -8,11 +8,12 @@
 extern "C" {
 #endif
 
-GSDECL GSClient GSClientCreate(GSEngine engine);
-GSDECL void	GSClientDestroy(GSClient client);
-GSDECL void	GSClientStep(GSClient client);
-GSDECL GSGL	GSClientGetGL(GSClient client);
-GSDECL void	GSClientToggleSkybox(GSClient client, GSBool toggle);
+GSDECL GSClient	     GSClientCreate(GSEngine engine);
+GSDECL void	     GSClientDestroy(GSClient client);
+GSDECL void	     GSClientStep(GSClient client);
+GSDECL GSGL	     GSClientGetGL(GSClient client);
+GSDECL GSSoundEngine GSClientGetSoundEngine(GSClient client);
+GSDECL void	     GSClientToggleSkybox(GSClient client, GSBool toggle);
 
 #ifdef __cplusplus
 }

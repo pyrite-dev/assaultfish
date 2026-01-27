@@ -270,7 +270,7 @@ GSModel GSModelOpen(GSEngine engine, const char* path) {
 
 	GSEngineUnregisterResource(engine, "model-ws");
 
-	GSLog(engine, GSLogInfo, "Opened model %s, %d vertexes, %d faces", path, arrlen(model->vertex), arrlen(model->face));
+	GSLog(engine, GSLogInfo, "%s: %d vertexes, %d faces", path, arrlen(model->vertex), arrlen(model->face));
 
 	/* TODO: check for animation */
 	if(gl != NULL) {

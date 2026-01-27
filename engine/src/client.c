@@ -6,7 +6,7 @@
 #include <GearSrc/Math.h>
 #include <GearSrc/Model.h>
 #include <GearSrc/Version.h>
-#include <GearSrc/Sound.h>
+#include <GearSrc/SoundEngine.h>
 
 #include <stb_ds.h>
 
@@ -50,9 +50,9 @@ GSClient GSClientCreate(GSEngine engine) {
 
 	client->skybox_enabled = GSFalse;
 
-	if((client->sound = GSSoundOpen(client)) == NULL) {
+	if((client->sengine = GSSoundEngineCreate(client)) == NULL) {
+		GSLog(engine, GSLogError, "Failed to create sound engine");
 		GSClientDestroy(client);
-		GSLog(engine, GSLogError, "Failed to create client");
 
 		return NULL;
 	}
@@ -89,7 +89,7 @@ void GSClientDestroy(GSClient client) {
 
 	GSGLDestroy(client->gl);
 
-	if(client->sound != NULL) GSSoundClose(client->sound);
+	if(client->sengine != NULL) GSSoundEngineDestroy(client->sengine);
 
 	GSLog(client->engine, GSLogInfo, "Destroyed client");
 
@@ -250,6 +250,10 @@ void GSClientStep(GSClient client) {
 
 GSGL GSClientGetGL(GSClient client) {
 	return client->gl;
+}
+
+GSSoundEngine GSClientGetSoundEngine(GSClient client) {
+	return client->sengine;
 }
 
 void GSClientToggleSkybox(GSClient client, GSBool toggle) {
