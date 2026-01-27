@@ -45,6 +45,7 @@ GSSound GSSoundOpenFLAC(GSSoundEngine sengine, GSFile file) {
 	}
 
 	sound->from_samplerate = ((drflac*)sound->opaque1)->sampleRate;
+	sound->from_channel    = ((drflac*)sound->opaque1)->channels;
 
 	return sound;
 }

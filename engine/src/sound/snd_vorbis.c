@@ -10,7 +10,7 @@ static void snd_reset(GSSound sound) {
 }
 
 static int snd_read(GSSound sound, GSI16* out, int frame) {
-	return stb_vorbis_get_samples_short_interleaved(sound->opaque1, 2, out, frame * 2);
+	return stb_vorbis_get_samples_short_interleaved(sound->opaque1, sound->from_channel, out, frame * sound->from_channel);
 }
 
 static void snd_close(GSSound sound) {
@@ -43,6 +43,7 @@ GSSound GSSoundOpenVorbis(GSSoundEngine sengine, GSFile file) {
 	info = stb_vorbis_get_info(sound->opaque1);
 
 	sound->from_samplerate = info.sample_rate;
+	sound->from_channel    = info.channels;
 
 	return sound;
 }

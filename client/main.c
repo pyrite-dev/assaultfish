@@ -78,7 +78,7 @@ int main(int argc, char** argv){
 
 		GSClientToggleSkybox(GSEngineGetClient(engine), GSTrue);
 		
-		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/shanghai.ogg")) != NULL){
+		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/shanghai.flac")) != NULL){
 			GSSoundToggleLoop(sound, 1);
 			GSSoundStart(sound);
 		}

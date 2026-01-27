@@ -50,6 +50,7 @@ GSSound GSSoundOpenWAV(GSSoundEngine sengine, GSFile file) {
 	}
 
 	sound->from_samplerate = ((drwav*)sound->opaque1)->sampleRate;
+	sound->from_channel    = ((drwav*)sound->opaque1)->channels;
 
 	return sound;
 }

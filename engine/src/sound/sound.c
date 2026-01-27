@@ -20,6 +20,7 @@ GSSound GSSoundNew(GSSoundEngine sengine) {
 	sound->loop   = 0;
 
 	sound->from_samplerate = 0;
+	sound->from_channel    = 2;
 
 	ma_mutex_init(&sound->mutex);
 
@@ -33,8 +34,12 @@ GSSound GSSoundNew(GSSoundEngine sengine) {
 static void after(GSSound s) {
 	GSSoundLock(s);
 	if(s->from_samplerate > 0) {
-		s->resampler_config = ma_resampler_config_init(ma_format_s16, 2, s->from_samplerate, GSSoundDriverRate, ma_resample_algorithm_linear);
+		s->resampler_config = ma_resampler_config_init(ma_format_s16, s->from_channel, s->from_samplerate, GSSoundDriverRate, ma_resample_algorithm_linear);
 		ma_resampler_init(&s->resampler_config, NULL, &s->resampler);
+	}
+	if(s->from_channel != 2) {
+		s->converter_config = ma_channel_converter_config_init(ma_format_s16, s->from_channel, NULL, 2, NULL, ma_channel_mix_mode_default);
+		ma_channel_converter_init(&s->converter_config, NULL, &s->converter);
 	}
 	GSSoundUnlock(s);
 }

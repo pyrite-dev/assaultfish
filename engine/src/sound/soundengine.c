@@ -19,6 +19,7 @@ static void read_callback(void* opaque, GSI16* out, int frame) {
 		int    s, f;
 		GSI16* result;
 		GSI16* result2;
+		GSI16* result3;
 
 		GSSoundLock(sengine->sound[i]);
 		if(sengine->sound[i]->paused || sengine->sound[i]->read == NULL) {
@@ -32,8 +33,8 @@ static void read_callback(void* opaque, GSI16* out, int frame) {
 			f = frame;
 		}
 
-		result = malloc(sizeof(*result) * f * 2);
-		memset(result, 0, sizeof(*result) * f * 2);
+		result = malloc(sizeof(*result) * f * sengine->sound[i]->from_channel);
+		memset(result, 0, sizeof(*result) * f * sengine->sound[i]->from_channel);
 		s = sengine->sound[i]->read(sengine->sound[i], result, f);
 		if(s > 0) {
 			int j;
@@ -42,8 +43,8 @@ static void read_callback(void* opaque, GSI16* out, int frame) {
 				ma_uint64 fin  = f;
 				ma_uint64 fout = frame;
 
-				result2 = malloc(sizeof(*result2) * frame * 2);
-				memset(result2, 0, sizeof(*result2) * frame * 2);
+				result2 = malloc(sizeof(*result2) * frame * sengine->sound[i]->from_channel);
+				memset(result2, 0, sizeof(*result2) * frame * sengine->sound[i]->from_channel);
 
 				ma_resampler_process_pcm_frames(&sengine->sound[i]->resampler, result, &fin, result2, &fout);
 
@@ -52,8 +53,17 @@ static void read_callback(void* opaque, GSI16* out, int frame) {
 				result2 = result;
 			}
 
-			for(j = 0; j < s * 2; j++) buffer[j] += (GSNumber)result2[j] / 32767;
+			if(sengine->sound[i]->from_channel == 2) {
+				result3 = result2;
+			} else {
+				result3 = malloc(sizeof(*result3) * frame * 2);
+				memset(result3, 0, sizeof(*result3) * frame * 2);
 
+				ma_channel_converter_process_pcm_frames(&sengine->sound[i]->converter, result3, result2, frame);
+				for(j = 0; j < s * 2; j++) buffer[j] += (GSNumber)result3[j] / 32767;
+			}
+
+			if(result3 != result2) free(result3);
 			if(result2 != result) free(result2);
 		} else if(sengine->sound[i]->loop && sengine->sound[i]->reset != NULL) {
 			sengine->sound[i]->reset(sengine->sound[i]);

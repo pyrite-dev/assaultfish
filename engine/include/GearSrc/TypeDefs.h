@@ -179,8 +179,13 @@ struct _GSSound {
 
 	GSFile file;
 
-	void*		    opaque1;
-	void*		    opaque2;
+	void* opaque1;
+	void* opaque2;
+
+	int			    from_channel;
+	ma_channel_converter_config converter_config;
+	ma_channel_converter	    converter;
+
 	int		    from_samplerate;
 	ma_resampler_config resampler_config;
 	ma_resampler	    resampler;

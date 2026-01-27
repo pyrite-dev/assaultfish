@@ -54,6 +54,7 @@ GSSound GSSoundOpenMP3(GSSoundEngine sengine, GSFile file) {
 	}
 
 	sound->from_samplerate = ((drmp3*)sound->opaque1)->sampleRate;
+	sound->from_channel    = ((drmp3*)sound->opaque1)->channels;
 
 	return sound;
 }
