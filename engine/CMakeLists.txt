@@ -19,6 +19,7 @@ add_subdirectory(external/ode)
 
 include_directories(external/stb)
 include_directories(external/jar)
+include_directories(external/miniaudio)
 
 file(GLOB GearSrc_SRC src/*.c)
 
@@ -28,7 +29,7 @@ target_compile_definitions(GearSrc PRIVATE _GEARSRC)
 target_link_libraries(GearSrc PRIVATE ode lz4)
 target_link_options(GearSrc PRIVATE -static-libgcc -static-libstdc++)
 if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
-	target_link_libraries(GearSrc PRIVATE m)
+	target_link_libraries(GearSrc PRIVATE m pthread)
 endif()
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 	target_link_libraries(GearSrc PRIVATE dl)

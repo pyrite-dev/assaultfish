@@ -141,12 +141,6 @@ void GSSkyBoxDraw(GSSkyBox skybox) {
 			v[3][0] = 1 + s, v[3][1] = -1, v[3][2] = -1 - s;
 		}
 
-		for(j = 0; j < 4; j++) {
-			for(k = 0; k < 3; k++) {
-				v[j][k] *= GSGLMaxDistance / 2;
-			}
-		}
-
 		GSGLTextureSet(gl, tex);
 
 		GSGLPolygon(gl, 4, v, t, n);
