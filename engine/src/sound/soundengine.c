@@ -60,8 +60,9 @@ static void read_callback(void* opaque, GSI16* out, int frame) {
 				memset(result3, 0, sizeof(*result3) * frame * 2);
 
 				ma_channel_converter_process_pcm_frames(&sengine->sound[i]->converter, result3, result2, frame);
-				for(j = 0; j < s * 2; j++) buffer[j] += (GSNumber)result3[j] / 32767;
 			}
+
+			for(j = 0; j < s * 2; j++) buffer[j] += (GSNumber)result3[j] / 32767;
 
 			if(result3 != result2) free(result3);
 			if(result2 != result) free(result2);

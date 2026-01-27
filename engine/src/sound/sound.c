@@ -103,6 +103,8 @@ void GSSoundClose(GSSound sound) {
 
 	if(sound->from_samplerate > 0) ma_resampler_uninit(&sound->resampler, NULL);
 
+	if(sound->from_channel != 2) ma_channel_converter_uninit(&sound->converter, NULL);
+
 	free(sound);
 }
 
