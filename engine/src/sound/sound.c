@@ -139,3 +139,13 @@ void GSSoundLock(GSSound sound) {
 void GSSoundUnlock(GSSound sound) {
 	ma_mutex_unlock(&sound->mutex);
 }
+
+GSBool GSSoundIsPaused(GSSound sound) {
+	GSBool b;
+
+	GSSoundLock(sound);
+	b = sound->paused;
+	GSSoundUnlock(sound);
+
+	return b;
+}

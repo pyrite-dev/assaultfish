@@ -18,6 +18,7 @@ GSDECL void    GSSoundResume(GSSound sound);
 GSDECL void    GSSoundPause(GSSound audio);
 GSDECL void    GSSoundLock(GSSound sound);
 GSDECL void    GSSoundUnlock(GSSound sound);
+GSDECL GSBool  GSSoundIsPaused(GSSound sound);
 
 /* you can guess where they are */
 GSDECL GSSound GSSoundOpenXM(GSSoundEngine sengine, GSFile file);
