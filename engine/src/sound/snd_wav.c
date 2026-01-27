@@ -3,28 +3,25 @@
 #include <GearSrc/SoundDriver.h>
 #include <GearSrc/File.h>
 
-#include <jar_xm.h>
+#include <dr_wav.h>
 
 static void snd_reset(GSSound sound) {
-	jar_xm_reset(sound->opaque1);
+	drwav_seek_to_pcm_frame(sound->opaque1, 0);
 }
 
 static int snd_read(GSSound sound, GSI16* out, int frame) {
-	int f = jar_xm_get_last(sound->opaque1);
-
-	if(f == -1) f = frame;
-
-	jar_xm_generate_samples_16bit(sound->opaque1, out, frame);
-
-	return f;
+	return drwav_read_pcm_frames_s16(sound->opaque1, frame, out);
 }
 
 static void snd_close(GSSound sound) {
-	if(sound->opaque1 != NULL) jar_xm_free_context(sound->opaque1);
+	if(sound->opaque1 != NULL) {
+		drwav_uninit(sound->opaque1);
+		free(sound->opaque1);
+	}
 	free(sound->opaque2);
 }
 
-GSSound GSSoundOpenXM(GSSoundEngine sengine, GSFile file) {
+GSSound GSSoundOpenWAV(GSSoundEngine sengine, GSFile file) {
 	GSSound sound = GSSoundNew(sengine);
 	int	size;
 
@@ -36,17 +33,23 @@ GSSound GSSoundOpenXM(GSSoundEngine sengine, GSFile file) {
 	sound->read  = snd_read;
 	sound->close = snd_close;
 
-	if(size < 37 || memcmp(sound->opaque2, "Extended Module: ", 17) != 0 || ((unsigned char*)sound->opaque2)[37] != 0x1a) {
+	if(size < 4 || memcmp(sound->opaque2, "RIFF", 4) != 0) {
 		GSSoundClose(sound);
 
 		return NULL;
 	}
 
-	if(jar_xm_create_context_safe((jar_xm_context_t**)&sound->opaque1, sound->opaque2, size, GSSoundDriverRate) != 0) {
+	sound->opaque1 = malloc(sizeof(drwav));
+	if(!drwav_init_memory(sound->opaque1, sound->opaque2, size, NULL)) {
+		free(sound->opaque1);
+		sound->opaque1 = NULL;
+
 		GSSoundClose(sound);
 
 		return NULL;
 	}
+
+	sound->from_samplerate = ((drwav*)sound->opaque1)->sampleRate;
 
 	return sound;
 }

@@ -42,8 +42,6 @@ GSSound GSSoundOpenMOD(GSSoundEngine sengine, GSFile file) {
 	GSSound sound = GSSoundNew(sengine);
 	int	size;
 
-	GSFileSeek(file, 0);
-
 	size	       = GSFileSize(file);
 	sound->opaque2 = malloc(size);
 	GSFileRead(file, sound->opaque2, size);

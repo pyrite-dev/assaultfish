@@ -1,6 +1,7 @@
 #include <GearSrc/Sound.h>
 
 #include <GearSrc/File.h>
+#include <GearSrc/SoundDriver.h>
 #include <GearSrc/SoundEngine.h>
 #include <GearSrc/Sound.h>
 #include <GearSrc/Log.h>
@@ -18,6 +19,8 @@ GSSound GSSoundNew(GSSoundEngine sengine) {
 	sound->paused = 1;
 	sound->loop   = 0;
 
+	sound->from_samplerate = 0;
+
 	ma_mutex_init(&sound->mutex);
 
 	GSSoundEngineLock(sengine);
@@ -27,21 +30,44 @@ GSSound GSSoundNew(GSSoundEngine sengine) {
 	return sound;
 }
 
+static void after(GSSound s) {
+	GSSoundLock(s);
+	if(s->from_samplerate > 0) {
+		s->resampler_config = ma_resampler_config_init(ma_format_s16, 2, s->from_samplerate, GSSoundDriverRate, ma_resample_algorithm_linear);
+		ma_resampler_init(&s->resampler_config, NULL, &s->resampler);
+	}
+	GSSoundUnlock(s);
+}
+
+typedef struct pair {
+	const char* name;
+	GSSound (*callback)(GSSoundEngine sengine, GSFile file);
+} pair_t;
+
 GSSound GSSoundOpen(GSSoundEngine sengine, const char* path) {
 	GSSound s;
 	GSFile	f;
+	int	i;
+	pair_t	formats[] = {
+	     {"XM", GSSoundOpenXM},	    /**/
+	     {"MOD", GSSoundOpenMOD},	    /**/
+	     {"MP3", GSSoundOpenMP3},	    /**/
+	     {"FLAC", GSSoundOpenFLAC},	    /**/
+	     {"Vorbis", GSSoundOpenVorbis}, /**/
+	     {"WAV", GSSoundOpenWAV}	    /**/
+	 };
 
 	if((f = GSFileOpen(sengine->engine, path)) == NULL) return NULL;
-	if((s = GSSoundOpenXM(sengine, f)) != NULL) {
-		s->file = f;
-		GSLog(sengine->engine, GSLogInfo, "%s: Opened as XM", path);
-		return s;
-	}
 
-	if((s = GSSoundOpenMOD(sengine, f)) != NULL) {
-		s->file = f;
-		GSLog(sengine->engine, GSLogInfo, "%s: Opened as MOD", path);
-		return s;
+	for(i = 0; i < sizeof(formats) / sizeof(formats[0]); i++) {
+		GSFileSeek(f, 0);
+
+		if((s = formats[i].callback(sengine, f)) != NULL) {
+			s->file = f;
+			GSLog(sengine->engine, GSLogInfo, "%s: Opened as %s", path, formats[i].name);
+			after(s);
+			return s;
+		}
 	}
 
 	GSLog(sengine->engine, GSLogError, "%s: Unrecognized format", path);
@@ -69,6 +95,8 @@ void GSSoundClose(GSSound sound) {
 	ma_mutex_uninit(&sound->mutex);
 
 	if(sound->file != NULL) GSFileClose(sound->file);
+
+	if(sound->from_samplerate > 0) ma_resampler_uninit(&sound->resampler, NULL);
 
 	free(sound);
 }
