@@ -6,6 +6,10 @@
 #include <Mw/Milsko.h>
 #include <Mw/Widget/OpenGL.h>
 
+#ifndef _WIN32
+#include <signal.h>
+#endif
+
 static MwWidget window, opengl;
 static GSEngine engine;
 
@@ -50,9 +54,11 @@ static void after_render(GSEngine self){
 	rot[0] = rot[1] = rot[2] += (1.0 / GSEngineGetTPS(self)) * 90;
 }
 
+#ifndef _WIN32
 static void shutdown_engine(int sig){
 	GSEngineShutdown(engine);
 }
+#endif
 
 int main(int argc, char** argv){
 	GSEngineParam param;
@@ -71,8 +77,10 @@ int main(int argc, char** argv){
 	if((engine = GSEngineCreate(&param)) != NULL){
 		GSSound sound;
 
+#ifndef _WIN32
 		signal(SIGINT, shutdown_engine);
 		signal(SIGTERM, shutdown_engine);
+#endif
 
 		model = GSModelOpen(engine, "game:/mdl/fish.gsm");
 
