@@ -10,11 +10,13 @@ static void snd_reset(GSSound sound) {
 }
 
 static int snd_read(GSSound sound, GSI16* out, int frame) {
-	if(jar_xm_get_loop_count(sound->opaque1) == 1) return 0;
+	int f = jar_xm_get_last(sound->opaque1);
+
+	if(f == -1) f = frame;
 
 	jar_xm_generate_samples_16bit(sound->opaque1, out, frame);
 
-	return frame;
+	return f;
 }
 
 static void snd_close(GSSound sound) {

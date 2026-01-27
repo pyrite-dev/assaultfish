@@ -78,7 +78,7 @@ int main(int argc, char** argv){
 
 		GSClientToggleSkybox(GSEngineGetClient(engine), GSTrue);
 		
-		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/fracture.mod")) != NULL){
+		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/shanghai.mp3")) != NULL){
 			GSSoundToggleLoop(sound, 1);
 			GSSoundStart(sound);
 		}

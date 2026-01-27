@@ -12,11 +12,13 @@ static void snd_reset(GSSound sound) {
 }
 
 static int snd_read(GSSound sound, GSI16* out, int frame) {
-	if(((jar_mod_context_t*)sound->opaque1)->loopcount > 0) return 0;
+	int f = ((jar_mod_context_t*)sound->opaque1)->last;
+
+	if(f == -1) f = frame;
 
 	jar_mod_fillbuffer(sound->opaque1, out, frame, NULL);
 
-	return frame;
+	return f;
 }
 
 static void snd_close(GSSound sound) {
