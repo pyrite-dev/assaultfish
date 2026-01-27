@@ -9,6 +9,9 @@ include(GNUInstallDirs)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_FULL_LIBDIR}")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
+# should this be on?
+#set(MW_INSTALL_HEADERS OFF)
+
 add_subdirectory(submodule/milsko) # Since Milsko provides CMake, we just use it
 
 add_subdirectory(engine)
