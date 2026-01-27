@@ -147,8 +147,8 @@ static void parse_obj(GSModel model, char* txt) {
 						}
 					}
 
-					if(c == 3) GSMathNormal3x3(face.normal, face.vertex[2], face.vertex[1], face.vertex[0]);
-					if(c == 4) GSMathNormal3x4(face.normal, face.vertex[3], face.vertex[2], face.vertex[1], face.vertex[0]);
+					if(c == 3) GSMathNormal3x3(face.normal, face.vertex[0], face.vertex[1], face.vertex[2]);
+					if(c == 4) GSMathNormal3x4(face.normal, face.vertex[0], face.vertex[1], face.vertex[2], face.vertex[3]);
 
 					arrput(model->face, face);
 				}

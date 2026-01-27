@@ -98,17 +98,6 @@ void GSClientDestroy(GSClient client) {
 
 static void scene(GSClient client) {
 	if(client->engine->param->render != NULL) client->engine->param->render(client->engine);
-
-	GSVector3 n   = {0, 1, 0};
-	GSVector3 q[] = {
-	    {-3, -1, 3},
-	    {-3, -1, -3},
-	    {3, -1, -3},
-	    {3, -1, 3}};
-
-	GSGLTextureSet(client->gl, 2);
-	GSGLPolygon(client->gl, 4, q, NULL, n);
-	GSGLTextureSet(client->gl, 0);
 }
 
 void GSClientStep(GSClient client) {

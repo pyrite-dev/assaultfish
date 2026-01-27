@@ -54,8 +54,8 @@ void GSMathAdd3(GSVector3 r, GSVector3 v0, GSVector3 v1) {
 void GSMathNormal3x3(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2) {
 	GSVector3 t0, t1;
 
-	GSMathSubtract3(t0, v1, v0);
-	GSMathSubtract3(t1, v2, v0);
+	GSMathSubtract3(t0, v1, v2);
+	GSMathSubtract3(t1, v0, v2);
 
 	GSMathCross3(r, t0, t1);
 
