@@ -6,6 +6,7 @@
 #include <GearSrc/Math.h>
 #include <GearSrc/Model.h>
 #include <GearSrc/Version.h>
+#include <GearSrc/Sound.h>
 
 #include <stb_ds.h>
 
@@ -49,6 +50,13 @@ GSClient GSClientCreate(GSEngine engine) {
 
 	client->skybox_enabled = GSFalse;
 
+	if((client->sound = GSSoundOpen(client)) == NULL) {
+		GSClientDestroy(client);
+		GSLog(engine, GSLogError, "Failed to create client");
+
+		return NULL;
+	}
+
 	client->gl = GSGLCreate(client);
 
 	client->skybox = GSSkyBoxTry(client, "default");
@@ -81,6 +89,8 @@ void GSClientDestroy(GSClient client) {
 
 	GSGLDestroy(client->gl);
 
+	if(client->sound != NULL) GSSoundClose(client->sound);
+
 	GSLog(client->engine, GSLogInfo, "Destroyed client");
 
 	free(client);
@@ -101,7 +111,7 @@ void GSClientStep(GSClient client) {
 	GSVector4 yellow = {1, 1, 0, 1};
 	GSVector4 half	 = {0, 0, 0, 0.5};
 	GSVector2 sq[4];
-	int	  i, j, k, c;
+	int	  i, j, k, c, t;
 
 	GSGLClear(client->gl);
 	GSGLCameraSetup(client->gl);
@@ -152,13 +162,13 @@ void GSClientStep(GSClient client) {
 
 	for(k = 0; k < 2; k++) {
 		c = 0;
-		for(i = arrlen(client->engine->log) - 1, j = 0; i >= 0 && j < 10; i--, j++) {
+		for(i = arrlen(client->engine->log) - 1, j = 0; i >= 0 && j < 5; i--, j++) {
 			if(client->engine->param->get_tick != NULL) {
 				if((client->engine->param->get_tick() - client->engine->log[i].tick) > 3000) continue;
 			}
 
 			if(k == 1) {
-				GSNumber  y = c * GSGLTextHeight(client->gl, "M");
+				GSNumber  y = (t - c - 1) * GSGLTextHeight(client->gl, "M");
 				GSNumber  w = 0;
 				char	  str[6];
 				int	  level = client->engine->log[i].level;
@@ -196,6 +206,8 @@ void GSClientStep(GSClient client) {
 
 			c++;
 		}
+
+		t = c;
 
 		if(k == 0) {
 			sq[0][0] = 0, sq[0][1] = 0;

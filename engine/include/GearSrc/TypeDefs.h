@@ -54,6 +54,7 @@ typedef struct _GSResource* GSResource;
 typedef struct _GSGL*	    GSGL;
 typedef struct _GSSkyBox*   GSSkyBox;
 typedef struct _GSModel*    GSModel;
+typedef struct _GSSound*    GSSound;
 
 typedef struct _GSModelFace	   GSModelFace;
 typedef struct _GSModelMaterial	   GSModelMaterial;
@@ -68,6 +69,7 @@ typedef void* GSResource;
 typedef void* GSGL;
 typedef void* GSSkyBox;
 typedef void* GSModel;
+typedef void* GSSound;
 #endif
 typedef float	 GSNumber;
 typedef GSNumber GSVector2[2];
@@ -95,6 +97,7 @@ struct _GSResourceKV {
 
 #ifdef _GEARSRC
 #include <GearSrc/GL/GL.h>
+#include <miniaudio.h>
 
 struct _GSGL {
 	GSEngine engine;
@@ -108,30 +111,6 @@ struct _GSGL {
 	GLdouble shadow_old_modelview[16];
 
 	GSBool bold;
-};
-
-struct _GSClient {
-	GSEngine engine;
-
-	GSGL gl;
-
-	GLuint font_normal;
-	int    font_normal_width;
-	int    font_normal_height;
-	int    glyph_normal_width;
-	int    glyph_normal_height;
-
-	GLuint font_bold;
-	int    font_bold_width;
-	int    font_bold_height;
-	int    glyph_bold_width;
-	int    glyph_bold_height;
-
-	GSVector3 look_at;
-	GSVector3 camera;
-	GSVector4 light0;
-	GSSkyBox  skybox;
-	GSBool	  skybox_enabled;
 };
 
 struct _GSSkyBox {
@@ -180,6 +159,39 @@ struct _GSModel {
 	GSModelFace* face;
 };
 
+struct _GSSound {
+	GSEngine engine;
+
+	ma_device	 device;
+	ma_device_config config;
+};
+
+struct _GSClient {
+	GSEngine engine;
+
+	GSGL gl;
+
+	GLuint font_normal;
+	int    font_normal_width;
+	int    font_normal_height;
+	int    glyph_normal_width;
+	int    glyph_normal_height;
+
+	GLuint font_bold;
+	int    font_bold_width;
+	int    font_bold_height;
+	int    glyph_bold_width;
+	int    glyph_bold_height;
+
+	GSVector3 look_at;
+	GSVector3 camera;
+	GSVector4 light0;
+	GSSkyBox  skybox;
+	GSBool	  skybox_enabled;
+
+	GSSound sound;
+};
+
 struct _GSServer {
 	GSEngine engine;
 };
@@ -201,6 +213,7 @@ struct _GSEngine {
 	GSNumber       tps_sampled;
 
 	GSEngineLog* log;
+	int	     shutdown;
 };
 
 struct _GSFile {

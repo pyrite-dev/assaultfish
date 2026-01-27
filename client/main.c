@@ -6,7 +6,8 @@
 #include <Mw/Milsko.h>
 #include <Mw/Widget/OpenGL.h>
 
-MwWidget window, opengl;
+static MwWidget window, opengl;
+static GSEngine engine;
 
 static void gl_swapbuffer(void){
 	MwOpenGLSwapBuffer(opengl);
@@ -36,8 +37,8 @@ static void tick(void){
 static GSVector3 rot = {0, 0, 0};
 static GSModel model = NULL;
 
-static void render(GSEngine engine){
-	GSGL gl = GSClientGetGL(GSEngineGetClient(engine));
+static void render(GSEngine self){
+	GSGL gl = GSClientGetGL(GSEngineGetClient(self));
 
 	GSGLPushMatrix(gl);
 	GSGLSetRotation(gl, rot);
@@ -45,13 +46,16 @@ static void render(GSEngine engine){
 	GSGLPopMatrix(gl);
 }
 
-static void after_render(GSEngine engine){
-	rot[0] = rot[1] = rot[2] += (1.0 / GSEngineGetTPS(engine)) * 90;
+static void after_render(GSEngine self){
+	rot[0] = rot[1] = rot[2] += (1.0 / GSEngineGetTPS(self)) * 90;
+}
+
+static void shutdown_engine(int sig){
+	GSEngineShutdown(engine);
 }
 
 int main(int argc, char** argv){
 	GSEngineParam param;
-	GSEngine engine;
 
 	GSEngineParamInit(&param);
 	param.ready = ready;
@@ -65,6 +69,9 @@ int main(int argc, char** argv){
 	GSInit();
 
 	if((engine = GSEngineCreate(&param)) != NULL){
+		signal(SIGINT, shutdown_engine);
+		signal(SIGTERM, shutdown_engine);
+
 		model = GSModelOpen(engine, "game:/mdl/fish.gsm");
 
 		GSClientToggleSkybox(GSEngineGetClient(engine), GSTrue);

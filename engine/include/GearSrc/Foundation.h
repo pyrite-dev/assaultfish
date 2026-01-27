@@ -17,5 +17,6 @@
 #include <GearSrc/SkyBox.h>
 #include <GearSrc/CRC.h>
 #include <GearSrc/Model.h>
+#include <GearSrc/Sound.h>
 
 #endif

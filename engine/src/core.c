@@ -50,8 +50,9 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 	engine->param = malloc(sizeof(*engine->param));
 	memcpy(engine->param, param, sizeof(*param));
 
-	engine->width  = 800;
-	engine->height = 600;
+	engine->width	 = 800;
+	engine->height	 = 600;
+	engine->shutdown = 0;
 
 	if(param->ready != NULL && param->client) {
 		param->ready(engine->width, engine->height);
@@ -79,6 +80,9 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 
 		engine = NULL;
 	}
+
+	if(param->client) engine->shutdown++;
+	if(param->server) engine->shutdown++;
 
 	if(engine == NULL) {
 		GSLog(engine, GSLogError, "Failed to create engine");
@@ -132,7 +136,7 @@ void GSEngineLoop(GSEngine engine) {
 	engine->tps	    = tps;
 	engine->tps_sampled = tps;
 
-	while(1) {
+	while(engine->shutdown > 0) {
 		if(engine->client != NULL) GSClientStep(engine->client);
 		if(engine->server != NULL) GSServerStep(engine->server);
 
@@ -177,4 +181,11 @@ GSServer GSEngineGetServer(GSEngine engine) {
 
 GSNumber GSEngineGetTPS(GSEngine engine) {
 	return engine->tps;
+}
+
+void GSEngineShutdown(GSEngine engine) {
+	GSLog(engine, GSLogInfo, "Engine shutdown started");
+
+	/* TODO: proper shutdown */
+	engine->shutdown -= 2;
 }
