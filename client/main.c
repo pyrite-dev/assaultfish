@@ -74,15 +74,16 @@ static void render(GSEngine self){
 	for(i = -1; i <= 1; i++){
 		for(j = -1; j <= 1; j++){
 			GSVector3 pos2;
+			double s = fabs(sin(rot[0] / 180 * GSMathPi));
 
-			pos2[0] = i;
+			pos2[0] = i * s * 2;
 			pos2[1] = 0;
-			pos2[2] = j;
+			pos2[2] = j * s * 2;
 
 			GSGLPushMatrix(gl);
 			GSGLSetPosition(gl, pos2);
 			GSGLSetRotation(gl, rot);
-			GSGLTetrakis(gl, 0.5, col, col2);
+			GSGLTetrakis(gl, s, col, col2);
 			GSGLPopMatrix(gl);
 		}
 	}
