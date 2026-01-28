@@ -8,6 +8,7 @@ varying vec4 vColor;
 uniform sampler2D depth_texture;
 uniform sampler2D current_texture;
 uniform float enable_lighting;
+uniform float enable_texture;
 
 vec4 PhongShading(void)
 {
@@ -67,8 +68,9 @@ void main(void){
 	vec4 ambient = gl_LightSource[0].ambient;
 	float shadow_coef = ShadowCoef();
 
-	c = c * texture2D(current_texture, gl_TexCoord[0].st);
+	if(enable_texture >= 0.5){
+		c = c * texture2D(current_texture, gl_TexCoord[0].st);
+	}
 
 	gl_FragColor = ambient * shadow_coef * c + (1.0 - ambient) * c;
-	gl_FragColor.a = 1.0;
 }

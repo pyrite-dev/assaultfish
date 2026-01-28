@@ -32,6 +32,7 @@ GSDECL void   GSGLTextEx(GSGL gl, GSNumber x, GSNumber y, const char* text, GSNu
 GSDECL void   GSGLText(GSGL gl, GSNumber x, GSNumber y, const char* text);
 GSDECL double GSGLTextWidth(GSGL gl, const char* text);
 GSDECL double GSGLTextHeight(GSGL gl, const char* text);
+GSDECL void   GSGLTetrakis(GSGL gl, GSNumber scale, GSVector4 col1, GSVector4 col2);
 
 /* gl_shadow.c */
 GSDECL void   GSGLShadowInit(GSGL gl);

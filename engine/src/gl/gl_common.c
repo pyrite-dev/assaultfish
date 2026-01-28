@@ -172,3 +172,44 @@ void GSGLTexturePrepareEx(GSGL gl, GLuint* texture, unsigned char* rgba, int wid
 void GSGLTexturePrepare(GSGL gl, GLuint* texture, unsigned char* rgba, int width, int height) {
 	GSGLTexturePrepareEx(gl, texture, rgba, width, height, 1);
 }
+
+/* who even uses this other than second reality? :) */
+void GSGLTetrakis(GSGL gl, GSNumber scale, GSVector4 col1, GSVector4 col2) {
+	GSVector3 v[] = {
+	    {0, 1, 0},
+	    {-0.75, 0.75, -0.75},
+	    {0.75, 0.75, -0.75}};
+	GSVector3 n;
+	GSVector3 rot2 = {0, 90, 0};
+	GSVector3 rot3 = {0, 0, 90};
+	GSVector3 rot4 = {90, 0, 0};
+	int	  i, j, k = 0;
+
+	for(i = 0; i < 3; i++) {
+		for(j = 0; j < 3; j++) v[i][j] *= scale;
+	}
+
+	GSMathNormal3x3(n, v[0], v[1], v[2]);
+
+	GSGLPushMatrix(gl);
+	for(i = 0; i < 6; i++) {
+		for(j = 0; j < 4; j++) {
+			GSGLSetColor(gl, ((k + j) % 2) ? col2 : col1);
+			GSGLPolygon(gl, 3, v, NULL, n);
+
+			GSGLSetRotation(gl, rot2);
+		}
+
+		if(i == 3) {
+			GSGLSetRotation(gl, rot4);
+			k++;
+		} else if(i == 4) {
+			GSGLSetRotation(gl, rot4);
+			GSGLSetRotation(gl, rot4);
+		} else {
+			GSGLSetRotation(gl, rot3);
+			k++;
+		}
+	}
+	GSGLPopMatrix(gl);
+}

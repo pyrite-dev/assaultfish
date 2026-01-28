@@ -44,6 +44,16 @@ static GSModel model = NULL;
 
 static void render(GSEngine self){
 	GSGL gl = GSClientGetGL(GSEngineGetClient(self));
+	GSVector3 v[] = {
+		{-5, -2, 5},
+		{-5, -2, -5},
+		{5, -2, -5},
+		{5, -2, 5}
+	};
+	GSVector3 n = {0, 1, 0};
+	GSVector4 col = {1, 1, 1, 1};
+	GSVector4 col2 = {1, 0, 0, 1};
+	int i, j;
 
 	pos[1] = 0;
 
@@ -60,6 +70,25 @@ static void render(GSEngine self){
 	GSGLSetRotation(gl, rot);
 	if(model != NULL) GSModelDraw(model);
 	GSGLPopMatrix(gl);
+
+	for(i = -1; i <= 1; i++){
+		for(j = -1; j <= 1; j++){
+			GSVector3 pos2;
+
+			pos2[0] = i;
+			pos2[1] = 0;
+			pos2[2] = j;
+
+			GSGLPushMatrix(gl);
+			GSGLSetPosition(gl, pos2);
+			GSGLSetRotation(gl, rot);
+			GSGLTetrakis(gl, 0.5, col, col2);
+			GSGLPopMatrix(gl);
+		}
+	}
+
+	GSGLSetColor(gl, col);
+	GSGLPolygon(gl, 4, v, NULL, n);
 }
 
 static void after_render(GSEngine self){
@@ -101,7 +130,7 @@ int main(int argc, char** argv){
 
 		GSClientSetSkybox(GSEngineGetClient(engine), GSTrue);
 		
-		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/df97.xm")) != NULL){
+		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/2nd_pm.xm")) != NULL){
 			GSSoundSetLoop(sound, 1);
 			GSSoundStart(sound);
 		}

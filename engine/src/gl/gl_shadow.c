@@ -30,6 +30,7 @@ void GSGLShadowInit(GSGL gl) {
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "depth_texture"), 7);
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "current_texture"), 0);
 		glUniform1f(glGetUniformLocation(gl->shadow_shader, "enable_lighting"), 1);
+		glUniform1f(glGetUniformLocation(gl->shadow_shader, "enable_texture"), 0);
 		glUseProgram(0);
 
 		gl->shadow_use_shader = 1;

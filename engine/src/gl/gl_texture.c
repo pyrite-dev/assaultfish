@@ -23,8 +23,16 @@ void GSGLTextureSet(GSGL gl, GLuint texture) {
 	glBindTexture(GL_TEXTURE_2D, texture);
 	if(texture == 0) {
 		glDisable(GL_TEXTURE_2D);
+
+		if(gl->shadow_use_shader) {
+			glUniform1f(glGetUniformLocation(gl->shadow_shader, "enable_texture"), 0);
+		}
 	} else {
 		glEnable(GL_TEXTURE_2D);
+
+		if(gl->shadow_use_shader) {
+			glUniform1f(glGetUniformLocation(gl->shadow_shader, "enable_texture"), 1);
+		}
 	}
 }
 

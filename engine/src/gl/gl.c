@@ -116,7 +116,7 @@ void GSGLEnd2D(GSGL gl) {
 }
 
 void GSGLSetPosition(GSGL gl, GSVector3 pos) {
-	glTranslatef(pos[0], pos[1], pos[2]);
+	glTranslatef(pos[0], pos[1], -pos[2]);
 }
 
 void GSGLSetRotation(GSGL gl, GSVector3 rot) {

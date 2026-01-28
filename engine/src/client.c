@@ -96,8 +96,14 @@ void GSClientDestroy(GSClient client) {
 	free(client);
 }
 
+static GSVector4 white = {1, 1, 1, 1};
+
 static void scene(GSClient client) {
+	GSGLSetColor(client->gl, white);
+
 	if(client->engine->param->render != NULL) client->engine->param->render(client->engine);
+
+	GSGLSetColor(client->gl, white);
 }
 
 void GSClientStep(GSClient client) {
@@ -107,7 +113,6 @@ void GSClientStep(GSClient client) {
 	char	  buf[512];
 	char	  buf2[512];
 	GSVersion ver;
-	GSVector4 white	 = {1, 1, 1, 1};
 	GSVector4 yellow = {1, 1, 0, 1};
 	GSVector4 half	 = {0, 0, 0, 0.5};
 	GSVector2 sq[4];
@@ -116,7 +121,6 @@ void GSClientStep(GSClient client) {
 	GSGLClear(client->gl);
 	GSGLCameraSetup(client->gl);
 	GSGLSetLight(client->gl);
-	GSGLSetColor(client->gl, white);
 
 	GSGLTextBold(client->gl, 0);
 
