@@ -1,7 +1,6 @@
 #include <GearSrc/Net.h>
 
 #include <GearSrc/Log.h>
-#include <GearSrc/Endian.h>
 
 #include <stb_ds.h>
 
@@ -21,8 +20,6 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 
 	GSNetStateInit(&net->state, client->engine);
 	strcpy(net->state.name, "Client");
-
-	GSNetStateWriteUnsafe(&net->state, "Hello", 5);
 
 	return net;
 }
