@@ -22,7 +22,7 @@ include_directories(external/jar)
 include_directories(external/miniaudio)
 include_directories(external/dr_libs)
 
-file(GLOB GearSrc_SRC src/*.c src/gl/*.c src/sound/*.c src/external/*.c)
+file(GLOB GearSrc_SRC src/*.c src/gl/*.c src/sound/*.c src/net/*.c src/external/*.c)
 
 add_library(GearSrc SHARED ${GearSrc_SRC})
 target_include_directories(GearSrc PUBLIC include)

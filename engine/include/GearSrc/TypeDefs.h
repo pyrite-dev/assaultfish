@@ -41,11 +41,13 @@ typedef GSU8 GSBool;
 #define GSTrue ((GSBool)1)
 #define GSFalse ((GSBool)0)
 
-typedef struct _GSVersion     GSVersion;
-typedef struct _GSEngineParam GSEngineParam;
-typedef struct _GSResourceKV  GSResourceKV;
-typedef struct _GSBox	      GSBox;
-typedef struct _GSNetPacket GSNetPacket;
+typedef struct _GSVersion	  GSVersion;
+typedef struct _GSEngineParam	  GSEngineParam;
+typedef struct _GSResourceKV	  GSResourceKV;
+typedef struct _GSBox		  GSBox;
+typedef struct _GSNetPacketHeader GSNetPacketHeader;
+typedef struct _GSNetPacket	  GSNetPacket;
+typedef struct _GSNetAddress	  GSNetAddress;
 #ifdef _GEARSRC
 typedef struct _GSClient*      GSClient;
 typedef struct _GSServer*      GSServer;
@@ -58,6 +60,8 @@ typedef struct _GSModel*       GSModel;
 typedef struct _GSSoundDriver* GSSoundDriver;
 typedef struct _GSSoundEngine* GSSoundEngine;
 typedef struct _GSSound*       GSSound;
+typedef struct _GSNetClient*   GSNetClient;
+typedef struct _GSNetServer*   GSNetServer;
 
 typedef struct _GSModelFace	   GSModelFace;
 typedef struct _GSModelMaterial	   GSModelMaterial;
@@ -107,12 +111,24 @@ struct _GSResourceKV {
 };
 
 #pragma pack(1)
-struct _GSNetPacket {
-	GSU8 flag;
+struct _GSNetPacketHeader {
+	GSU8  flag;
 	GSU32 index;
 	GSU32 sequence;
 };
 #pragma pack()
+
+struct _GSNetPacket {
+	GSNetPacketHeader header;
+	unsigned char	  data[508];
+	int		  size;
+};
+
+/* i hope someone adds ipv6 support :) */
+struct _GSNetAddress {
+	GSU32 address;
+	GSU16 port;
+};
 
 #ifdef _GEARSRC
 #include <GearSrc/GL/GL.h>
@@ -224,6 +240,14 @@ struct _GSSoundEngine {
 	ma_mutex mutex;
 
 	GSSound* sound;
+};
+
+struct _GSNetClient {
+	GSEngine engine;
+};
+
+struct _GSNetServer {
+	GSEngine engine;
 };
 
 struct _GSClient {
