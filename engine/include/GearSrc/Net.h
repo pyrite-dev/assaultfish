@@ -8,10 +8,28 @@
 extern "C" {
 #endif
 
+/**
+ *  6  bits reserved
+ *  1  bit  unsafe or safe
+ *  1  bit  ack or normal
+ *  4 bytes index
+ *  4 bytes sequence
+ *
+ * if unsafe:
+ *  n bytes data
+ * else if ack:
+ *   no data continues
+ * else if sequence is 0:
+ *  4 bytes sequence count
+ * else:
+ *  n bytes data
+ */
+
 #define GSNetDefaultPort 23903
 #define GSNetAcknowledgeTimeout 500
 
 #define GSNetPacketFlagAcknowledge (1 << 0)
+#define GSNetPacketFlagUnsafe (1 << 1)
 
 /* net_client.c */
 GSDECL GSNetClient GSNetClientOpen(GSClient net, const char* hostname, int port);

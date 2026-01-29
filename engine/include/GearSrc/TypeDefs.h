@@ -141,6 +141,8 @@ struct _GSNetAddress {
 struct _GSBinary {
 	void* data;
 	int   size;
+
+	int flag;
 };
 
 struct _GSNetState {

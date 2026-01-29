@@ -11,7 +11,16 @@ enum states {
 };
 
 void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address) {
-	if(packet->header.flag & GSNetPacketFlagAcknowledge) {
+	if(packet->header.flag & GSNetPacketFlagUnsafe) {
+		GSBinary binary;
+
+		binary.size = 508 - sizeof(packet->header);
+		binary.data = malloc(binary.size);
+
+		memcpy(binary.data, packet->data, binary.size);
+
+		arrput(state->rx, binary);
+	} else if(packet->header.flag & GSNetPacketFlagAcknowledge) {
 		if(arrlen(state->tx) > 0 && state->txstate == WaitingAcknowledge && state->txindex == packet->header.index && state->txseq == packet->header.seq) {
 			GSLog(state->engine, GSLogDebug, "%s: Received acknowledge packet %d:%d", state->name, state->txindex, state->txseq);
 
@@ -32,6 +41,8 @@ void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GS
 			if(state->rxseq == 0) {
 				state->rxtotal = GSEndianSwapU32BE(*(GSU32*)packet->data);
 			}
+
+			/* TODO: buffer what it got */
 
 			state->rxseq++;
 			if(state->rxseq == (state->rxtotal + 1)) {
@@ -54,6 +65,25 @@ void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GS
 
 void GSNetStateWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address) {
 	if(arrlen(state->tx) > 0) {
+		int i;
+		for(i = 0; i < arrlen(state->tx); i++) {
+			if(state->tx[i].flag & GSNetPacketFlagUnsafe) {
+				GSNetPacket pkt;
+
+				pkt.header.flag	 = GSNetPacketFlagUnsafe;
+				pkt.header.index = 0;
+				pkt.header.seq	 = 0;
+				pkt.size	 = state->tx[i].size;
+
+				memcpy(pkt.data, state->tx[i].data, pkt.size);
+
+				GSNetPacketWrite(sock, &pkt, address);
+
+				arrdel(state->tx, i);
+				i--;
+			}
+		}
+
 		if(state->txstate == Acknowledged) {
 			int	    n = state->tx[0].size;
 			GSNetPacket pkt;
