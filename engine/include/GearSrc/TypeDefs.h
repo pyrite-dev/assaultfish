@@ -79,6 +79,8 @@ typedef void* GSModel;
 typedef void* GSSoundDriver;
 typedef void* GSSoundEngine;
 typedef void* GSSound;
+typedef void* GSNetClient;
+typedef void* GSNetServer;
 #endif
 typedef float	 GSNumber;
 typedef GSNumber GSVector2[2];
@@ -244,10 +246,14 @@ struct _GSSoundEngine {
 
 struct _GSNetClient {
 	GSEngine engine;
+
+	int fd;
 };
 
 struct _GSNetServer {
 	GSEngine engine;
+
+	int fd;
 };
 
 struct _GSClient {
@@ -274,10 +280,14 @@ struct _GSClient {
 	GSBool	  skybox_enabled;
 
 	GSSoundEngine sengine;
+
+	GSNetClient net;
 };
 
 struct _GSServer {
 	GSEngine engine;
+
+	GSNetServer net;
 };
 
 struct _GSEngineLog {
@@ -325,6 +335,7 @@ struct _GSVersion {
 struct _GSEngineParam {
 	int		       client;
 	int		       server;
+	int		       port;
 	GSGLSwapBufferCallback gl_swapbuffer;
 	GSReadyCallback	       ready;
 	GSTickCallback	       tick;

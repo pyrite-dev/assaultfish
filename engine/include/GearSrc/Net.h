@@ -8,6 +8,8 @@
 extern "C" {
 #endif
 
+#define GSNetDefaultPort 23903
+
 /* net_client.c */
 GSDECL GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port);
 GSDECL void	   GSNetClientClose(GSNetClient client);

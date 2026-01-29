@@ -6,6 +6,7 @@
 #include <GearSrc/Server.h>
 #include <GearSrc/Resource.h>
 #include <GearSrc/String.h>
+#include <GearSrc/Net.h>
 
 #include <stb_ds.h>
 
@@ -67,26 +68,20 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 
 	if(engine != NULL && param->client && (engine->client = GSClientCreate(engine)) == NULL) {
 		GSLog(engine, GSLogError, "Failed to create client");
-
 		GSEngineDestroy(engine);
 
-		engine = NULL;
+		return NULL;
 	}
 
 	if(engine != NULL && param->server && (engine->server = GSServerCreate(engine)) == NULL) {
 		GSLog(engine, GSLogError, "Failed to create server");
-
 		GSEngineDestroy(engine);
 
-		engine = NULL;
+		return NULL;
 	}
 
 	if(param->client) engine->shutdown++;
 	if(param->server) engine->shutdown++;
-
-	if(engine == NULL) {
-		GSLog(engine, GSLogError, "Failed to create engine");
-	}
 
 	return engine;
 }
@@ -110,6 +105,7 @@ void GSEngineParamInit(GSEngineParam* param) {
 
 	param->server	     = 0;
 	param->client	     = 1;
+	param->port	     = GSNetDefaultPort;
 	param->gl_swapbuffer = NULL;
 	param->ready	     = NULL;
 	param->sleep	     = NULL;

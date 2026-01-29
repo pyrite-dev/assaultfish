@@ -20,5 +20,6 @@
 #include <GearSrc/SoundDriver.h>
 #include <GearSrc/SoundEngine.h>
 #include <GearSrc/Sound.h>
+#include <GearSrc/Net.h>
 
 #endif
