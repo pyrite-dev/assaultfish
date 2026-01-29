@@ -2,10 +2,10 @@
 
 #include <GearSrc/Endian.h>
 
-void GSNetPacketRead(int fd, GSNetPacket* packet, GSNetAddress* address) {
+void GSNetPacketRead(GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address) {
 	unsigned char buf[508];
 
-	packet->size = GSNetBaseRead(fd, buf, 508, address) - sizeof(packet->header);
+	packet->size = GSNetBaseRead(sock, buf, 508, address) - sizeof(packet->header);
 
 	memcpy(&packet->header, buf, sizeof(packet->header));
 	memcpy(packet->data, buf + sizeof(packet->header), packet->size);
@@ -14,7 +14,7 @@ void GSNetPacketRead(int fd, GSNetPacket* packet, GSNetAddress* address) {
 	packet->header.seq   = GSEndianSwapU32BE(packet->header.seq);
 }
 
-void GSNetPacketWrite(int fd, GSNetPacket* packet, GSNetAddress* address) {
+void GSNetPacketWrite(GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address) {
 	GSNetPacketHeader header = packet->header;
 	unsigned char	  buf[508];
 
@@ -24,5 +24,5 @@ void GSNetPacketWrite(int fd, GSNetPacket* packet, GSNetAddress* address) {
 	memcpy(buf, &header, sizeof(header));
 	memcpy(buf + sizeof(header), packet->data, packet->size);
 
-	GSNetBaseWrite(fd, buf, sizeof(header) + packet->size, address);
+	GSNetBaseWrite(sock, buf, sizeof(header) + packet->size, address);
 }

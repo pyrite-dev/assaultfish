@@ -12,7 +12,7 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 
 	net->engine = client->engine;
 
-	if((net->fd = GSNetBaseClient(hostname, port, &net->address)) < 0) {
+	if((net->sock = GSNetBaseClient(hostname, port, &net->address)) < 0) {
 		GSLog(client->engine, GSLogError, "Failed to initialize socket");
 		GSNetClientClose(net);
 
@@ -22,8 +22,8 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 	net->state.engine = net->engine;
 
 	GSBinary b;
-	b.data = strdup("Hello");
-	b.size = 5;
+	b.data = strdup("Hello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello world");
+	b.size = strlen(b.data);
 	arrput(net->state.tx, b);
 
 	return net;
@@ -32,16 +32,16 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 void GSNetClientStep(GSNetClient net) {
 	GSNetPacket pkt;
 
-	while(GSNetBaseHasData(net->fd)){
-		GSNetPacketRead(net->fd, &pkt, &net->address);
-		GSNetStateRead(&net->state, net->fd, &pkt, &net->address);
+	while(GSNetBaseHasData(net->sock)) {
+		GSNetPacketRead(net->sock, &pkt, &net->address);
+		GSNetStateRead(&net->state, net->sock, &pkt, &net->address);
 	}
 
-	GSNetStateWrite(&net->state, net->fd, &net->address);
+	GSNetStateWrite(&net->state, net->sock, &net->address);
 }
 
 void GSNetClientClose(GSNetClient net) {
-	if(net->fd >= 0) GSNetBaseClose(net->fd);
+	if(net->sock != NULL) GSNetBaseClose(net->sock);
 
 	free(net);
 }

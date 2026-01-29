@@ -23,20 +23,20 @@ GSDECL void	   GSNetServerStep(GSNetServer net);
 GSDECL void	   GSNetServerClose(GSNetServer net);
 
 /* net_base.c */
-GSDECL GSBool GSNetBaseHasData(int fd);
-GSDECL int    GSNetBaseServer(int port);
-GSDECL int    GSNetBaseClient(const char* hostname, int port, GSNetAddress* address);
-GSDECL void   GSNetBaseClose(int fd);
-GSDECL int    GSNetBaseRead(int fd, void* data, int size, GSNetAddress* address); /* always read 508 bytes! */
-GSDECL void   GSNetBaseWrite(int fd, void* data, int size, GSNetAddress* address);
+GSDECL GSBool	   GSNetBaseHasData(GSNetSocket sock);
+GSDECL GSNetSocket GSNetBaseServer(int port);
+GSDECL GSNetSocket GSNetBaseClient(const char* hostname, int port, GSNetAddress* address);
+GSDECL void	   GSNetBaseClose(GSNetSocket sock);
+GSDECL int	   GSNetBaseRead(GSNetSocket sock, void* data, int size, GSNetAddress* address); /* always read 508 bytes! */
+GSDECL void	   GSNetBaseWrite(GSNetSocket sock, void* data, int size, GSNetAddress* address);
 
 /* net_packet.c */
-GSDECL void GSNetPacketRead(int fd, GSNetPacket* packet, GSNetAddress* address);
-GSDECL void GSNetPacketWrite(int fd, GSNetPacket* packet, GSNetAddress* address);
+GSDECL void GSNetPacketRead(GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address);
+GSDECL void GSNetPacketWrite(GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address);
 
 /* net_state.c */
-GSDECL void GSNetStateRead(GSNetState* state, int fd, GSNetPacket* packet, GSNetAddress* address);
-GSDECL void GSNetStateWrite(GSNetState* state, int fd, GSNetAddress* address);
+GSDECL void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address);
+GSDECL void GSNetStateWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address);
 
 #ifdef __cplusplus
 }

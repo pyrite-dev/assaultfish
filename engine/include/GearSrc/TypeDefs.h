@@ -49,8 +49,8 @@ typedef struct _GSNetPacketHeader GSNetPacketHeader;
 typedef struct _GSNetPacket	  GSNetPacket;
 typedef struct _GSNetAddress	  GSNetAddress;
 typedef struct _GSBinary	  GSBinary;
-typedef struct _GSNetState GSNetState;
-typedef struct _GSNetKV           GSNetKV;
+typedef struct _GSNetState	  GSNetState;
+typedef struct _GSNetKV		  GSNetKV;
 #ifdef _GEARSRC
 typedef struct _GSClient*      GSClient;
 typedef struct _GSServer*      GSServer;
@@ -65,6 +65,7 @@ typedef struct _GSSoundEngine* GSSoundEngine;
 typedef struct _GSSound*       GSSound;
 typedef struct _GSNetClient*   GSNetClient;
 typedef struct _GSNetServer*   GSNetServer;
+typedef struct _GSNetSocket*   GSNetSocket;
 
 typedef struct _GSModelFace	   GSModelFace;
 typedef struct _GSModelMaterial	   GSModelMaterial;
@@ -84,6 +85,7 @@ typedef void* GSSoundEngine;
 typedef void* GSSound;
 typedef void* GSNetClient;
 typedef void* GSNetServer;
+typedef void* GSNetSocket;
 #endif
 typedef float	 GSNumber;
 typedef GSNumber GSVector2[2];
@@ -147,10 +149,10 @@ struct _GSNetState {
 	unsigned int rxindex;
 	unsigned int rxtotal;
 
-	unsigned int txseq;
-	unsigned int txindex;
-	unsigned int txtotal;
-	unsigned int txstate;
+	unsigned int  txseq;
+	unsigned int  txindex;
+	unsigned int  txtotal;
+	unsigned int  txstate;
 	unsigned long txtick;
 
 	GSBinary* rx;
@@ -161,7 +163,7 @@ struct _GSNetState {
 
 struct _GSNetKV {
 	GSNetAddress key;
-	GSNetState value;
+	GSNetState   value;
 };
 
 #ifdef _GEARSRC
@@ -279,18 +281,23 @@ struct _GSSoundEngine {
 struct _GSNetClient {
 	GSEngine engine;
 
-	int fd;
+	GSNetSocket sock;
 
 	GSNetAddress address;
-	GSNetState state;
+	GSNetState   state;
 };
 
 struct _GSNetServer {
 	GSEngine engine;
 
-	int fd;
+	GSNetSocket sock;
 
 	GSNetKV* client;
+};
+
+struct _GSNetSocket {
+	int    fd;
+	GSBool client;
 };
 
 struct _GSClient {
