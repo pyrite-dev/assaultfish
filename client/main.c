@@ -75,10 +75,15 @@ static void render(GSEngine self){
 		for(j = -1; j <= 1; j++){
 			GSVector3 pos2;
 			double s = fabs(sin(rot[0] / 180 * GSMathPi));
+			int n = (i + 1) * 3 + (j + 1);
 
 			pos2[0] = i * s * 2;
 			pos2[1] = 0;
 			pos2[2] = j * s * 2;
+
+			col2[2] = n & 1;
+			col2[1] = (n & 2) ? 1 : 0;
+			col2[0] = (n & 4) ? 1 : 0;
 
 			GSGLPushMatrix(gl);
 			GSGLSetPosition(gl, pos2);
