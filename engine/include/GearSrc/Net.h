@@ -34,6 +34,10 @@ GSDECL void   GSNetBaseWrite(int fd, void* data, int size, GSNetAddress* address
 GSDECL void GSNetPacketRead(int fd, GSNetPacket* packet, GSNetAddress* address);
 GSDECL void GSNetPacketWrite(int fd, GSNetPacket* packet, GSNetAddress* address);
 
+/* net_state.c */
+GSDECL void GSNetStateRead(GSNetState* state, int fd, GSNetPacket* packet, GSNetAddress* address);
+GSDECL void GSNetStateWrite(GSNetState* state, int fd, GSNetAddress* address);
+
 #ifdef __cplusplus
 }
 #endif

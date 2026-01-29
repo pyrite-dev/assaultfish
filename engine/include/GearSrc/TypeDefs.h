@@ -49,6 +49,7 @@ typedef struct _GSNetPacketHeader GSNetPacketHeader;
 typedef struct _GSNetPacket	  GSNetPacket;
 typedef struct _GSNetAddress	  GSNetAddress;
 typedef struct _GSBinary	  GSBinary;
+typedef struct _GSNetState GSNetState;
 #ifdef _GEARSRC
 typedef struct _GSClient*      GSClient;
 typedef struct _GSServer*      GSServer;
@@ -136,6 +137,23 @@ struct _GSNetAddress {
 struct _GSBinary {
 	void* data;
 	int   size;
+};
+
+struct _GSNetState {
+	GSEngine engine;
+
+	unsigned int rxseq;
+	unsigned int rxindex;
+	unsigned int rxtotal;
+
+	unsigned int txseq;
+	unsigned int txindex;
+	unsigned int txtotal;
+	unsigned int txstate;
+	unsigned long txtick;
+
+	GSBinary* rx;
+	GSBinary* tx;
 };
 
 #ifdef _GEARSRC
@@ -255,18 +273,7 @@ struct _GSNetClient {
 
 	int fd;
 
-	unsigned int rxseq;
-	unsigned int rxindex;
-	unsigned int rxtotal;
-
-	unsigned int txseq;
-	unsigned int txindex;
-	unsigned int txtotal;
-	unsigned int txstate;
-	unsigned long txtick;
-
-	GSBinary* rx;
-	GSBinary* tx;
+	GSNetState state;
 };
 
 struct _GSNetServer {
