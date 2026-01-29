@@ -10,9 +10,11 @@ enum states {
 	WaitingAcknowledge
 };
 
-void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address) {
+void GSNetStateCheckRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address) {
 	if(packet->header.flag & GSNetPacketFlagUnsafe) {
 		GSBinary binary;
+
+		GSLog(state->engine, GSLogDebug, "%s: Received unsafe packet", state->name);
 
 		binary.size = 508 - sizeof(packet->header);
 		binary.data = malloc(binary.size);
@@ -73,28 +75,30 @@ void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GS
 	}
 }
 
-void GSNetStateWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address) {
-	if(arrlen(state->tx) > 0) {
-		int i;
-		for(i = 0; i < arrlen(state->tx); i++) {
-			if(state->tx[i].flag & GSNetPacketFlagUnsafe) {
-				GSNetPacket pkt;
+void GSNetStateCheckWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address) {
+	int i;
+	for(i = 0; i < arrlen(state->tx); i++) {
+		if(state->tx[i].flag & GSNetPacketFlagUnsafe) {
+			GSNetPacket pkt;
 
-				pkt.header.flag	 = GSNetPacketFlagUnsafe;
-				pkt.header.index = 0;
-				pkt.header.seq	 = 0;
-				pkt.size	 = state->tx[i].size;
+			pkt.header.flag	 = GSNetPacketFlagUnsafe;
+			pkt.header.index = 0;
+			pkt.header.seq	 = 0;
+			pkt.size	 = state->tx[i].size;
 
-				memcpy(pkt.data, state->tx[i].data, pkt.size);
+			memcpy(pkt.data, state->tx[i].data, pkt.size);
 
-				GSNetPacketWrite(sock, &pkt, address);
+			GSNetPacketWrite(sock, &pkt, address);
 
-				free(state->tx[i].data);
-				arrdel(state->tx, i);
-				i--;
-			}
+			free(state->tx[i].data);
+			arrdel(state->tx, i);
+			i--;
+
+			GSLog(state->engine, GSLogDebug, "%s: Sent unsafe packet", state->name);
 		}
+	}
 
+	if(arrlen(state->tx) > 0) {
 		if(state->txstate == Acknowledged) {
 			int	    n = state->tx[0].size;
 			GSNetPacket pkt;
@@ -158,4 +162,37 @@ void GSNetStateDeinit(GSNetState* state) {
 	arrfree(state->tx);
 
 	if(state->buffer.data != NULL) free(state->buffer.data);
+}
+
+GSBool GSNetStateRead(GSNetState* state, void** data, int* size) {
+	if(arrlen(state->tx) <= 0) return GSFalse;
+
+	*data = state->rx[0].data;
+	*size = state->rx[0].size;
+
+	arrdel(state->rx, 0);
+
+	return GSTrue;
+}
+
+void GSNetStateWrite(GSNetState* state, void* data, int size) {
+	GSBinary buffer;
+
+	buffer.flag = 0;
+	buffer.size = size;
+	buffer.data = malloc(buffer.size);
+	memcpy(buffer.data, data, buffer.size);
+
+	arrput(state->tx, buffer);
+}
+
+void GSNetStateWriteUnsafe(GSNetState* state, void* data, int size) {
+	GSBinary buffer;
+
+	buffer.flag = GSNetPacketFlagUnsafe;
+	buffer.size = size;
+	buffer.data = malloc(buffer.size);
+	memcpy(buffer.data, data, buffer.size);
+
+	arrput(state->tx, buffer);
 }

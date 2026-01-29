@@ -22,6 +22,8 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 	GSNetStateInit(&net->state, client->engine);
 	strcpy(net->state.name, "Client");
 
+	GSNetStateWriteUnsafe(&net->state, "Hello", 5);
+
 	return net;
 }
 
@@ -31,10 +33,10 @@ void GSNetClientStep(GSNetClient net) {
 	do {
 		while(GSNetBaseHasData(net->sock)) {
 			GSNetPacketRead(net->sock, &pkt, &net->address);
-			GSNetStateRead(&net->state, net->sock, &pkt, &net->address);
+			GSNetStateCheckRead(&net->state, net->sock, &pkt, &net->address);
 		}
 
-		GSNetStateWrite(&net->state, net->sock, &net->address);
+		GSNetStateCheckWrite(&net->state, net->sock, &net->address);
 	} while(GSNetBaseHasData(net->sock));
 }
 

@@ -43,11 +43,11 @@ void GSNetServerStep(GSNetServer net) {
 				i = hmgeti(net->client, addr);
 			}
 
-			GSNetStateRead(&net->client[i].value, net->sock, &pkt, &addr);
+			GSNetStateCheckRead(&net->client[i].value, net->sock, &pkt, &addr);
 		}
 
 		for(i = 0; i < hmlen(net->client); i++) {
-			GSNetStateWrite(&net->client[i].value, net->sock, &net->client[i].key);
+			GSNetStateCheckWrite(&net->client[i].value, net->sock, &net->client[i].key);
 		}
 	} while(GSNetBaseHasData(net->sock));
 }

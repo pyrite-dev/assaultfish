@@ -54,10 +54,13 @@ GSDECL void GSNetPacketRead(GSNetSocket sock, GSNetPacket* packet, GSNetAddress*
 GSDECL void GSNetPacketWrite(GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address);
 
 /* net_state.c */
-GSDECL void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address);
-GSDECL void GSNetStateWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address);
-GSDECL void GSNetStateInit(GSNetState* state, GSEngine engine);
-GSDECL void GSNetStateDeinit(GSNetState* state);
+GSDECL void   GSNetStateCheckRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address);
+GSDECL void   GSNetStateCheckWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address);
+GSDECL void   GSNetStateInit(GSNetState* state, GSEngine engine);
+GSDECL void   GSNetStateDeinit(GSNetState* state);
+GSDECL GSBool GSNetStateRead(GSNetState* state, void** data, int* size); /* remember to free what gets returned in data! */
+GSDECL void   GSNetStateWrite(GSNetState* state, void* data, int size);
+GSDECL void   GSNetStateWriteUnsafe(GSNetState* state, void* data, int size);
 
 #ifdef __cplusplus
 }
