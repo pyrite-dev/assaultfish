@@ -1,6 +1,9 @@
 #include <GearSrc/Net.h>
 
 #include <GearSrc/Log.h>
+#include <GearSrc/Endian.h>
+
+#include <stb_ds.h>
 
 GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 	GSNetClient net = malloc(sizeof(*net));
@@ -15,6 +18,11 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 
 		return NULL;
 	}
+
+	GSBinary b;
+	b.data = strdup("Hello");
+	b.size = 5;
+	arrput(net->tx, b);
 
 	return net;
 }
@@ -32,20 +40,65 @@ void GSNetClientStep(GSNetClient net) {
 		GSNetPacketRead(net->fd, &pkt, &addr);
 
 		if(pkt.header.flag & GSNetPacketFlagAcknowledge) {
-			if(net->txstate == WaitingAcknowledge && net->txindex == pkt.header.index && net->txseq == pkt.header.seq) {
-				GSLog(net->engine, GSLogDebug, "ACK received for %d:%d", net->txindex, net->txseq);
+			if(arrlen(net->tx) > 0 && net->txstate == WaitingAcknowledge && net->txindex == pkt.header.index && net->txseq == pkt.header.seq) {
+				GSLog(net->engine, GSLogDebug, "Received ACK packet %d:%d", net->txindex, net->txseq);
 
-				if(net->txseq == net->txtotal) net->txstate = Acknowledged;
+				net->txstate = Acknowledged;
+				net->txseq++;
+				if(net->txseq == (net->txtotal + 1)){
+					net->txseq = 0;
+					net->txindex++;
+
+					arrdel(net->tx, 0);
+				}
 			}
 		} else {
-			if(net->rxstate == Acknowledged && net->rxindex == pkt.header.index && net->rxseq == pkt.header.seq) {
+			if(net->rxindex == pkt.header.index && net->rxseq == pkt.header.seq) {
+				GSLog(net->engine, GSLogDebug, "Received packet %d:%d", net->rxindex, net->rxseq);
+
 				pkt.header.flag |= GSNetPacketFlagAcknowledge;
 				pkt.header.index = net->rxindex;
 				pkt.header.seq	 = net->rxseq;
 				pkt.size	 = 0;
 
+				if(net->rxseq == 0){
+					net->rxtotal = GSEndianSwapU32BE(*(GSU32*)pkt.data);
+				}
+
 				GSNetPacketWrite(net->fd, &pkt, &addr);
+
+				net->rxseq++;
+				if(net->rxseq == (net->rxtotal + 1)){
+					net->rxseq = 0;
+					net->rxindex++;
+				}
 			}
+		}
+	}
+
+	if(arrlen(net->tx) > 0){
+		if(net->txstate == Acknowledged){
+			int n = net->tx[0].size;
+
+			if(net->txseq == 0){
+				net->txtotal = 0;
+
+				while(n > 0){
+					n -= 508 - sizeof(pkt.header);
+					net->txtotal++;
+				}
+
+			}
+
+			net->txstate = WaitingAcknowledge;
+			if(net->engine->param->get_tick != NULL) net->txtick = net->engine->param->get_tick();
+
+			GSLog(net->engine, GSLogDebug, "Sent packet %d:%d", net->txindex, net->txseq);
+		}else if(net->engine->param->get_tick == NULL){
+		}else if((net->engine->param->get_tick() - net->txtick) >= 500){
+			GSLog(net->engine, GSLogDebug, "Lost pcaket %d:%d", net->txindex, net->txseq);
+
+			net->txstate = Acknowledged;
 		}
 	}
 }

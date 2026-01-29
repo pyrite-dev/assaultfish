@@ -158,8 +158,7 @@ void GSEngineLoop(GSEngine engine) {
 
 			tick += 1.0 / engine->tps;
 			if(tick >= 1) {
-				engine->tps_sampled += engine->tps;
-				engine->tps_sampled /= 2;
+				engine->tps_sampled = engine->tps;
 
 				tick = tick - 1;
 			}

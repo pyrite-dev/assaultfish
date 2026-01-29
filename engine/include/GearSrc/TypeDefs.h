@@ -258,12 +258,12 @@ struct _GSNetClient {
 	unsigned int rxseq;
 	unsigned int rxindex;
 	unsigned int rxtotal;
-	unsigned int rxstate;
 
 	unsigned int txseq;
 	unsigned int txindex;
 	unsigned int txtotal;
 	unsigned int txstate;
+	unsigned long txtick;
 
 	GSBinary* rx;
 	GSBinary* tx;
