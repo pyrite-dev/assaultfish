@@ -39,7 +39,10 @@ void GSNetClientStep(GSNetClient net) {
 }
 
 void GSNetClientClose(GSNetClient net) {
-	if(net->sock != NULL) GSNetBaseClose(net->sock);
+	if(net->sock != NULL){
+		GSNetStateDeinit(&net->state);
+		GSNetBaseClose(net->sock);
+	}
 
 	free(net);
 }
