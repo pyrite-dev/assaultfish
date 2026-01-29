@@ -91,6 +91,7 @@ typedef float	 GSNumber;
 typedef GSNumber GSVector2[2];
 typedef GSNumber GSVector3[3];
 typedef GSNumber GSVector4[4];
+typedef GSNumber GSMatrix3x3[9];
 typedef GSNumber GSMatrix4x4[16];
 
 typedef void (*GSGLSwapBufferCallback)(void);

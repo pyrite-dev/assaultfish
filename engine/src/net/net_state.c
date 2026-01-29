@@ -41,7 +41,7 @@ void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GS
 		}
 
 		/* this is to prevent netcode from blowing up when
-		 * ACK packet goes missing...
+		 * acknowledge packet goes missing...
 		 */
 		pkt.header.flag |= GSNetPacketFlagAcknowledge;
 		pkt.header.index = packet->header.index;
@@ -90,7 +90,7 @@ void GSNetStateWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address)
 
 			GSLog(state->engine, GSLogDebug, "%s: Sent packet %d:%d", state->name, state->txindex, state->txseq);
 		} else if(state->engine->param->get_tick == NULL) {
-		} else if((state->engine->param->get_tick() - state->txtick) >= 500) {
+		} else if((state->engine->param->get_tick() - state->txtick) >= GSNetAcknowledgeTimeout) {
 			GSLog(state->engine, GSLogDebug, "%s: Lost packet %d:%d", state->name, state->txindex, state->txseq);
 
 			state->txstate = Acknowledged;

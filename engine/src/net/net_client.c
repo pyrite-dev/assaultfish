@@ -22,14 +22,6 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 	strcpy(net->state.name, "Client");
 	net->state.engine = net->engine;
 
-	int i;
-	for(i = 0; i < 5; i++) {
-		GSBinary b;
-		b.data = malloc(512 * 5);
-		b.size = 512 * 5;
-		arrput(net->state.tx, b);
-	}
-
 	return net;
 }
 

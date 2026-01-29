@@ -9,6 +9,7 @@ extern "C" {
 #endif
 
 #define GSNetDefaultPort 23903
+#define GSNetAcknowledgeTimeout 500
 
 #define GSNetPacketFlagAcknowledge (1 << 0)
 
