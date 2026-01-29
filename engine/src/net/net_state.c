@@ -13,7 +13,7 @@ enum states {
 void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address) {
 	if(packet->header.flag & GSNetPacketFlagAcknowledge) {
 		if(arrlen(state->tx) > 0 && state->txstate == WaitingAcknowledge && state->txindex == packet->header.index && state->txseq == packet->header.seq) {
-			GSLog(state->engine, GSLogDebug, "Received Acknowledge packet %d:%d", state->txindex, state->txseq);
+			GSLog(state->engine, GSLogDebug, "%s: Received acknowledge packet %d:%d", state->name, state->txindex, state->txseq);
 
 			state->txstate = Acknowledged;
 			state->txseq++;
@@ -27,7 +27,7 @@ void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GS
 	} else {
 		GSNetPacket pkt;
 		if(state->rxindex == packet->header.index && state->rxseq == packet->header.seq) {
-			GSLog(state->engine, GSLogDebug, "Received packet %d:%d", state->rxindex, state->rxseq);
+			GSLog(state->engine, GSLogDebug, "%s: Received packet %d:%d", state->name, state->rxindex, state->rxseq);
 
 			if(state->rxseq == 0) {
 				state->rxtotal = GSEndianSwapU32BE(*(GSU32*)packet->data);
@@ -88,10 +88,10 @@ void GSNetStateWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address)
 			state->txstate = WaitingAcknowledge;
 			if(state->engine->param->get_tick != NULL) state->txtick = state->engine->param->get_tick();
 
-			GSLog(state->engine, GSLogDebug, "Sent packet %d:%d", state->txindex, state->txseq);
+			GSLog(state->engine, GSLogDebug, "%s: Sent packet %d:%d", state->name, state->txindex, state->txseq);
 		} else if(state->engine->param->get_tick == NULL) {
 		} else if((state->engine->param->get_tick() - state->txtick) >= 500) {
-			GSLog(state->engine, GSLogDebug, "Lost packet %d:%d", state->txindex, state->txseq);
+			GSLog(state->engine, GSLogDebug, "%s: Lost packet %d:%d", state->name, state->txindex, state->txseq);
 
 			state->txstate = Acknowledged;
 		}

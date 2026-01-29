@@ -144,6 +144,7 @@ struct _GSBinary {
 
 struct _GSNetState {
 	GSEngine engine;
+	char	 name[16];
 
 	unsigned int rxseq;
 	unsigned int rxindex;
