@@ -89,14 +89,17 @@ void GSNetBaseClose(int fd) {
 #endif
 }
 
-void GSNetBaseRead(int fd, void* data, int size, GSNetAddress* address) {
+int GSNetBaseRead(int fd, void* data, int size, GSNetAddress* address) {
 	struct sockaddr_in addr;
 	int		   len = sizeof(addr);
+	int		   n;
 
-	recvfrom(fd, data, size, 0, (struct sockaddr*)&addr, &len);
+	n = recvfrom(fd, data, size, 0, (struct sockaddr*)&addr, &len);
 
 	address->address = addr.sin_addr.s_addr;
 	address->port	 = addr.sin_port;
+
+	return n;
 }
 
 void GSNetBaseWrite(int fd, void* data, int size, GSNetAddress* address) {

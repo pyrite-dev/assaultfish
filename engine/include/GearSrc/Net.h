@@ -21,7 +21,7 @@ GSDECL GSBool GSNetBaseHasData(int fd);
 GSDECL int    GSNetBaseServer(int port);
 GSDECL int    GSNetBaseClient(const char* hostname, int port);
 GSDECL void   GSNetBaseClose(int fd);
-GSDECL void   GSNetBaseRead(int fd, void* data, int size, GSNetAddress* address); /* always read 508 bytes! */
+GSDECL int    GSNetBaseRead(int fd, void* data, int size, GSNetAddress* address); /* always read 508 bytes! */
 GSDECL void   GSNetBaseWrite(int fd, void* data, int size, GSNetAddress* address);
 
 /* net_packet.c */
