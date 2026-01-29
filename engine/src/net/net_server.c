@@ -26,12 +26,12 @@ void GSNetServerStep(GSNetServer net) {
 	GSNetPacket  pkt;
 	GSNetAddress addr;
 
-	do{
+	do {
 		while(GSNetBaseHasData(net->sock)) {
 			GSNetPacketRead(net->sock, &pkt, &addr);
 
 			i = hmgeti(net->client, addr);
-			if(i == -1){
+			if(i == -1) {
 				GSNetState v;
 
 				memset(&v, 0, sizeof(v));
@@ -48,7 +48,7 @@ void GSNetServerStep(GSNetServer net) {
 		for(i = 0; i < hmlen(net->client); i++) {
 			GSNetStateWrite(&net->client[i].value, net->sock, &net->client[i].key);
 		}
-	}while(GSNetBaseHasData(net->sock));
+	} while(GSNetBaseHasData(net->sock));
 }
 
 void GSNetServerClose(GSNetServer net) {
