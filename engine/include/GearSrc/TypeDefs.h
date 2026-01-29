@@ -162,6 +162,8 @@ struct _GSNetState {
 	GSBinary* rx;
 	GSBinary* tx;
 
+	GSBinary buffer;
+
 	void* opaque;
 };
 

@@ -30,6 +30,7 @@ void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GS
 				state->txseq = 0;
 				state->txindex++;
 
+				free(state->tx[0].data);
 				arrdel(state->tx, 0);
 			}
 		}
@@ -40,12 +41,21 @@ void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GS
 
 			if(state->rxseq == 0) {
 				state->rxtotal = GSEndianSwapU32BE(*(GSU32*)packet->data);
-			}
 
-			/* TODO: buffer what it got */
+				state->buffer.data = malloc(state->rxtotal * (508 - sizeof(packet->header)));
+				state->buffer.size = 0;
+			} else {
+				memcpy(((unsigned char*)state->buffer.data) + state->buffer.size, packet->data, packet->size);
+
+				state->buffer.size += packet->size;
+			}
 
 			state->rxseq++;
 			if(state->rxseq == (state->rxtotal + 1)) {
+				arrput(state->rx, state->buffer);
+
+				state->buffer.data = NULL;
+
 				state->rxseq = 0;
 				state->rxindex++;
 			}
@@ -79,6 +89,7 @@ void GSNetStateWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address)
 
 				GSNetPacketWrite(sock, &pkt, address);
 
+				free(state->tx[i].data);
 				arrdel(state->tx, i);
 				i--;
 			}
@@ -126,4 +137,25 @@ void GSNetStateWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address)
 			state->txstate = Acknowledged;
 		}
 	}
+}
+
+void GSNetStateInit(GSNetState* state, GSEngine engine) {
+	memset(state, 0, sizeof(*state));
+
+	state->engine = engine;
+}
+
+void GSNetStateDeinit(GSNetState* state) {
+	int i;
+	for(i = 0; i < arrlen(state->rx); i++) {
+		free(state->rx[i].data);
+	}
+	arrfree(state->rx);
+
+	for(i = 0; i < arrlen(state->rx); i++) {
+		free(state->tx[i].data);
+	}
+	arrfree(state->tx);
+
+	if(state->buffer.data != NULL) free(state->buffer.data);
 }

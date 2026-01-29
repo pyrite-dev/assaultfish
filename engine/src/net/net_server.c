@@ -35,7 +35,7 @@ void GSNetServerStep(GSNetServer net) {
 				GSNetState v;
 
 				memset(&v, 0, sizeof(v));
-				v.engine = net->engine;
+				GSNetStateInit(&v, net->engine);
 				strcpy(v.name, "Server");
 
 				hmput(net->client, addr, v);

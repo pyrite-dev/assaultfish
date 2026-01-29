@@ -56,6 +56,8 @@ GSDECL void GSNetPacketWrite(GSNetSocket sock, GSNetPacket* packet, GSNetAddress
 /* net_state.c */
 GSDECL void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address);
 GSDECL void GSNetStateWrite(GSNetState* state, GSNetSocket sock, GSNetAddress* address);
+GSDECL void GSNetStateInit(GSNetState* state, GSEngine engine);
+GSDECL void GSNetStateDeinit(GSNetState* state);
 
 #ifdef __cplusplus
 }

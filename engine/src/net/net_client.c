@@ -19,8 +19,8 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 		return NULL;
 	}
 
+	GSNetStateInit(&net->state, client->engine);
 	strcpy(net->state.name, "Client");
-	net->state.engine = net->engine;
 
 	return net;
 }
