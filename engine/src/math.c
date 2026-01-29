@@ -51,7 +51,7 @@ void GSMathAdd3(GSVector3 r, GSVector3 v0, GSVector3 v1) {
  *  | /
  * v1/
  */
-void GSMathNormal3x3(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2) {
+void GSMathNormalTriangle(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2) {
 	GSVector3 t0, t1;
 
 	/**
@@ -75,11 +75,11 @@ void GSMathNormal3x3(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2) {
  *  | |
  * v1-v2
  */
-void GSMathNormal3x4(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2, GSVector3 v3) {
+void GSMathNormalQuad(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2, GSVector3 v3) {
 	GSVector3 t0, t1;
 
-	GSMathNormal3x3(t0, v0, v1, v3);
-	GSMathNormal3x3(t1, v1, v2, v3);
+	GSMathNormalTriangle(t0, v0, v1, v3);
+	GSMathNormalTriangle(t1, v1, v2, v3);
 
 	GSMathAdd3(r, t0, t1);
 
@@ -90,28 +90,37 @@ GSNumber GSMathCot(GSNumber x) {
 	return (GSNumber)1 / tan(x);
 }
 
+void GSMathRowToColumn4x4(GSMatrix4x4 out, GSMatrix4x4 in) {
+	int y, x;
+	for(y = 0; y < 4; y++) {
+		for(x = 0; x < 4; x++) {
+			out[4 * x + y] = in[4 * y + x];
+		}
+	}
+}
+
 void GSMathInvert4x4(GSMatrix4x4 out, GSMatrix4x4 in) {
 	GSNumber inv[16], det;
 	int	 i;
 
-	inv[0]	= in[5] * in[10] * in[15] - in[5] * in[11] * in[14] - in[9] * in[6] * in[15] + in[9] * in[7] * in[14] + in[13] * in[6] * in[11] - in[13] * in[7] * in[10];
-	inv[4]	= -in[4] * in[10] * in[15] + in[4] * in[11] * in[14] + in[8] * in[6] * in[15] - in[8] * in[7] * in[14] - in[12] * in[6] * in[11] + in[12] * in[7] * in[10];
-	inv[8]	= in[4] * in[9] * in[15] - in[4] * in[11] * in[13] - in[8] * in[5] * in[15] + in[8] * in[7] * in[13] + in[12] * in[5] * in[11] - in[12] * in[7] * in[9];
-	inv[12] = -in[4] * in[9] * in[14] + in[4] * in[10] * in[13] + in[8] * in[5] * in[14] - in[8] * in[6] * in[13] - in[12] * in[5] * in[10] + in[12] * in[6] * in[9];
-	inv[1]	= -in[1] * in[10] * in[15] + in[1] * in[11] * in[14] + in[9] * in[2] * in[15] - in[9] * in[3] * in[14] - in[13] * in[2] * in[11] + in[13] * in[3] * in[10];
-	inv[5]	= in[0] * in[10] * in[15] - in[0] * in[11] * in[14] - in[8] * in[2] * in[15] + in[8] * in[3] * in[14] + in[12] * in[2] * in[11] - in[12] * in[3] * in[10];
-	inv[9]	= -in[0] * in[9] * in[15] + in[0] * in[11] * in[13] + in[8] * in[1] * in[15] - in[8] * in[3] * in[13] - in[12] * in[1] * in[11] + in[12] * in[3] * in[9];
-	inv[13] = in[0] * in[9] * in[14] - in[0] * in[10] * in[13] - in[8] * in[1] * in[14] + in[8] * in[2] * in[13] + in[12] * in[1] * in[10] - in[12] * in[2] * in[9];
-	inv[2]	= in[1] * in[6] * in[15] - in[1] * in[7] * in[14] - in[5] * in[2] * in[15] + in[5] * in[3] * in[14] + in[13] * in[2] * in[7] - in[13] * in[3] * in[6];
-	inv[6]	= -in[0] * in[6] * in[15] + in[0] * in[7] * in[14] + in[4] * in[2] * in[15] - in[4] * in[3] * in[14] - in[12] * in[2] * in[7] + in[12] * in[3] * in[6];
-	inv[10] = in[0] * in[5] * in[15] - in[0] * in[7] * in[13] - in[4] * in[1] * in[15] + in[4] * in[3] * in[13] + in[12] * in[1] * in[7] - in[12] * in[3] * in[5];
-	inv[14] = -in[0] * in[5] * in[14] + in[0] * in[6] * in[13] + in[4] * in[1] * in[14] - in[4] * in[2] * in[13] - in[12] * in[1] * in[6] + in[12] * in[2] * in[5];
-	inv[3]	= -in[1] * in[6] * in[11] + in[1] * in[7] * in[10] + in[5] * in[2] * in[11] - in[5] * in[3] * in[10] - in[9] * in[2] * in[7] + in[9] * in[3] * in[6];
-	inv[7]	= in[0] * in[6] * in[11] - in[0] * in[7] * in[10] - in[4] * in[2] * in[11] + in[4] * in[3] * in[10] + in[8] * in[2] * in[7] - in[8] * in[3] * in[6];
-	inv[11] = -in[0] * in[5] * in[11] + in[0] * in[7] * in[9] + in[4] * in[1] * in[11] - in[4] * in[3] * in[9] - in[8] * in[1] * in[7] + in[8] * in[3] * in[5];
-	inv[15] = in[0] * in[5] * in[10] - in[0] * in[6] * in[9] - in[4] * in[1] * in[10] + in[4] * in[2] * in[9] + in[8] * in[1] * in[6] - in[8] * in[2] * in[5];
+	inv[0]	= in[5] * in[10] * in[15] - in[5] * in[14] * in[11] - in[6] * in[9] * in[15] + in[6] * in[13] * in[11] + in[7] * in[9] * in[14] - in[7] * in[13] * in[10];
+	inv[1]	= -in[1] * in[10] * in[15] + in[1] * in[14] * in[11] + in[2] * in[9] * in[15] - in[2] * in[13] * in[11] - in[3] * in[9] * in[14] + in[3] * in[13] * in[10];
+	inv[2]	= in[1] * in[6] * in[15] - in[1] * in[14] * in[7] - in[2] * in[5] * in[15] + in[2] * in[13] * in[7] + in[3] * in[5] * in[14] - in[3] * in[13] * in[6];
+	inv[3]	= -in[1] * in[6] * in[11] + in[1] * in[10] * in[7] + in[2] * in[5] * in[11] - in[2] * in[9] * in[7] - in[3] * in[5] * in[10] + in[3] * in[9] * in[6];
+	inv[4]	= -in[4] * in[10] * in[15] + in[4] * in[14] * in[11] + in[6] * in[8] * in[15] - in[6] * in[12] * in[11] - in[7] * in[8] * in[14] + in[7] * in[12] * in[10];
+	inv[5]	= in[0] * in[10] * in[15] - in[0] * in[14] * in[11] - in[2] * in[8] * in[15] + in[2] * in[12] * in[11] + in[3] * in[8] * in[14] - in[3] * in[12] * in[10];
+	inv[6]	= -in[0] * in[6] * in[15] + in[0] * in[14] * in[7] + in[2] * in[4] * in[15] - in[2] * in[12] * in[7] - in[3] * in[4] * in[14] + in[3] * in[12] * in[6];
+	inv[7]	= in[0] * in[6] * in[11] - in[0] * in[10] * in[7] - in[2] * in[4] * in[11] + in[2] * in[8] * in[7] + in[3] * in[4] * in[10] - in[3] * in[8] * in[6];
+	inv[8]	= in[4] * in[9] * in[15] - in[4] * in[13] * in[11] - in[5] * in[8] * in[15] + in[5] * in[12] * in[11] + in[7] * in[8] * in[13] - in[7] * in[12] * in[9];
+	inv[9]	= -in[0] * in[9] * in[15] + in[0] * in[13] * in[11] + in[1] * in[8] * in[15] - in[1] * in[12] * in[11] - in[3] * in[8] * in[13] + in[3] * in[12] * in[9];
+	inv[10] = in[0] * in[5] * in[15] - in[0] * in[13] * in[7] - in[1] * in[4] * in[15] + in[1] * in[12] * in[7] + in[3] * in[4] * in[13] - in[3] * in[12] * in[5];
+	inv[11] = -in[0] * in[5] * in[11] + in[0] * in[9] * in[7] + in[1] * in[4] * in[11] - in[1] * in[8] * in[7] - in[3] * in[4] * in[9] + in[3] * in[8] * in[5];
+	inv[12] = -in[4] * in[9] * in[14] + in[4] * in[13] * in[10] + in[5] * in[8] * in[14] - in[5] * in[12] * in[10] - in[6] * in[8] * in[13] + in[6] * in[12] * in[9];
+	inv[13] = in[0] * in[9] * in[14] - in[0] * in[13] * in[10] - in[1] * in[8] * in[14] + in[1] * in[12] * in[10] + in[2] * in[8] * in[13] - in[2] * in[12] * in[9];
+	inv[14] = -in[0] * in[5] * in[14] + in[0] * in[13] * in[6] + in[1] * in[4] * in[14] - in[1] * in[12] * in[6] - in[2] * in[4] * in[13] + in[2] * in[12] * in[5];
+	inv[15] = in[0] * in[5] * in[10] - in[0] * in[9] * in[6] - in[1] * in[4] * in[10] + in[1] * in[8] * in[6] + in[2] * in[4] * in[9] - in[2] * in[8] * in[5];
 
-	det = in[0] * inv[0] + in[1] * inv[4] + in[2] * inv[8] + in[3] * inv[12];
+	det = in[0] * inv[0] + in[4] * inv[1] + in[8] * inv[2] + in[12] * inv[3];
 	if(det == 0)
 		return;
 

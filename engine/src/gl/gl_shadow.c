@@ -81,7 +81,7 @@ GSBool GSGLShadowBeforeMapping(GSGL gl) {
 }
 
 void GSGLShadowAfterMapping(GSGL gl) {
-	GSMatrix4x4 in, out;
+	GSMatrix4x4 in, in2, out, out2;
 	GLdouble    mat[16];
 	int	    i;
 
@@ -115,8 +115,10 @@ void GSGLShadowAfterMapping(GSGL gl) {
 	glLoadIdentity();
 
 	for(i = 0; i < 16; i++) in[i] = gl->shadow_old_modelview[i];
-	GSMathInvert4x4(out, in);
-	for(i = 0; i < 16; i++) mat[i] = out[i];
+	GSMathColumnToRow4x4(in2, in);
+	GSMathInvert4x4(out, in2);
+	GSMathRowToColumn4x4(out2, out);
+	for(i = 0; i < 16; i++) mat[i] = out2[i];
 
 	glTranslated(0.5, 0.5, 0.5);
 	glScaled(0.5, 0.5, 0.5);

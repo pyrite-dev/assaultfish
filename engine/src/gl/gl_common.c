@@ -189,7 +189,7 @@ void GSGLTetrakis(GSGL gl, GSNumber scale, GSVector4 col1, GSVector4 col2) {
 		for(j = 0; j < 3; j++) v[i][j] *= scale;
 	}
 
-	GSMathNormal3x3(n, v[0], v[1], v[2]);
+	GSMathNormalTriangle(n, v[0], v[1], v[2]);
 
 	GSGLPushMatrix(gl);
 	for(i = 0; i < 6; i++) {

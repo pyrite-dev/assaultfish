@@ -15,11 +15,14 @@ GSDECL GSNumber GSMathInner3(GSVector3 v0, GSVector3 v1);
 GSDECL void	GSMathNormalize3(GSVector3 vec);
 GSDECL void	GSMathSubtract3(GSVector3 r, GSVector3 v0, GSVector3 v1);
 GSDECL void	GSMathAdd3(GSVector3 r, GSVector3 v0, GSVector3 v1);
-GSDECL void	GSMathNormal3x3(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2);
-GSDECL void	GSMathNormal3x4(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2, GSVector3 v3);
+GSDECL void	GSMathNormalTriangle(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2);
+GSDECL void	GSMathNormalQuad(GSVector3 r, GSVector3 v0, GSVector3 v1, GSVector3 v2, GSVector3 v3);
 GSDECL void	GSMathInvert4x4(GSMatrix4x4 out, GSMatrix4x4 in);
+GSDECL void	GSMathRowToColumn4x4(GSMatrix4x4 out, GSMatrix4x4 in);
 GSDECL GSNumber GSMathCot(GSNumber x);
 GSDECL GSNumber GSMathClosestPOT(GSNumber x);
+
+#define GSMathColumnToRow4x4 GSMathRowToColumn4x4
 
 #ifdef __cplusplus
 }
