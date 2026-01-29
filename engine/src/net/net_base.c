@@ -63,7 +63,7 @@ int GSNetBaseServer(int port) {
 	return fd;
 }
 
-int GSNetBaseClient(const char* hostname, int port) {
+int GSNetBaseClient(const char* hostname, int port, GSNetAddress* address) {
 	struct sockaddr_in addr;
 	int		   fd;
 
@@ -76,6 +76,11 @@ int GSNetBaseClient(const char* hostname, int port) {
 		if(host == NULL) return -1;
 
 		addr.sin_addr.s_addr = *(GSU32*)host->h_addr_list[0];
+	}
+
+	if(address != NULL){
+		address->address = addr.sin_addr.s_addr;
+		address->port	 = addr.sin_port;
 	}
 
 	if((fd = new_socket()) < 0) return -1;

@@ -50,6 +50,7 @@ typedef struct _GSNetPacket	  GSNetPacket;
 typedef struct _GSNetAddress	  GSNetAddress;
 typedef struct _GSBinary	  GSBinary;
 typedef struct _GSNetState GSNetState;
+typedef struct _GSNetKV           GSNetKV;
 #ifdef _GEARSRC
 typedef struct _GSClient*      GSClient;
 typedef struct _GSServer*      GSServer;
@@ -154,6 +155,13 @@ struct _GSNetState {
 
 	GSBinary* rx;
 	GSBinary* tx;
+
+	void* opaque;
+};
+
+struct _GSNetKV {
+	GSNetAddress key;
+	GSNetState value;
 };
 
 #ifdef _GEARSRC
@@ -273,6 +281,7 @@ struct _GSNetClient {
 
 	int fd;
 
+	GSNetAddress address;
 	GSNetState state;
 };
 
@@ -280,6 +289,8 @@ struct _GSNetServer {
 	GSEngine engine;
 
 	int fd;
+
+	GSNetKV* client;
 };
 
 struct _GSClient {

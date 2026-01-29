@@ -51,7 +51,6 @@ void GSNetStateRead(GSNetState* state, int fd, GSNetPacket* packet, GSNetAddress
 }
 
 void GSNetStateWrite(GSNetState* state, int fd, GSNetAddress* address){
-
 	if(arrlen(state->tx) > 0){
 		if(state->txstate == Acknowledged){
 			int n = state->tx[0].size;
@@ -69,12 +68,18 @@ void GSNetStateWrite(GSNetState* state, int fd, GSNetAddress* address){
 
 				t = GSEndianSwapU32BE(state->txtotal);
 
-				pkt.header.flag = 0;
-				pkt.header.index = state->txindex;
-				pkt.header.seq = state->txseq;
 				memcpy(pkt.data, &t, 4);
 				pkt.size = 4;
+			}else{
+				int m = 508 - sizeof(pkt.header);
+				int n = m * (state->txseq - 1);
+
+				pkt.size = (n > m) ? m : n;
+				memcpy(pkt.data, ((unsigned char*)state->tx[0].data) + n, pkt.size);
 			}
+			pkt.header.flag = 0;
+			pkt.header.index = state->txindex;
+			pkt.header.seq = state->txseq;
 
 			GSNetPacketWrite(fd, &pkt, address);
 

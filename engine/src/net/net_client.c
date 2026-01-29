@@ -12,7 +12,7 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 
 	net->engine = client->engine;
 
-	if((net->fd = GSNetBaseClient(hostname, port)) < 0) {
+	if((net->fd = GSNetBaseClient(hostname, port, &net->address)) < 0) {
 		GSLog(client->engine, GSLogError, "Failed to initialize socket");
 		GSNetClientClose(net);
 
@@ -31,14 +31,13 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 
 void GSNetClientStep(GSNetClient net) {
 	GSNetPacket pkt;
-	GSNetAddress addr;
 
 	while(GSNetBaseHasData(net->fd)){
-		GSNetPacketRead(net->fd, &pkt, &addr);
-		GSNetStateRead(&net->state, net->fd, &pkt, &addr);
+		GSNetPacketRead(net->fd, &pkt, &net->address);
+		GSNetStateRead(&net->state, net->fd, &pkt, &net->address);
 	}
 
-	GSNetStateWrite(&net->state, net->fd, &addr);
+	GSNetStateWrite(&net->state, net->fd, &net->address);
 }
 
 void GSNetClientClose(GSNetClient net) {
