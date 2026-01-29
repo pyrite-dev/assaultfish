@@ -53,7 +53,15 @@ void GSNetServerStep(GSNetServer net) {
 }
 
 void GSNetServerClose(GSNetServer net) {
-	if(net->sock >= 0) GSNetBaseClose(net->sock);
+	if(net->sock >= 0) {
+		int i;
+		for(i = 0; i < hmlen(net->client); i++) {
+			GSNetStateDeinit(&net->client[i].value);
+		}
+		hmfree(net->client);
+
+		GSNetBaseClose(net->sock);
+	}
 
 	free(net);
 }
