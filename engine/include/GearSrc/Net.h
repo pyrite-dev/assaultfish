@@ -10,13 +10,17 @@ extern "C" {
 
 #define GSNetDefaultPort 23903
 
+#define GSNetPacketFlagAcknowledge (1 << 0)
+
 /* net_client.c */
-GSDECL GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port);
-GSDECL void	   GSNetClientClose(GSNetClient client);
+GSDECL GSNetClient GSNetClientOpen(GSClient net, const char* hostname, int port);
+GSDECL void	   GSNetClientStep(GSNetClient net);
+GSDECL void	   GSNetClientClose(GSNetClient net);
 
 /* net_server.c */
-GSDECL GSNetServer GSNetServerOpen(GSServer server, int port);
-GSDECL void	   GSNetServerClose(GSNetServer server);
+GSDECL GSNetServer GSNetServerOpen(GSServer net, int port);
+GSDECL void	   GSNetServerStep(GSNetServer net);
+GSDECL void	   GSNetServerClose(GSNetServer net);
 
 /* net_base.c */
 GSDECL GSBool GSNetBaseHasData(int fd);

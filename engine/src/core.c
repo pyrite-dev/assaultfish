@@ -83,6 +83,8 @@ GSEngine GSEngineCreate(GSEngineParam* param) {
 	if(param->client) engine->shutdown++;
 	if(param->server) engine->shutdown++;
 
+	engine->client->net = GSNetClientOpen(engine->client, "localhost", GSNetDefaultPort);
+
 	return engine;
 }
 

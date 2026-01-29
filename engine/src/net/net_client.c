@@ -19,8 +19,39 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 	return net;
 }
 
-void GSNetClientClose(GSNetClient client) {
-	if(client->fd >= 0) GSNetBaseClose(client->fd);
+enum states {
+	Acknowledged = 0,
+	WaitingAcknowledge
+};
 
-	free(client);
+void GSNetClientStep(GSNetClient net) {
+	GSNetPacket  pkt;
+	GSNetAddress addr;
+
+	while(GSNetBaseHasData(net->fd)) {
+		GSNetPacketRead(net->fd, &pkt, &addr);
+
+		if(pkt.header.flag & GSNetPacketFlagAcknowledge) {
+			if(net->txstate == WaitingAcknowledge && net->txindex == pkt.header.index && net->txseq == pkt.header.seq) {
+				GSLog(net->engine, GSLogDebug, "ACK received for %d:%d", net->txindex, net->txseq);
+
+				if(net->txseq == net->txtotal) net->txstate = Acknowledged;
+			}
+		} else {
+			if(net->rxstate == Acknowledged && net->rxindex == pkt.header.index && net->rxseq == pkt.header.seq) {
+				pkt.header.flag |= GSNetPacketFlagAcknowledge;
+				pkt.header.index = net->rxindex;
+				pkt.header.seq	 = net->rxseq;
+				pkt.size	 = 0;
+
+				GSNetPacketWrite(net->fd, &pkt, &addr);
+			}
+		}
+	}
+}
+
+void GSNetClientClose(GSNetClient net) {
+	if(net->fd >= 0) GSNetBaseClose(net->fd);
+
+	free(net);
 }

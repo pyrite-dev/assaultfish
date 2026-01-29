@@ -25,13 +25,17 @@ static int new_socket(void) {
 }
 
 GSBool GSNetBaseHasData(int fd) {
-	fd_set fds;
+	fd_set	       fds;
+	struct timeval tv;
+
+	tv.tv_sec  = 0;
+	tv.tv_usec = 0;
 
 	FD_ZERO(&fds);
 
 	FD_SET(fd, &fds);
 
-	select(FD_SETSIZE, &fds, NULL, NULL, NULL);
+	select(FD_SETSIZE, &fds, NULL, NULL, &tv);
 
 	if(FD_ISSET(fd, &fds)) return GSTrue;
 

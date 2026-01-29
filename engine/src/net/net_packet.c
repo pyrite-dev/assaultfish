@@ -10,16 +10,16 @@ void GSNetPacketRead(int fd, GSNetPacket* packet, GSNetAddress* address) {
 	memcpy(&packet->header, buf, sizeof(packet->header));
 	memcpy(packet->data, buf + sizeof(packet->header), packet->size);
 
-	packet->header.index	= GSEndianSwapU32BE(packet->header.index);
-	packet->header.sequence = GSEndianSwapU32BE(packet->header.sequence);
+	packet->header.index = GSEndianSwapU32BE(packet->header.index);
+	packet->header.seq   = GSEndianSwapU32BE(packet->header.seq);
 }
 
 void GSNetPacketWrite(int fd, GSNetPacket* packet, GSNetAddress* address) {
 	GSNetPacketHeader header = packet->header;
 	unsigned char	  buf[508];
 
-	header.index	= GSEndianSwapU32BE(header.index);
-	header.sequence = GSEndianSwapU32BE(header.sequence);
+	header.index = GSEndianSwapU32BE(header.index);
+	header.seq   = GSEndianSwapU32BE(header.seq);
 
 	memcpy(buf, &header, sizeof(header));
 	memcpy(buf + sizeof(header), packet->data, packet->size);

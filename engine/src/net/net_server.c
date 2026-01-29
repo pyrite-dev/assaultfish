@@ -19,8 +19,11 @@ GSNetServer GSNetServerOpen(GSServer server, int port) {
 	return net;
 }
 
-void GSNetServerClose(GSNetServer server) {
-	if(server->fd >= 0) GSNetBaseClose(server->fd);
+void GSNetServerStep(GSNetServer net) {
+}
 
-	free(server);
+void GSNetServerClose(GSNetServer net) {
+	if(net->fd >= 0) GSNetBaseClose(net->fd);
+
+	free(net);
 }

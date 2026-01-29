@@ -48,6 +48,7 @@ typedef struct _GSBox		  GSBox;
 typedef struct _GSNetPacketHeader GSNetPacketHeader;
 typedef struct _GSNetPacket	  GSNetPacket;
 typedef struct _GSNetAddress	  GSNetAddress;
+typedef struct _GSBinary	  GSBinary;
 #ifdef _GEARSRC
 typedef struct _GSClient*      GSClient;
 typedef struct _GSServer*      GSServer;
@@ -116,7 +117,7 @@ struct _GSResourceKV {
 struct _GSNetPacketHeader {
 	GSU8  flag;
 	GSU32 index;
-	GSU32 sequence;
+	GSU32 seq;
 };
 #pragma pack()
 
@@ -130,6 +131,11 @@ struct _GSNetPacket {
 struct _GSNetAddress {
 	GSU32 address;
 	GSU16 port;
+};
+
+struct _GSBinary {
+	void* data;
+	int   size;
 };
 
 #ifdef _GEARSRC
@@ -248,6 +254,19 @@ struct _GSNetClient {
 	GSEngine engine;
 
 	int fd;
+
+	unsigned int rxseq;
+	unsigned int rxindex;
+	unsigned int rxtotal;
+	unsigned int rxstate;
+
+	unsigned int txseq;
+	unsigned int txindex;
+	unsigned int txtotal;
+	unsigned int txstate;
+
+	GSBinary* rx;
+	GSBinary* tx;
 };
 
 struct _GSNetServer {

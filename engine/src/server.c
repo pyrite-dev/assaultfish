@@ -31,4 +31,5 @@ void GSServerDestroy(GSServer server) {
 }
 
 void GSServerStep(GSServer server) {
+	GSNetServerStep(server->net);
 }

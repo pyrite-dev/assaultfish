@@ -7,6 +7,7 @@
 #include <GearSrc/Model.h>
 #include <GearSrc/Version.h>
 #include <GearSrc/SoundEngine.h>
+#include <GearSrc/Net.h>
 
 #include <stb_ds.h>
 
@@ -117,6 +118,8 @@ void GSClientStep(GSClient client) {
 	GSVector4 half	 = {0, 0, 0, 0.5};
 	GSVector2 sq[4];
 	int	  i, j, k, c, t;
+
+	if(client->net != NULL) GSNetClientStep(client->net);
 
 	GSGLClear(client->gl);
 	GSGLCameraSetup(client->gl);
