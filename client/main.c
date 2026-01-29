@@ -116,6 +116,7 @@ int main(int argc, char** argv){
 	param.gl_swapbuffer = gl_swapbuffer;
 	param.render = render;
 	param.after_render = after_render;
+	param.server = 1;
 
 	GSInit();
 
@@ -131,7 +132,7 @@ int main(int argc, char** argv){
 
 		GSClientSetSkybox(GSEngineGetClient(engine), GSTrue);
 		
-		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/2nd_pm.xm")) != NULL){
+		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/desert2.mod")) != NULL){
 			GSSoundSetLoop(sound, 1);
 			GSSoundStart(sound);
 		}

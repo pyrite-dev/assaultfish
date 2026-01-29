@@ -45,6 +45,7 @@ typedef struct _GSVersion     GSVersion;
 typedef struct _GSEngineParam GSEngineParam;
 typedef struct _GSResourceKV  GSResourceKV;
 typedef struct _GSBox	      GSBox;
+typedef struct _GSNetPacket GSNetPacket;
 #ifdef _GEARSRC
 typedef struct _GSClient*      GSClient;
 typedef struct _GSServer*      GSServer;
@@ -104,6 +105,14 @@ struct _GSResourceKV {
 	char*	   key;
 	GSResource value;
 };
+
+#pragma pack(1)
+struct _GSNetPacket {
+	GSU8 flag;
+	GSU32 index;
+	GSU32 sequence;
+};
+#pragma pack()
 
 #ifdef _GEARSRC
 #include <GearSrc/GL/GL.h>
