@@ -99,6 +99,27 @@ void GSMathRowToColumn4x4(GSMatrix4x4 out, GSMatrix4x4 in) {
 	}
 }
 
+void GSMathRowToColumn3x3(GSMatrix3x3 out, GSMatrix3x3 in) {
+	int y, x;
+	for(y = 0; y < 3; y++) {
+		for(x = 0; x < 3; x++) {
+			out[3 * x + y] = in[3 * y + x];
+		}
+	}
+}
+
+void GSMath3x3To4x4(GSMatrix4x4 out, GSMatrix3x3 in) {
+	int y, x, i;
+	for(i = 0; i < 16; i++) out[i] = 0;
+	for(y = 0; y < 3; y++) {
+		for(x = 0; x < 3; x++) {
+			out[4 * y + x] = in[3 * y + x];
+		}
+	}
+
+	out[15] = 1;
+}
+
 void GSMathInvert4x4(GSMatrix4x4 out, GSMatrix4x4 in) {
 	GSNumber inv[16], det;
 	int	 i;

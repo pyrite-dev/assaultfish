@@ -1,5 +1,7 @@
 #include <GearSrc/GL.h>
 
+#include <GearSrc/Math.h>
+
 GSGL GSGLCreate(GSClient client) {
 	GLfloat lightamb[] = {0.5, 0.5, 0.5, 1.0};
 	GLfloat lightcol[] = {1.0, 1.0, 1.0, 1.0};
@@ -123,6 +125,17 @@ void GSGLSetRotation(GSGL gl, GSVector3 rot) {
 	glRotatef(rot[0], 1, 0, 0);
 	glRotatef(rot[1], 0, 1, 0);
 	glRotatef(rot[2], 0, 0, 1);
+}
+
+void GSGLSetRotation3x3(GSGL gl, GSMatrix3x3 rot) {
+	GSMatrix4x4 out, out2;
+	GLdouble    mat[16];
+	int	    i;
+
+	GSMath3x3To4x4(out, rot);
+	GSMathRowToColumn4x4(out2, out);
+	for(i = 0; i < 16; i++) mat[i] = out2[i];
+	glMultMatrixd(mat);
 }
 
 void GSGLPushMatrix(GSGL gl) {

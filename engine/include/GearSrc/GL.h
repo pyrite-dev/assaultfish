@@ -56,6 +56,7 @@ GSDECL void   GSGLBegin2D(GSGL gl);
 GSDECL void   GSGLEnd2D(GSGL gl);
 GSDECL void   GSGLSetPosition(GSGL gl, GSVector3 pos);
 GSDECL void   GSGLSetRotation(GSGL gl, GSVector3 rot);
+GSDECL void   GSGLSetRotation3x3(GSGL gl, GSMatrix3x3 rot);
 GSDECL void   GSGLPushMatrix(GSGL gl);
 GSDECL void   GSGLPopMatrix(GSGL gl);
 GSDECL GLuint GSGLBeginList(GSGL gl);
