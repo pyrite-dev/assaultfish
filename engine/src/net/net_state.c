@@ -13,7 +13,7 @@ enum states {
 void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GSNetAddress* address) {
 	if(packet->header.flag & GSNetPacketFlagAcknowledge) {
 		if(arrlen(state->tx) > 0 && state->txstate == WaitingAcknowledge && state->txindex == packet->header.index && state->txseq == packet->header.seq) {
-			GSLog(state->engine, GSLogDebug, "Received ACK packet %d:%d", state->txindex, state->txseq);
+			GSLog(state->engine, GSLogDebug, "Received Acknowledge packet %d:%d", state->txindex, state->txseq);
 
 			state->txstate = Acknowledged;
 			state->txseq++;
@@ -25,21 +25,13 @@ void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GS
 			}
 		}
 	} else {
+		GSNetPacket pkt;
 		if(state->rxindex == packet->header.index && state->rxseq == packet->header.seq) {
-			GSNetPacket pkt;
-
 			GSLog(state->engine, GSLogDebug, "Received packet %d:%d", state->rxindex, state->rxseq);
 
-			pkt.header.flag |= GSNetPacketFlagAcknowledge;
-			pkt.header.index = state->rxindex;
-			pkt.header.seq	 = state->rxseq;
-			pkt.size	 = 0;
-
 			if(state->rxseq == 0) {
-				state->rxtotal = GSEndianSwapU32BE(*(GSU32*)pkt.data);
+				state->rxtotal = GSEndianSwapU32BE(*(GSU32*)packet->data);
 			}
-
-			GSNetPacketWrite(sock, &pkt, address);
 
 			state->rxseq++;
 			if(state->rxseq == (state->rxtotal + 1)) {
@@ -47,6 +39,16 @@ void GSNetStateRead(GSNetState* state, GSNetSocket sock, GSNetPacket* packet, GS
 				state->rxindex++;
 			}
 		}
+
+		/* this is to prevent netcode from blowing up when
+		 * ACK packet goes missing...
+		 */
+		pkt.header.flag |= GSNetPacketFlagAcknowledge;
+		pkt.header.index = packet->header.index;
+		pkt.header.seq	 = packet->header.seq;
+		pkt.size	 = 0;
+
+		GSNetPacketWrite(sock, &pkt, address);
 	}
 }
 

@@ -120,6 +120,7 @@ int GSNetBaseRead(GSNetSocket sock, void* data, int size, GSNetAddress* address)
 
 		n = recvfrom(sock->fd, data, size, 0, (struct sockaddr*)&addr, &len);
 
+		memset(address, 0, sizeof(*address));
 		address->address = addr.sin_addr.s_addr;
 		address->port	 = addr.sin_port;
 	}

@@ -21,10 +21,13 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 
 	net->state.engine = net->engine;
 
-	GSBinary b;
-	b.data = strdup("Hello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello worldHello world");
-	b.size = strlen(b.data);
-	arrput(net->state.tx, b);
+	int i;
+	for(i = 0; i < 5; i++){
+		GSBinary b;
+		b.data = malloc(512 * 5);
+		b.size = 512 * 5;
+		arrput(net->state.tx, b);
+	}
 
 	return net;
 }
@@ -32,12 +35,14 @@ GSNetClient GSNetClientOpen(GSClient client, const char* hostname, int port) {
 void GSNetClientStep(GSNetClient net) {
 	GSNetPacket pkt;
 
-	while(GSNetBaseHasData(net->sock)) {
-		GSNetPacketRead(net->sock, &pkt, &net->address);
-		GSNetStateRead(&net->state, net->sock, &pkt, &net->address);
-	}
+	do{
+		while(GSNetBaseHasData(net->sock)) {
+			GSNetPacketRead(net->sock, &pkt, &net->address);
+			GSNetStateRead(&net->state, net->sock, &pkt, &net->address);
+		}
 
-	GSNetStateWrite(&net->state, net->sock, &net->address);
+		GSNetStateWrite(&net->state, net->sock, &net->address);
+	}while(GSNetBaseHasData(net->sock));
 }
 
 void GSNetClientClose(GSNetClient net) {

@@ -26,24 +26,29 @@ void GSNetServerStep(GSNetServer net) {
 	GSNetPacket  pkt;
 	GSNetAddress addr;
 
-	while(GSNetBaseHasData(net->sock)) {
-		GSNetState v;
+	do{
+		while(GSNetBaseHasData(net->sock)) {
+			GSNetPacketRead(net->sock, &pkt, &addr);
 
-		memset(&v, 0, sizeof(v));
-		v.engine = net->engine;
+			i = hmgeti(net->client, addr);
+			if(i == -1){
+				GSNetState v;
 
-		GSNetPacketRead(net->sock, &pkt, &addr);
+				memset(&v, 0, sizeof(v));
+				v.engine = net->engine;
 
-		i = hmgeti(net->client, addr);
-		if(i != -1) v = net->client[i].value;
+				hmput(net->client, addr, v);
 
-		GSNetStateRead(&v, net->sock, &pkt, &addr);
-		hmput(net->client, addr, v);
-	}
+				i = hmgeti(net->client, addr);
+			}
 
-	for(i = 0; i < hmlen(net->client); i++) {
-		GSNetStateWrite(&net->client[i].value, net->sock, &net->client[i].key);
-	}
+			GSNetStateRead(&net->client[i].value, net->sock, &pkt, &addr);
+		}
+
+		for(i = 0; i < hmlen(net->client); i++) {
+			GSNetStateWrite(&net->client[i].value, net->sock, &net->client[i].key);
+		}
+	}while(GSNetBaseHasData(net->sock));
 }
 
 void GSNetServerClose(GSNetServer net) {
