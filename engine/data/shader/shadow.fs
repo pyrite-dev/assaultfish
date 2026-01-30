@@ -73,4 +73,5 @@ void main(void){
 	}
 
 	gl_FragColor = ambient * shadow_coef * c + (1.0 - ambient) * c;
+	gl_FragColor.a = vColor.a;
 }

@@ -23,6 +23,7 @@ GSDECL void	GSMathRowToColumn3x3(GSMatrix3x3 out, GSMatrix3x3 in);
 GSDECL void	GSMath3x3To4x4(GSMatrix4x4 out, GSMatrix3x3 in);
 GSDECL GSNumber GSMathCot(GSNumber x);
 GSDECL GSNumber GSMathClosestPOT(GSNumber x);
+GSDECL GSNumber GSMathLength3(GSVector3 vec);
 
 #define GSMathColumnToRow4x4 GSMathRowToColumn4x4
 #define GSMathColumnToRow3x3 GSMathRowToColumn3x3

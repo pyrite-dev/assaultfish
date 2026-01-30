@@ -260,6 +260,10 @@ struct _GSSound {
 	GSSoundResetCallback reset;
 	GSSoundReadCallback  read;
 	GSSoundCloseCallback close;
+
+	GSVector3 position;
+	GSBool	  is_3d;
+	GSNumber  volume;
 };
 
 struct _GSSoundDriver {
@@ -324,7 +328,7 @@ struct _GSClient {
 	int    glyph_bold_height;
 
 	GSVector3 look_at;
-	GSVector3 camera;
+	GSVector3 position;
 	GSVector4 light0;
 	GSSkyBox  skybox;
 	GSBool	  skybox_enabled;

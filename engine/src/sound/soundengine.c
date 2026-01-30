@@ -3,6 +3,7 @@
 #include <GearSrc/SoundDriver.h>
 #include <GearSrc/Log.h>
 #include <GearSrc/Sound.h>
+#include <GearSrc/Math.h>
 
 #include <miniaudio.h>
 #include <stb_ds.h>
@@ -37,7 +38,29 @@ static void read_callback(void* opaque, GSI16* out, int frame) {
 		memset(result, 0, sizeof(*result) * f * sengine->sound[i]->from_channel);
 		s = sengine->sound[i]->read(sengine->sound[i], result, f);
 		if(s > 0) {
-			int j;
+			int	 j;
+			GSNumber la = 1, ra = 1;
+
+			if(sengine->sound[i]->is_3d) {
+				GSNumber  angle;
+				GSNumber  v;
+				GSNumber  d;
+				GSVector3 r;
+				GSNumber  lf, rf;
+
+				GSMathSubtract3(r, sengine->sound[i]->position, sengine->engine->client->position);
+
+				angle = atan2(r[2], r[0]);
+				v     = cos(angle);
+
+				lf = 1.0 - v;
+				rf = 1.0 + v;
+
+				d = GSMathLength3(r) / 4;
+
+				la = 1.0 / (1.0 + lf + d * d);
+				ra = 1.0 / (1.0 + rf + d * d);
+			}
 
 			if(sengine->sound[i]->from_samplerate > 0) {
 				ma_uint64 fin  = f;
@@ -62,7 +85,10 @@ static void read_callback(void* opaque, GSI16* out, int frame) {
 				ma_channel_converter_process_pcm_frames(&sengine->sound[i]->converter, result3, result2, frame);
 			}
 
-			for(j = 0; j < s * 2; j++) buffer[j] += (GSNumber)result3[j] / 32767;
+			for(j = 0; j < s * 2; j += 2) {
+				buffer[j + 0] += (GSNumber)result3[j + 0] / 32767 * la * sengine->sound[i]->volume;
+				buffer[j + 1] += (GSNumber)result3[j + 1] / 32767 * ra * sengine->sound[i]->volume;
+			}
 
 			if(result3 != result2) free(result3);
 			if(result2 != result) free(result2);

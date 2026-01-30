@@ -15,13 +15,19 @@ GSNumber GSMathInner3(GSVector3 v0, GSVector3 v1) {
 	return r;
 }
 
-void GSMathNormalize3(GSVector3 vec) {
+GSNumber GSMathLength3(GSVector3 vec) {
 	GSNumber l = 0;
 	int	 i;
 
 	for(i = 0; i < 3; i++) l += vec[i] * vec[i];
 
 	l = sqrt(l);
+
+	return l;
+}
+
+void GSMathNormalize3(GSVector3 vec) {
+	GSNumber l = GSMathLength3(vec);
 
 	if(l > 0) {
 		l = (GSNumber)1 / l;

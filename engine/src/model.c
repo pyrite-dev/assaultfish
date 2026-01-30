@@ -48,8 +48,8 @@ static void parse_obj(GSModel model, char* txt) {
 					if(dm > v1) dm = v1;
 					if(um < v1) um = v1;
 
-					if(bm > v2) bm = v2;
-					if(fm < v2) fm = v2;
+					if(fm > v2) fm = v2;
+					if(bm < v2) bm = v2;
 
 					arrput(model->vertex, v0);
 					arrput(model->vertex, v1);
@@ -71,7 +71,7 @@ static void parse_obj(GSModel model, char* txt) {
 					float	    sc = 0;
 					float	    lr = fabs(lm - rm);
 					float	    ud = fabs(um - dm);
-					float	    bf = fabs(bm - fm);
+					float	    bf = fabs(fm - bm);
 
 					if(sc < lr) sc = lr;
 					if(sc < ud) sc = ud;
@@ -137,7 +137,7 @@ static void parse_obj(GSModel model, char* txt) {
 							if(arrlen(model->vertex) > varr[i] * 3) {
 								face.vertex[i][0] = (model->vertex[varr[i] * 3 + 0] - lm - lr / 2) / sc;
 								face.vertex[i][1] = (model->vertex[varr[i] * 3 + 1] - dm - ud / 2) / sc;
-								face.vertex[i][2] = -(model->vertex[varr[i] * 3 + 2] - bm - bf / 2) / sc;
+								face.vertex[i][2] = -(model->vertex[varr[i] * 3 + 2] - fm - bf / 2) / sc;
 							}
 
 							if(arrlen(model->texcoord) > tarr[i] * 2) {

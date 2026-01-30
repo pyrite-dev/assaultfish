@@ -36,9 +36,9 @@ GSClient GSClientCreate(GSEngine engine) {
 
 	client->engine = engine;
 
-	client->camera[0] = 0;
-	client->camera[1] = 1.5;
-	client->camera[2] = 5;
+	client->position[0] = 0;
+	client->position[1] = 1.5;
+	client->position[2] = 5;
 
 	client->look_at[0] = 0;
 	client->look_at[1] = 1;

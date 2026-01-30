@@ -25,7 +25,7 @@ void GSGLCameraPerspective(GSGL gl, GSNumber width, GSNumber height) {
 }
 
 void GSGLCameraSet(GSGL gl) {
-	GSGLCameraLookAt(gl, gl->engine->client->camera, gl->engine->client->look_at);
+	GSGLCameraLookAt(gl, gl->engine->client->position, gl->engine->client->look_at);
 }
 
 void GSGLCameraLookAt(GSGL gl, GSVector3 camera, GSVector3 look_at) {

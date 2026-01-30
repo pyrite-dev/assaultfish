@@ -22,6 +22,12 @@ GSSound GSSoundNew(GSSoundEngine sengine) {
 	sound->from_samplerate = 0;
 	sound->from_channel    = 2;
 
+	sound->is_3d	   = 0;
+	sound->position[0] = 0;
+	sound->position[1] = 0;
+	sound->position[2] = 0;
+	sound->volume	   = 1.0;
+
 	ma_mutex_init(&sound->mutex);
 
 	GSSoundEngineLock(sengine);
