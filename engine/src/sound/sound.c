@@ -140,6 +140,20 @@ void GSSoundPause(GSSound sound) {
 	GSSoundUnlock(sound);
 }
 
+void GSSoundSet3D(GSSound sound, GSBool toggle) {
+	GSSoundLock(sound);
+	sound->is_3d = toggle;
+	GSSoundUnlock(sound);
+}
+
+void GSSoundSetPosition(GSSound sound, GSVector3 position) {
+	int i;
+
+	GSSoundLock(sound);
+	for(i = 0; i < 3; i++) sound->position[i] = position[i];
+	GSSoundUnlock(sound);
+}
+
 void GSSoundLock(GSSound sound) {
 	ma_mutex_lock(&sound->mutex);
 }

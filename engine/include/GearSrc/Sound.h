@@ -13,6 +13,8 @@ GSDECL GSSound GSSoundNew(GSSoundEngine sengine);
 GSDECL GSSound GSSoundOpen(GSSoundEngine sengine, const char* path);
 GSDECL void    GSSoundClose(GSSound sound);
 GSDECL void    GSSoundSetLoop(GSSound sound, GSBool toggle);
+GSDECL void    GSSoundSet3D(GSSound sound, GSBool toggle);
+GSDECL void    GSSoundSetPosition(GSSound sound, GSVector3 position);
 GSDECL void    GSSoundStart(GSSound sound);
 GSDECL void    GSSoundResume(GSSound sound);
 GSDECL void    GSSoundPause(GSSound audio);
