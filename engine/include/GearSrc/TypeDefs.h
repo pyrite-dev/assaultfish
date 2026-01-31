@@ -316,8 +316,9 @@ struct _GSNetSocket {
 struct _GSPhysics {
 	GSEngine engine;
 
-	dWorldID world;
-	dSpaceID space;
+	dWorldID      world;
+	dSpaceID      space;
+	dJointGroupID contact_group;
 };
 
 struct _GSClient {
