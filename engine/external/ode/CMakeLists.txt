@@ -12,6 +12,7 @@ file(GLOB ODE_SRC
 add_library(ode ${ODE_SRC})
 target_include_directories(ode PUBLIC
 	../../submodule/ode/include
+	${CMAKE_CURRENT_BINARY_DIR}
 )
 target_include_directories(ode PRIVATE
 	../../submodule/ode/ode/src
@@ -21,7 +22,6 @@ target_include_directories(ode PRIVATE
 	../../submodule/ode/GIMPACT/include
 	../../submodule/ode/libccd/src/custom
 	../../submodule/ode/libccd/src
-	${CMAKE_CURRENT_BINARY_DIR}
 )
 
 list(REMOVE_ITEM ODE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../submodule/ode/ode/src/collision_trimesh_trimesh_old.cpp)

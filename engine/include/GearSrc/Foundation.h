@@ -21,5 +21,6 @@
 #include <GearSrc/SoundEngine.h>
 #include <GearSrc/Sound.h>
 #include <GearSrc/Net.h>
+#include <GearSrc/Physics.h>
 
 #endif

@@ -7,6 +7,7 @@
 #include <GearSrc/Resource.h>
 #include <GearSrc/String.h>
 #include <GearSrc/Net.h>
+#include <GearSrc/Physics.h>
 
 #include <stb_ds.h>
 
@@ -16,6 +17,8 @@ void GSInit(void) {
 	GSVersionGet(&version);
 
 	GSLog(NULL, GSLogInfo, "GearSrc Engine %s", version.string);
+
+	GSPhysicsInit();
 }
 
 GSBool GSEngineRegisterResource(GSEngine engine, const char* name, const char* path) {

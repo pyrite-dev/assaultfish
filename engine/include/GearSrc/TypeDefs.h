@@ -175,6 +175,7 @@ struct _GSNetKV {
 #ifdef _GEARSRC
 #include <GearSrc/GL/GL.h>
 #include <miniaudio.h>
+#include <ode/ode.h>
 
 struct _GSGL {
 	GSEngine engine;
