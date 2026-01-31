@@ -8,7 +8,10 @@
 extern "C" {
 #endif
 
-GSDECL void GSPhysicsInit(void);
+GSDECL void	 GSPhysicsInit(void);
+GSDECL GSPhysics GSPhysicsCreate(GSServer server);
+GSDECL void	 GSPhysicsDestroy(GSPhysics physics);
+GSDECL void	 GSPhysicsStep(GSPhysics physics);
 
 #ifdef __cplusplus
 }

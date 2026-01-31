@@ -66,6 +66,7 @@ typedef struct _GSSound*       GSSound;
 typedef struct _GSNetClient*   GSNetClient;
 typedef struct _GSNetServer*   GSNetServer;
 typedef struct _GSNetSocket*   GSNetSocket;
+typedef struct _GSPhysics*     GSPhysics;
 
 typedef struct _GSModelFace	   GSModelFace;
 typedef struct _GSModelMaterial	   GSModelMaterial;
@@ -86,6 +87,7 @@ typedef void* GSSound;
 typedef void* GSNetClient;
 typedef void* GSNetServer;
 typedef void* GSNetSocket;
+typedef void* GSPhysics;
 #endif
 typedef float	 GSNumber;
 typedef GSNumber GSVector2[2];
@@ -311,6 +313,13 @@ struct _GSNetSocket {
 	GSBool client;
 };
 
+struct _GSPhysics {
+	GSEngine engine;
+
+	dWorldID world;
+	dSpaceID space;
+};
+
 struct _GSClient {
 	GSEngine engine;
 
@@ -343,6 +352,8 @@ struct _GSServer {
 	GSEngine engine;
 
 	GSNetServer net;
+
+	GSPhysics physics;
 };
 
 struct _GSEngineLog {
