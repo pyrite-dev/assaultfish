@@ -44,9 +44,9 @@ GSClient GSClientCreate(GSEngine engine) {
 	client->look_at[1] = 1;
 	client->look_at[2] = 0;
 
-	client->light0[0] = 2.5;
-	client->light0[1] = 5;
-	client->light0[2] = 5;
+	client->light0[0] = 1;
+	client->light0[1] = 1;
+	client->light0[2] = 0;
 	client->light0[3] = 0;
 
 	client->skybox_enabled = GSFalse;
@@ -249,6 +249,7 @@ void GSClientStep(GSClient client) {
 	GSGLTextBold(client->gl, 1);
 	GSGLText(client->gl, client->engine->width - tw, 0, buf2);
 	GSGLTextBold(client->gl, 0);
+	GSGLSetColor(client->gl, white);
 
 	client->engine->param->gl_swapbuffer();
 
@@ -261,6 +262,10 @@ GSGL GSClientGetGL(GSClient client) {
 
 GSSoundEngine GSClientGetSoundEngine(GSClient client) {
 	return client->sengine;
+}
+
+GSNetClient GSClientGetNetClient(GSClient client) {
+	return client->net;
 }
 
 void GSClientSetSkybox(GSClient client, GSBool toggle) {

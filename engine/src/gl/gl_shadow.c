@@ -2,20 +2,22 @@
 
 #include <GearSrc/Math.h>
 
-#define SHADOW_WIDTH 512
-#define SHADOW_HEIGHT 512
 #define SHADOW_CULL
 
 void GSGLShadowInit(GSGL gl) {
+	GLfloat color[] = {1, 1, 1, 1};
+
 	glGenTextures(1, &gl->shadow_texture);
 	glBindTexture(GL_TEXTURE_2D, gl->shadow_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, GSGLMaxShadowDistance, GSGLMaxShadowDistance, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
 
@@ -48,12 +50,16 @@ GSBool GSGLShadowBeforeMapping(GSGL gl) {
 
 	GSGLClear(gl);
 
-	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glViewport(0, 0, GSGLMaxShadowDistance, GSGLMaxShadowDistance);
 
 	glMatrixMode(GL_PROJECTION);
 	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_old_projection);
 	glLoadIdentity();
-	GSGLCameraPerspective(gl, SHADOW_WIDTH, SHADOW_HEIGHT);
+	if(gl->engine->client->light0[3]) {
+		GSGLCameraPerspective(gl, GSGLMaxShadowDistance, GSGLMaxShadowDistance);
+	} else {
+		glOrtho(-GSGLMaxShadowDistance / 2, GSGLMaxShadowDistance / 2, -GSGLMaxShadowDistance / 2, GSGLMaxShadowDistance / 2, -GSGLMaxDistance, GSGLMaxDistance);
+	}
 
 	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_projection);
 
@@ -89,7 +95,7 @@ void GSGLShadowAfterMapping(GSGL gl) {
 
 	glActiveTexture(GL_TEXTURE7);
 	glBindTexture(GL_TEXTURE_2D, gl->shadow_texture);
-	glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+	glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, GSGLMaxShadowDistance, GSGLMaxShadowDistance);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glActiveTexture(GL_TEXTURE0);
 

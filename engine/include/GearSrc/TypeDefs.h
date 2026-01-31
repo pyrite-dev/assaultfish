@@ -52,21 +52,22 @@ typedef struct _GSBinary	  GSBinary;
 typedef struct _GSNetState	  GSNetState;
 typedef struct _GSNetKV		  GSNetKV;
 #ifdef _GEARSRC
-typedef struct _GSClient*      GSClient;
-typedef struct _GSServer*      GSServer;
-typedef struct _GSEngine*      GSEngine;
-typedef struct _GSFile*	       GSFile;
-typedef struct _GSResource*    GSResource;
-typedef struct _GSGL*	       GSGL;
-typedef struct _GSSkyBox*      GSSkyBox;
-typedef struct _GSModel*       GSModel;
-typedef struct _GSSoundDriver* GSSoundDriver;
-typedef struct _GSSoundEngine* GSSoundEngine;
-typedef struct _GSSound*       GSSound;
-typedef struct _GSNetClient*   GSNetClient;
-typedef struct _GSNetServer*   GSNetServer;
-typedef struct _GSNetSocket*   GSNetSocket;
-typedef struct _GSPhysics*     GSPhysics;
+typedef struct _GSClient*	 GSClient;
+typedef struct _GSServer*	 GSServer;
+typedef struct _GSEngine*	 GSEngine;
+typedef struct _GSFile*		 GSFile;
+typedef struct _GSResource*	 GSResource;
+typedef struct _GSGL*		 GSGL;
+typedef struct _GSSkyBox*	 GSSkyBox;
+typedef struct _GSModel*	 GSModel;
+typedef struct _GSSoundDriver*	 GSSoundDriver;
+typedef struct _GSSoundEngine*	 GSSoundEngine;
+typedef struct _GSSound*	 GSSound;
+typedef struct _GSNetClient*	 GSNetClient;
+typedef struct _GSNetServer*	 GSNetServer;
+typedef struct _GSNetSocket*	 GSNetSocket;
+typedef struct _GSPhysics*	 GSPhysics;
+typedef struct _GSPhysicsObject* GSPhysicsObject;
 
 typedef struct _GSModelFace	   GSModelFace;
 typedef struct _GSModelMaterial	   GSModelMaterial;
@@ -88,6 +89,7 @@ typedef void* GSNetClient;
 typedef void* GSNetServer;
 typedef void* GSNetSocket;
 typedef void* GSPhysics;
+typedef void* GSPhysicsObject;
 #endif
 typedef float	 GSNumber;
 typedef GSNumber GSVector2[2];
@@ -319,6 +321,13 @@ struct _GSPhysics {
 	dWorldID      world;
 	dSpaceID      space;
 	dJointGroupID contact_group;
+};
+
+struct _GSPhysicsObject {
+	GSEngine engine;
+
+	dGeomID geom;
+	dBodyID body;
 };
 
 struct _GSClient {

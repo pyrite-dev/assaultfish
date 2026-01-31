@@ -8,9 +8,11 @@
 extern "C" {
 #endif
 
-GSDECL GSServer GSServerCreate(GSEngine engine);
-GSDECL void	GSServerDestroy(GSServer server);
-GSDECL void	GSServerStep(GSServer server);
+GSDECL GSServer	   GSServerCreate(GSEngine engine);
+GSDECL void	   GSServerDestroy(GSServer server);
+GSDECL GSNetServer GSServerGetNetServer(GSServer server);
+GSDECL GSPhysics   GSServerGetPhysics(GSServer server);
+GSDECL void	   GSServerStep(GSServer server);
 
 #ifdef __cplusplus
 }

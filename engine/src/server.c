@@ -39,6 +39,15 @@ void GSServerDestroy(GSServer server) {
 	free(server);
 }
 
+GSNetServer GSServerGetNetServer(GSServer server) {
+	return server->net;
+}
+
+GSPhysics GSServerGetPhysics(GSServer server) {
+	return server->physics;
+}
+
 void GSServerStep(GSServer server) {
+	GSPhysicsStep(server->physics);
 	GSNetServerStep(server->net);
 }

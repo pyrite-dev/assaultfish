@@ -38,70 +38,46 @@ static void tick(void){
 	while(!window->close && MwPending(window)) MwStep(window);
 }
 
-static GSVector3 rot = {0, 0, 0};
-static GSVector3 pos = {0, 0, 0};
-static GSModel model = NULL;
+GSPhysicsObject obj[128];
 
 static void render(GSEngine self){
 	GSGL gl = GSClientGetGL(GSEngineGetClient(self));
+	int i;
+	GSVector4 col1 = {1, 0, 0, 1};
+	GSVector4 col2 = {1, 1, 1, 1};
 	GSVector3 v[] = {
-		{-5, -2, 5},
-		{-5, -2, -5},
-		{5, -2, -5},
-		{5, -2, 5}
+		{-10, 0, 10},
+		{-10, 0, -10},
+		{10, 0, -10},
+		{10, 0, 10}
 	};
+	GSVector3 pos = {0, 1, 0};
 	GSVector3 n = {0, 1, 0};
-	GSVector4 col = {1, 1, 1, 1};
-	GSVector4 col2 = {1, 0, 0, 1};
-	int i, j;
 
-	pos[1] = 0;
+	for(i = 0; i < sizeof(obj) / sizeof(obj[0]); i++){
+		GSVector3 rv;
+		GSMatrix3x3 rm;
 
-	GSGLPushMatrix(gl);
-	GSGLSetPosition(gl, pos);
-	GSGLSetRotation(gl, rot);
-	if(model != NULL) GSModelDraw(model);
-	GSGLPopMatrix(gl);
+		GSPhysicsGetPosition(obj[i], rv);
+		GSPhysicsGetRotation(obj[i], rm);
 
-	pos[1] = 1;
-
-	GSGLPushMatrix(gl);
-	GSGLSetPosition(gl, pos);
-	GSGLSetRotation(gl, rot);
-	if(model != NULL) GSModelDraw(model);
-	GSGLPopMatrix(gl);
-
-	for(i = -1; i <= 1; i++){
-		for(j = -1; j <= 1; j++){
-			GSVector3 pos2;
-			double s = fabs(sin(rot[0] / 180 * GSMathPi));
-			int n = (i + 1) * 3 + (j + 1);
-
-			pos2[0] = i * s * 2;
-			pos2[1] = 0;
-			pos2[2] = j * s * 2;
-
-			col2[2] = n & 1;
-			col2[1] = (n & 2) ? 1 : 0;
-			col2[0] = (n & 4) ? 1 : 0;
-
-			GSGLPushMatrix(gl);
-			GSGLSetPosition(gl, pos2);
-			GSGLSetRotation(gl, rot);
-			GSGLTetrakis(gl, s, col, col2);
-			GSGLPopMatrix(gl);
-		}
+		GSGLPushMatrix(gl);
+		GSGLSetPosition(gl, rv);
+		GSGLSetRotation3x3(gl, rm);
+//		GSGLTetrakis(gl, 0.5, col1, col2);
+		GSGLPopMatrix(gl);
 	}
 
-	GSGLSetColor(gl, col);
+	GSGLPushMatrix(gl);
+	GSGLSetPosition(gl, pos);
+	GSGLTetrakis(gl, 0.5, col1, col2);
+	GSGLPopMatrix(gl);
+
+	GSGLSetColor(gl, col2);
 	GSGLPolygon(gl, 4, v, NULL, n);
 }
 
 static void after_render(GSEngine self){
-	rot[0] = rot[1] = rot[2] += (1.0 / GSEngineGetTPS(self)) * 90;
-
-	pos[0] = cos(rot[0] / 180 * GSMathPi);
-	pos[2] = sin(rot[0] / 180 * GSMathPi);
 }
 
 #ifndef _WIN32
@@ -126,24 +102,26 @@ int main(int argc, char** argv){
 	GSInit();
 
 	if((engine = GSEngineCreate(&param)) != NULL){
-		GSSound sound;
-
 #ifndef _WIN32
 		signal(SIGINT, shutdown_engine);
 		signal(SIGTERM, shutdown_engine);
 #endif
 
-		model = GSModelOpen(engine, "game:/mdl/fish.gsm");
+		int i;
+		GSVector3 pos = {0, 1, 0};
+		GSVector3 sz = {1, 1, 1};
+		for(i = 0; i < sizeof(obj) / sizeof(obj[0]); i++){
+			obj[i] = GSPhysicsCreateSphere(GSServerGetPhysics(GSEngineGetServer(engine)), 1, 0.5);
 
-		GSClientSetSkybox(GSEngineGetClient(engine), GSTrue);
-		
-		if((sound = GSSoundOpen(GSClientGetSoundEngine(GSEngineGetClient(engine)), "game:/desert2.mod")) != NULL){
-			GSSoundSetLoop(sound, 1);
-			GSSoundStart(sound);
+			pos[0] = ((GSNumber)rand() / RAND_MAX - 0.5) * 20;
+			pos[1] = 10;
+			pos[2] = ((GSNumber)rand() / RAND_MAX - 0.5) * 20;
+
+			GSPhysicsSetPosition(obj[i], pos);
 		}
 
+		GSClientSetSkybox(GSEngineGetClient(engine), GSTrue);
 		GSEngineLoop(engine);
-
 		GSEngineDestroy(engine);
 	}
 }
