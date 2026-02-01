@@ -46,10 +46,10 @@ static void render(GSEngine self){
 	GSVector4 col1 = {1, 0, 0, 1};
 	GSVector4 col2 = {1, 1, 1, 1};
 	GSVector3 v[] = {
-		{-10, -1, 10},
-		{-10, -1, -10},
-		{10, -1, -10},
-		{10, -1, 10}
+		{-20, -1, 20},
+		{-20, -1, -20},
+		{20, -1, -20},
+		{20, -1, 20}
 	};
 	GSVector3 pos = {0, 0, 0};
 	GSVector3 n = {0, 1, 0};
