@@ -51,7 +51,6 @@ static void render(GSEngine self){
 		{20, -1, -20},
 		{20, -1, 20}
 	};
-	GSVector3 pos = {0, 0, 0};
 	GSVector3 n = {0, 1, 0};
 
 	for(i = 0; i < sizeof(obj) / sizeof(obj[0]); i++){
@@ -64,14 +63,9 @@ static void render(GSEngine self){
 		GSGLPushMatrix(gl);
 		GSGLSetPosition(gl, rv);
 		GSGLSetRotation3x3(gl, rm);
-		//GSGLTetrakis(gl, 0.5, col1, col2);
+		GSGLTetrakis(gl, 0.5, col1, col2);
 		GSGLPopMatrix(gl);
 	}
-
-	GSGLPushMatrix(gl);
-	GSGLSetPosition(gl, pos);
-	GSGLTetrakis(gl, 0.5, col1, col2);
-	GSGLPopMatrix(gl);
 
 	GSGLSetColor(gl, col2);
 	GSGLPolygon(gl, 4, v, NULL, n);

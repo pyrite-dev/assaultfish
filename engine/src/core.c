@@ -9,10 +9,26 @@
 #include <GearSrc/Net.h>
 #include <GearSrc/Physics.h>
 
+#ifdef _WIN32
+#include <winsock.h>
+#endif
+
 #include <stb_ds.h>
+
+#ifdef _WIN32
+static void init_winsock(void){
+	WSADATA wsa;
+
+	WSAStartup(MAKEWORD(1, 1), &wsa);
+}
+#endif
 
 void GSInit(void) {
 	GSVersion version;
+
+#ifdef _WIN32
+	init_winsock();
+#endif
 
 	GSVersionGet(&version);
 
