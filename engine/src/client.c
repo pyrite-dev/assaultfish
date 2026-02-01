@@ -44,10 +44,10 @@ GSClient GSClientCreate(GSEngine engine) {
 	client->look_at[1] = 1;
 	client->look_at[2] = 0;
 
-	client->light0[0] = 1;
-	client->light0[1] = 1;
+	client->light0[0] = 5;
+	client->light0[1] = 20;
 	client->light0[2] = 0;
-	client->light0[3] = 0;
+	client->light0[3] = 1;
 
 	client->skybox_enabled = GSFalse;
 

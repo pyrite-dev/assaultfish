@@ -11,7 +11,7 @@ extern "C" {
 #endif
 
 #define GSGLMaxDistance 100.0
-#define GSGLMaxShadowDistance 1024
+#define GSGLMaxShadowDistance 512
 
 /* gl_shader.c */
 GSDECL GSBool GSGLShaderPrepare(GSGL gl, GLuint* shader, const char* vs, const char* fs);
