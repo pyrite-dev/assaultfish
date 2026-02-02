@@ -2,10 +2,14 @@
 
 varying vec4 vPos;
 varying vec3 vNrm;
-varying vec4 vShadowCoord;
+varying vec4 vShadowCoord0;
+varying vec4 vShadowCoord1;
+varying vec4 vShadowCoord2;
 varying vec4 vColor;
 
-uniform sampler2D depth_texture;
+uniform sampler2D shadow_map0;
+uniform sampler2D shadow_map1;
+uniform sampler2D shadow_map2;
 uniform sampler2D current_texture;
 uniform float enable_lighting;
 uniform float enable_texture;
@@ -36,14 +40,14 @@ vec4 PhongShading(void)
         return ambient+diffuse+specular;
 }
 
-float ShadowCoef(void){
-	vec3 shadow_coord = vShadowCoord.xyz / vShadowCoord.w;
-	float view = shadow_coord.z;
-	vec2 d[4];
+float SampleShadow(sampler2D shadowMap, vec4 shadowCoord) {
+	vec3 shadow_c = shadowCoord.xyz / shadowCoord.w;
+	float view = shadow_c.z;
 	float shadow_coef = 1.0;
+	vec2 d[4];
 	int i;
 
-	if(shadow_coord.z > 1.0) return 1.0;
+	if(shadow_c.z > 1.0) return 1.0;
 
 	d[0] = vec2(-0.94201624, -0.39906216);
 	d[1] = vec2(0.94558609, -0.76890725);
@@ -51,16 +55,24 @@ float ShadowCoef(void){
 	d[3] = vec2(0.34495938, 0.29387760);
 
 	for(i = 0; i < 4; i++){
-		vec2 p = shadow_coord.xy + d[i] / 700.0;
+		vec2 p = shadow_c.xy + d[i] / 700.0;
 
 		if(p.x < 0.0 || p.y < 0.0 || p.x > 1.0 || p.y > 1.0) shadow_coef += 1.0;
 
-		if(texture2D(depth_texture, p).z < view){
+		if(texture2D(shadowMap, p).z < view){
 			shadow_coef -= 0.2;
 		}
 	}
 	
 	return shadow_coef;
+}
+
+float ShadowCoef(void){
+	float dist = -vPos.z;
+
+	if(dist < 10.0) return SampleShadow(shadow_map0, vShadowCoord0);
+	if(dist < 40.0) return SampleShadow(shadow_map1, vShadowCoord1);
+	return SampleShadow(shadow_map2, vShadowCoord2);
 }
 
 void main(void){

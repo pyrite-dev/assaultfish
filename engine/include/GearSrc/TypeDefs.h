@@ -181,14 +181,16 @@ struct _GSNetKV {
 #include <miniaudio.h>
 #include <ode/ode.h>
 
+#define GSGL_SHADOW_CASCADES 3
+
 struct _GSGL {
 	GSEngine engine;
 
 	int	 shadow_use_shader;
-	GLuint	 shadow_texture;
+	GLuint	 shadow_texture[GSGL_SHADOW_CASCADES];
 	GLuint	 shadow_shader;
-	GLdouble shadow_modelview[16];
-	GLdouble shadow_projection[16];
+	GLdouble shadow_modelview[GSGL_SHADOW_CASCADES][16];
+	GLdouble shadow_projection[GSGL_SHADOW_CASCADES][16];
 	GLdouble shadow_old_projection[16];
 	GLdouble shadow_old_modelview[16];
 

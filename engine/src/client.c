@@ -132,9 +132,14 @@ void GSClientStep(GSClient client) {
 
 	GSGLTextBold(client->gl, 0);
 
-	if(GSGLShadowBeforeMapping(client->gl)) {
-		scene(client);
-		GSGLShadowAfterMapping(client->gl);
+	if(GSGLShadowBegin(client->gl)) {
+		int c;
+		for(c = 0; c < GSGL_SHADOW_CASCADES; c++) {
+			GSGLShadowCascade(client->gl, c);
+			scene(client);
+			GSGLShadowCopy(client->gl, c);
+		}
+		GSGLShadowApply(client->gl);
 	}
 
 	if(client->skybox_enabled) {

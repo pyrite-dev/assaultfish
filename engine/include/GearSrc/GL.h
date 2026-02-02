@@ -37,8 +37,10 @@ GSDECL void   GSGLTetrakis(GSGL gl, GSNumber scale, GSVector4 col1, GSVector4 co
 
 /* gl_shadow.c */
 GSDECL void   GSGLShadowInit(GSGL gl);
-GSDECL GSBool GSGLShadowBeforeMapping(GSGL gl);
-GSDECL void   GSGLShadowAfterMapping(GSGL gl);
+GSDECL GSBool GSGLShadowBegin(GSGL gl);
+GSDECL void   GSGLShadowCascade(GSGL gl, int cascade);
+GSDECL void   GSGLShadowCopy(GSGL gl, int cascade);
+GSDECL void   GSGLShadowApply(GSGL gl);
 GSDECL void   GSGLShadowEnd(GSGL gl);
 GSDECL void   GSGLShadowDeinit(GSGL gl);
 GSDECL void   GSGLShadowDisable(GSGL gl);
