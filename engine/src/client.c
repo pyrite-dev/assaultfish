@@ -49,6 +49,11 @@ GSClient GSClientCreate(GSEngine engine) {
 	client->light0[2] = 0;
 	client->light0[3] = 1;
 
+	client->light0[0] = -1;
+	client->light0[1] = -1;
+	client->light0[2] = 0;
+	client->light0[3] = 0;
+
 	client->skybox_enabled = GSFalse;
 
 	if((client->sengine = GSSoundEngineCreate(client)) == NULL) {

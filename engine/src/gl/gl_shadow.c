@@ -58,7 +58,7 @@ GSBool GSGLShadowBeforeMapping(GSGL gl) {
 	if(gl->engine->client->light0[3]) {
 		GSGLCameraPerspective(gl, GSGLMaxShadowDistance, GSGLMaxShadowDistance);
 	} else {
-		glOrtho(-GSGLMaxShadowDistance / 2, GSGLMaxShadowDistance / 2, -GSGLMaxShadowDistance / 2, GSGLMaxShadowDistance / 2, -GSGLMaxDistance, GSGLMaxDistance);
+		glOrtho(-10, 10, -10, 10, -10, 20);
 	}
 
 	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_projection);
@@ -66,7 +66,16 @@ GSBool GSGLShadowBeforeMapping(GSGL gl) {
 	glMatrixMode(GL_MODELVIEW);
 	glGetDoublev(GL_MODELVIEW_MATRIX, gl->shadow_old_modelview);
 	glLoadIdentity();
-	GSGLCameraLookAt(gl, gl->engine->client->light0, zero);
+	if(gl->engine->client->light0[3]){
+		GSGLCameraLookAt(gl, gl->engine->client->light0, zero);
+	}else{
+		GSVector3 n;
+		int i;
+
+		for(i = 0; i < 3; i++) n[i] = -gl->engine->client->light0[i];
+
+		GSGLCameraLookAt(gl, n, zero);
+	}
 
 	glGetDoublev(GL_MODELVIEW_MATRIX, gl->shadow_modelview);
 
