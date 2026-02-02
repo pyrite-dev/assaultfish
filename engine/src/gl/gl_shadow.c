@@ -72,7 +72,7 @@ GSBool GSGLShadowBeforeMapping(GSGL gl) {
 		GSVector3 n;
 		int i;
 
-		for(i = 0; i < 3; i++) n[i] = -gl->engine->client->light0[i];
+		for(i = 0; i < 3; i++) n[i] = gl->engine->client->light0[i];
 
 		GSMathNormalize3(n);
 
