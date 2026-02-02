@@ -74,6 +74,10 @@ GSBool GSGLShadowBeforeMapping(GSGL gl) {
 
 		for(i = 0; i < 3; i++) n[i] = -gl->engine->client->light0[i];
 
+		GSMathNormalize3(n);
+
+		for(i = 0; i < 3; i++) n[i] *= 5;
+
 		GSGLCameraLookAt(gl, n, zero);
 	}
 
