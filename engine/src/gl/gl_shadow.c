@@ -74,6 +74,12 @@ GSBool GSGLShadowBegin(GSGL gl) {
 	return GSTrue;
 }
 
+int GSGLShadowCascadeSteps(GSGL gl){
+	if(gl->engine->client->light0[3]) return 1;
+
+	return GSGL_SHADOW_CASCADES;
+}
+
 void GSGLShadowCascade(GSGL gl, int cascade) {
 	GSVector3 zero = {0, 0, 0};
 	GSNumber  size;
@@ -217,12 +223,13 @@ void GSGLShadowEnable(GSGL gl) {
 }
 
 void GSGLShadowEnd(GSGL gl) {
+	int i;
 	if(!gl->shadow_use_shader) return;
 
 	GSGLShadowDisable(gl);
 
 	// Reset texture matrices
-	for(int i = 0; i < GSGL_SHADOW_CASCADES; i++) {
+	for(i = 0; i < GSGL_SHADOW_CASCADES; i++) {
 		glActiveTexture(GL_TEXTURE5 + i);
 		glMatrixMode(GL_TEXTURE);
 		glLoadIdentity();

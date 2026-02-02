@@ -13,6 +13,7 @@ uniform sampler2D shadow_map2;
 uniform sampler2D current_texture;
 uniform float enable_lighting;
 uniform float enable_texture;
+uniform vec3 camera;
 
 vec4 PhongShading(void)
 {
@@ -68,7 +69,11 @@ float SampleShadow(sampler2D shadowMap, vec4 shadowCoord) {
 }
 
 float ShadowCoef(void){
-	float dist = -vPos.z;
+	float dist = length(normalize(camera + gl_LightSource[0].position.xyz) - vPos.xyz);
+
+	if(gl_LightSource[0].position.w > 0.5){
+		if(dist >= 10.0) return 1.0;
+	}
 
 	if(dist < 10.0) return SampleShadow(shadow_map0, vShadowCoord0);
 	if(dist < 40.0) return SampleShadow(shadow_map1, vShadowCoord1);

@@ -63,6 +63,12 @@ void GSGLCameraLookAt(GSGL gl, GSVector3 camera, GSVector3 look_at) {
 
 	glMultMatrixd(matrix);
 	glTranslated(-camera[0], -camera[1], camera[2]);
+
+	if(gl->shadow_use_shader){
+		glUseProgram(gl->shadow_shader);
+		glUniform3f(glGetUniformLocation(gl->shadow_shader, "camera"), camera[0], camera[1], camera[2]);
+		glUseProgram(0);
+	}
 }
 
 void GSGLCameraSetup(GSGL gl) {

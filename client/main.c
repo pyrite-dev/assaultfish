@@ -39,6 +39,7 @@ static void tick(void){
 }
 
 GSPhysicsObject obj[128];
+GSModel mdl;
 
 static void render(GSEngine self){
 	GSGL gl = GSClientGetGL(GSEngineGetClient(self));
@@ -46,10 +47,10 @@ static void render(GSEngine self){
 	GSVector4 col1 = {1, 0, 0, 1};
 	GSVector4 col2 = {1, 1, 1, 1};
 	GSVector3 v[] = {
-		{-20, 0, 20},
-		{-20, 0, -20},
-		{20, 0, -20},
-		{20, 0, 20}
+		{-40, 0, 40},
+		{-40, 0, -40},
+		{40, 0, -40},
+		{40, 0, 40}
 	};
 	GSVector3 n = {0, 1, 0};
 
@@ -63,7 +64,7 @@ static void render(GSEngine self){
 		GSGLPushMatrix(gl);
 		GSGLSetPosition(gl, rv);
 		GSGLSetRotation3x3(gl, rm);
-		GSGLTetrakis(gl, 0.5, col1, col2);
+		GSModelDraw(mdl);
 		GSGLPopMatrix(gl);
 	}
 
@@ -104,6 +105,9 @@ int main(int argc, char** argv){
 		int i;
 		GSVector3 pos = {0, 1, 0};
 		GSVector3 sz = {1, 1, 1};
+
+		mdl = GSModelOpen(engine, "game:/mdl/fish.gsm");
+
 		for(i = 0; i < sizeof(obj) / sizeof(obj[0]); i++){
 			obj[i] = GSPhysicsCreateSphere(GSServerGetPhysics(GSEngineGetServer(engine)), 1, 0.5);
 
@@ -116,6 +120,7 @@ int main(int argc, char** argv){
 
 		GSClientSetSkybox(GSEngineGetClient(engine), GSTrue);
 		GSEngineLoop(engine);
+		GSModelClose(mdl);
 		GSEngineDestroy(engine);
 	}
 }

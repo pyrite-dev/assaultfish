@@ -54,6 +54,11 @@ GSClient GSClientCreate(GSEngine engine) {
 	client->light0[2] = 0;
 	client->light0[3] = 0;
 
+	client->light0[0] = 5;
+	client->light0[1] = 5;
+	client->light0[2] = 0;
+	client->light0[3] = 1;
+
 	client->skybox_enabled = GSFalse;
 
 	if((client->sengine = GSSoundEngineCreate(client)) == NULL) {
@@ -134,7 +139,7 @@ void GSClientStep(GSClient client) {
 
 	if(GSGLShadowBegin(client->gl)) {
 		int c;
-		for(c = 0; c < GSGL_SHADOW_CASCADES; c++) {
+		for(c = 0; c < GSGLShadowCascadeSteps(client->gl); c++) {
 			GSGLShadowCascade(client->gl, c);
 			scene(client);
 			GSGLShadowCopy(client->gl, c);
