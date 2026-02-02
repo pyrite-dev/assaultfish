@@ -15,6 +15,10 @@ vec4 PhongShading(void)
         vec3 N = normalize(vNrm);
         vec3 L = normalize(gl_LightSource[0].position.xyz-vPos.xyz);
 
+	if(gl_LightSource[0].position.w < 0.5){
+		L = normalize(gl_LightSource[0].position.xyz);
+	}
+
         vec4 ambient = gl_FrontLightProduct[0].ambient;
 
         float dcoef = max(dot(L, N), 0.0);
