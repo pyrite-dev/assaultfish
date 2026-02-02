@@ -76,9 +76,12 @@ GSBool GSGLShadowBeforeMapping(GSGL gl) {
 
 		GSMathNormalize3(n);
 
-		for(i = 0; i < 3; i++) n[i] *= 5;
+		for(i = 0; i < 3; i++){
+			n[i] *= 5;
+			n[i] += gl->engine->client->position[i];
+		}
 
-		GSGLCameraLookAt(gl, n, zero);
+		GSGLCameraLookAt(gl, n, gl->engine->client->position);
 	}
 
 	glGetDoublev(GL_MODELVIEW_MATRIX, gl->shadow_modelview);
