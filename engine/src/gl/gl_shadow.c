@@ -58,7 +58,7 @@ GSBool GSGLShadowBeforeMapping(GSGL gl) {
 	if(gl->engine->client->light0[3]) {
 		GSGLCameraPerspective(gl, GSGLMaxShadowDistance, GSGLMaxShadowDistance);
 	} else {
-		glOrtho(-10, 10, -10, 10, -10, 20);
+		glOrtho(-5, 5, -5, 5, -5, 10);
 	}
 
 	glGetDoublev(GL_PROJECTION_MATRIX, gl->shadow_projection);
