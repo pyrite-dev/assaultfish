@@ -206,6 +206,11 @@ struct _GSGL {
 	GLdouble shadow_old_projection[16];
 	GLdouble shadow_old_modelview[16];
 
+	GLdouble frustum_projection[16];
+	GLdouble frustum_modelview[16];
+	GSNumber frustum_planes[6][16];
+	GSNumber frustum_clip[16];
+
 	GSBool bold;
 };
 
@@ -253,6 +258,8 @@ struct _GSModel {
 	float*	     vertex;
 	float*	     texcoord;
 	GSModelFace* face;
+
+	GSVector3 bbox[2];
 };
 
 struct _GSSound {

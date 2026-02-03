@@ -10,13 +10,17 @@
 #include <stb_ds.h>
 
 static void parse_obj(GSModel model, char* txt) {
-	char* f	 = txt;
-	float lm = 0; /* leftmost */
-	float rm = 0; /* rightmost */
-	float um = 0; /* upmost */
-	float dm = 0; /* downmost */
-	float fm = 0; /* frontmost */
-	float bm = 0; /* backmost */
+	char* f	  = txt;
+	float lm  = 0; /* leftmost */
+	float rm  = 0; /* rightmost */
+	float um  = 0; /* upmost */
+	float dm  = 0; /* downmost */
+	float fm  = 0; /* frontmost */
+	float bm  = 0; /* backmost */
+	float l	  = 0;
+	float blr = fabs(lm - rm);
+	float bud = fabs(um - dm);
+	float bbf = fabs(fm - bm);
 
 	while(1) {
 		char* s = strchr(f, '\n');
@@ -158,6 +162,22 @@ static void parse_obj(GSModel model, char* txt) {
 		if(s == NULL) break;
 		f = s + 1;
 	}
+
+	blr = fabs(lm - rm);
+	bud = fabs(um - dm);
+	bbf = fabs(fm - bm);
+
+	if(l < blr) l = blr;
+	if(l < bud) l = bud;
+	if(l < bbf) l = bbf;
+
+	model->bbox[0][0] = l;
+	model->bbox[0][1] = l;
+	model->bbox[0][2] = l;
+
+	model->bbox[1][0] = -model->bbox[0][0];
+	model->bbox[1][1] = -model->bbox[0][1];
+	model->bbox[1][2] = -model->bbox[0][2];
 }
 
 static void parse_mtl(GSModel model, char* txt) {
@@ -316,7 +336,16 @@ void GSModelDraw(GSModel model, GSVector3 pos, GSRotation* rot) {
 
 		GSGLTextureSet(gl, 0);
 	} else {
-		GSGLCallList(gl, model->call_list);
+		GSVector3 a, b;
+
+		for(i = 0; i < 3; i++) {
+			a[i] = b[i] = pos[i];
+
+			a[i] += model->bbox[0][i];
+			b[i] += model->bbox[1][i];
+		}
+
+		if(GSGLCameraFrustumContain(gl, a, b)) GSGLCallList(gl, model->call_list);
 	}
 	GSGLPopMatrix(gl);
 }

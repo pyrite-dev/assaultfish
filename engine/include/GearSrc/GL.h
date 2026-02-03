@@ -70,10 +70,12 @@ GSDECL void   GSGLClearDepth(GSGL gl);
 GSDECL void   GSGLInitialTranslation(GSGL gl);
 
 /* gl_camera.c */
-GSDECL void GSGLCameraPerspective(GSGL gl, GSNumber width, GSNumber height);
-GSDECL void GSGLCameraSet(GSGL gl);
-GSDECL void GSGLCameraLookAt(GSGL gl, GSVector3 camera, GSVector3 look_at);
-GSDECL void GSGLCameraSetup(GSGL gl);
+GSDECL void   GSGLCameraPerspective(GSGL gl, GSNumber width, GSNumber height);
+GSDECL void   GSGLCameraSet(GSGL gl);
+GSDECL void   GSGLCameraLookAt(GSGL gl, GSVector3 camera, GSVector3 look_at);
+GSDECL void   GSGLCameraSetup(GSGL gl);
+GSDECL void   GSGLCameraFrustum(GSGL gl);
+GSDECL GSBool GSGLCameraFrustumContain(GSGL gl, GSVector3 a, GSVector3 b);
 
 #ifdef __cplusplus
 }
