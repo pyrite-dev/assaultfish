@@ -121,21 +121,21 @@ void GSGLSetPosition(GSGL gl, GSVector3 pos) {
 	glTranslatef(pos[0], pos[1], -pos[2]);
 }
 
-void GSGLSetRotation(GSGL gl, GSVector3 rot) {
-	glRotatef(rot[0], 1, 0, 0);
-	glRotatef(rot[1], 0, 1, 0);
-	glRotatef(rot[2], 0, 0, 1);
-}
+void GSGLSetRotation(GSGL gl, GSRotation* rot) {
+	if(rot->use_matrix) {
+		GSMatrix4x4 out, out2;
+		GLdouble    mat[16];
+		int	    i;
 
-void GSGLSetRotation3x3(GSGL gl, GSMatrix3x3 rot) {
-	GSMatrix4x4 out, out2;
-	GLdouble    mat[16];
-	int	    i;
-
-	GSMath3x3To4x4(out, rot);
-	GSMathRowToColumn4x4(out2, out);
-	for(i = 0; i < 16; i++) mat[i] = out2[i];
-	glMultMatrixd(mat);
+		GSMath3x3To4x4(out, rot->u.matrix);
+		GSMathRowToColumn4x4(out2, out);
+		for(i = 0; i < 16; i++) mat[i] = out2[i];
+		glMultMatrixd(mat);
+	} else {
+		glRotatef(rot->u.vector[0], 1, 0, 0);
+		glRotatef(rot->u.vector[1], 0, 1, 0);
+		glRotatef(rot->u.vector[2], 0, 0, 1);
+	}
 }
 
 void GSGLPushMatrix(GSGL gl) {

@@ -74,7 +74,7 @@ GSBool GSGLShadowBegin(GSGL gl) {
 	return GSTrue;
 }
 
-int GSGLShadowCascadeSteps(GSGL gl){
+int GSGLShadowCascadeSteps(GSGL gl) {
 	if(gl->engine->client->light0[3]) return 1;
 
 	return GSGL_SHADOW_CASCADES;
@@ -92,8 +92,10 @@ void GSGLShadowCascade(GSGL gl, int cascade) {
 
 	// Simple cascade sizing
 	if(cascade == 0) size = 10;
-	else if(cascade == 1) size = 40;
-	else size = 100; // Covers max distance roughly
+	else if(cascade == 1)
+		size = 40;
+	else
+		size = 100; // Covers max distance roughly
 
 	// If light is directional (light0[3] == 0)
 	// Current existing code logic:

@@ -51,6 +51,8 @@ typedef struct _GSNetAddress	  GSNetAddress;
 typedef struct _GSBinary	  GSBinary;
 typedef struct _GSNetState	  GSNetState;
 typedef struct _GSNetKV		  GSNetKV;
+typedef union _GSRotationUnion	  GSRotationUnion;
+typedef struct _GSRotation	  GSRotation;
 #ifdef _GEARSRC
 typedef struct _GSClient*	 GSClient;
 typedef struct _GSServer*	 GSServer;
@@ -174,6 +176,16 @@ struct _GSNetState {
 struct _GSNetKV {
 	GSNetAddress key;
 	GSNetState   value;
+};
+
+union _GSRotationUnion {
+	GSVector3   vector;
+	GSMatrix3x3 matrix;
+};
+
+struct _GSRotation {
+	GSBool		use_matrix;
+	GSRotationUnion u;
 };
 
 #ifdef _GEARSRC

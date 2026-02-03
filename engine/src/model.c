@@ -274,8 +274,16 @@ GSModel GSModelOpen(GSEngine engine, const char* path) {
 
 	/* TODO: check for animation */
 	if(gl != NULL) {
-		GLuint list = GSGLBeginList(gl);
-		GSModelDraw(model);
+		GLuint	   list = GSGLBeginList(gl);
+		GSVector3  pos	= {0, 0, 0};
+		GSRotation rot;
+
+		rot.use_matrix	= GSFalse;
+		rot.u.vector[0] = 0;
+		rot.u.vector[1] = 0;
+		rot.u.vector[2] = 0;
+
+		GSModelDraw(model, pos, &rot);
 		GSGLEndList(gl);
 
 		model->call_list = list;
@@ -284,10 +292,13 @@ GSModel GSModelOpen(GSEngine engine, const char* path) {
 	return model;
 }
 
-void GSModelDraw(GSModel model) {
+void GSModelDraw(GSModel model, GSVector3 pos, GSRotation* rot) {
 	GSGL gl = model->engine->client->gl;
 	int  i;
 
+	GSGLPushMatrix(gl);
+	GSGLSetPosition(gl, pos);
+	GSGLSetRotation(gl, rot);
 	if(model->call_list == 0) {
 		char* k = "default";
 
@@ -307,6 +318,7 @@ void GSModelDraw(GSModel model) {
 	} else {
 		GSGLCallList(gl, model->call_list);
 	}
+	GSGLPopMatrix(gl);
 }
 
 void GSModelClose(GSModel model) {

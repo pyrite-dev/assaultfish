@@ -56,16 +56,14 @@ static void render(GSEngine self){
 
 	for(i = 0; i < sizeof(obj) / sizeof(obj[0]); i++){
 		GSVector3 rv;
-		GSMatrix3x3 rm;
+		GSRotation rot;
+
+		rot.use_matrix = GSTrue;
 
 		GSPhysicsGetPosition(obj[i], rv);
-		GSPhysicsGetRotation(obj[i], rm);
+		GSPhysicsGetRotation(obj[i], rot.u.matrix);
 
-		GSGLPushMatrix(gl);
-		GSGLSetPosition(gl, rv);
-		GSGLSetRotation3x3(gl, rm);
-		GSModelDraw(mdl);
-		GSGLPopMatrix(gl);
+		GSModelDraw(mdl, rv, &rot);
 	}
 
 	GSGLSetColor(gl, col2);
@@ -106,7 +104,7 @@ int main(int argc, char** argv){
 		GSVector3 pos = {0, 1, 0};
 		GSVector3 sz = {1, 1, 1};
 
-		mdl = GSModelOpen(engine, "game:/mdl/fish.gsm");
+		mdl = GSModelOpen(engine, "game:/mdl/tetopear.gsm");
 
 		for(i = 0; i < sizeof(obj) / sizeof(obj[0]); i++){
 			obj[i] = GSPhysicsCreateSphere(GSServerGetPhysics(GSEngineGetServer(engine)), 1, 0.5);

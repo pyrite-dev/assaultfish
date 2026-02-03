@@ -16,7 +16,7 @@
 #include <stb_ds.h>
 
 #ifdef _WIN32
-static void init_winsock(void){
+static void init_winsock(void) {
 	WSADATA wsa;
 
 	WSAStartup(MAKEWORD(1, 1), &wsa);

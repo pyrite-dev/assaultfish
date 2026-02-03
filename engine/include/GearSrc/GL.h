@@ -45,7 +45,7 @@ GSDECL void   GSGLShadowEnd(GSGL gl);
 GSDECL void   GSGLShadowDeinit(GSGL gl);
 GSDECL void   GSGLShadowDisable(GSGL gl);
 GSDECL void   GSGLShadowEnable(GSGL gl);
-GSDECL int GSGLShadowCascadeSteps(GSGL gl);
+GSDECL int    GSGLShadowCascadeSteps(GSGL gl);
 
 /* gl.c */
 GSDECL GSGL   GSGLCreate(GSClient client);
@@ -59,8 +59,7 @@ GSDECL void   GSGLPolygon2D(GSGL gl, int pairs, GSVector2* vert, GSVector2* tex)
 GSDECL void   GSGLBegin2D(GSGL gl);
 GSDECL void   GSGLEnd2D(GSGL gl);
 GSDECL void   GSGLSetPosition(GSGL gl, GSVector3 pos);
-GSDECL void   GSGLSetRotation(GSGL gl, GSVector3 rot);
-GSDECL void   GSGLSetRotation3x3(GSGL gl, GSMatrix3x3 rot);
+GSDECL void   GSGLSetRotation(GSGL gl, GSRotation* rot);
 GSDECL void   GSGLPushMatrix(GSGL gl);
 GSDECL void   GSGLPopMatrix(GSGL gl);
 GSDECL GLuint GSGLBeginList(GSGL gl);

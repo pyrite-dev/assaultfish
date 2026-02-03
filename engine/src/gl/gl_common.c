@@ -179,11 +179,11 @@ void GSGLTetrakis(GSGL gl, GSNumber scale, GSVector4 col1, GSVector4 col2) {
 	    {0, 1, 0},
 	    {-0.75, 0.75, -0.75},
 	    {0.75, 0.75, -0.75}};
-	GSVector3 n;
-	GSVector3 rot2 = {0, 90, 0};
-	GSVector3 rot3 = {0, 0, 90};
-	GSVector3 rot4 = {90, 0, 0};
-	int	  i, j, k = 0;
+	GSVector3  n;
+	GSRotation rot2 = {0, {0, 90, 0}};
+	GSRotation rot3 = {0, {0, 0, 90}};
+	GSRotation rot4 = {0, {90, 0, 0}};
+	int	   i, j, k = 0;
 
 	for(i = 0; i < 3; i++) {
 		for(j = 0; j < 3; j++) v[i][j] *= scale;
@@ -197,17 +197,17 @@ void GSGLTetrakis(GSGL gl, GSNumber scale, GSVector4 col1, GSVector4 col2) {
 			GSGLSetColor(gl, ((k + j) % 2) ? col2 : col1);
 			GSGLPolygon(gl, 3, v, NULL, n);
 
-			GSGLSetRotation(gl, rot2);
+			GSGLSetRotation(gl, &rot2);
 		}
 
 		if(i == 3) {
-			GSGLSetRotation(gl, rot4);
+			GSGLSetRotation(gl, &rot4);
 			k++;
 		} else if(i == 4) {
-			GSGLSetRotation(gl, rot4);
-			GSGLSetRotation(gl, rot4);
+			GSGLSetRotation(gl, &rot4);
+			GSGLSetRotation(gl, &rot4);
 		} else {
-			GSGLSetRotation(gl, rot3);
+			GSGLSetRotation(gl, &rot3);
 			k++;
 		}
 	}
