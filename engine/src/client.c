@@ -132,6 +132,7 @@ void GSClientStep(GSClient client) {
 
 	GSGLTextBold(client->gl, 0);
 
+#ifdef SHADOW
 	if(GSGLShadowBegin(client->gl)) {
 		int c;
 		for(c = 0; c < GSGLShadowCascadeSteps(client->gl); c++) {
@@ -141,12 +142,17 @@ void GSClientStep(GSClient client) {
 		}
 		GSGLShadowApply(client->gl);
 	}
+#else
+	GSGLShadowRender(client->gl, 0);
+#endif
 
 	if(client->skybox_enabled) {
 		if(client->skybox != NULL) GSSkyBoxDraw(client->skybox);
 	}
 	scene(client);
+#ifdef SHADOW
 	GSGLShadowEnd(client->gl);
+#endif
 
 	GSVersionGet(&ver);
 

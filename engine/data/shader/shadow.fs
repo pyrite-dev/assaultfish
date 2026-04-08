@@ -13,6 +13,7 @@ uniform sampler2D shadow_map2;
 uniform sampler2D current_texture;
 uniform float enable_lighting;
 uniform float enable_texture;
+uniform float enable_shadow;
 uniform vec3 camera;
 
 vec4 PhongShading(void)
@@ -83,7 +84,11 @@ float ShadowCoef(void){
 void main(void){
 	vec4 c = PhongShading();
 	vec4 ambient = gl_LightSource[0].ambient;
-	float shadow_coef = ShadowCoef();
+	float shadow_coef = 1.0;
+	
+	if(enable_shadow >= 0.5){
+		shadow_coef = ShadowCoef();
+	}
 
 	if(enable_texture >= 0.5){
 		c = c * texture2D(current_texture, gl_TexCoord[0].st);

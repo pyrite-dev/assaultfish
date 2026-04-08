@@ -104,7 +104,7 @@ int main(int argc, char** argv){
 		GSVector3 pos = {0, 1, 0};
 		GSVector3 sz = {1, 1, 1};
 
-		mdl = GSModelOpen(engine, "game:/mdl/tetopear.gsm");
+		mdl = GSModelOpen(engine, "game:/mdl/crate.gsm");
 
 		for(i = 0; i < sizeof(obj) / sizeof(obj[0]); i++){
 			obj[i] = GSPhysicsCreateSphere(GSServerGetPhysics(GSEngineGetServer(engine)), 1, 0.5);

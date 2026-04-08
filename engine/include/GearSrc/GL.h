@@ -46,6 +46,7 @@ GSDECL void   GSGLShadowDeinit(GSGL gl);
 GSDECL void   GSGLShadowDisable(GSGL gl);
 GSDECL void   GSGLShadowEnable(GSGL gl);
 GSDECL int    GSGLShadowCascadeSteps(GSGL gl);
+GSDECL void GSGLShadowRender(GSGL gl, int toggle);
 
 /* gl.c */
 GSDECL GSGL   GSGLCreate(GSClient client);

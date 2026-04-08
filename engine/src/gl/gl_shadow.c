@@ -40,6 +40,7 @@ void GSGLShadowInit(GSGL gl) {
 		glUniform1i(glGetUniformLocation(gl->shadow_shader, "current_texture"), 0);
 		glUniform1f(glGetUniformLocation(gl->shadow_shader, "enable_lighting"), 1);
 		glUniform1f(glGetUniformLocation(gl->shadow_shader, "enable_texture"), 0);
+		glUniform1f(glGetUniformLocation(gl->shadow_shader, "enable_shadow"), 1);
 		glUseProgram(0);
 
 		gl->shadow_use_shader = 1;
@@ -48,6 +49,8 @@ void GSGLShadowInit(GSGL gl) {
 
 		gl->shadow_use_shader = 0;
 	}
+
+	gl->shadow = GSFalse;
 }
 
 GSBool GSGLShadowBegin(GSGL gl) {
@@ -207,6 +210,8 @@ void GSGLShadowDisable(GSGL gl) {
 		}
 		glActiveTexture(GL_TEXTURE0);
 	}
+
+	gl->shadow = GSFalse;
 }
 
 void GSGLShadowEnable(GSGL gl) {
@@ -221,6 +226,16 @@ void GSGLShadowEnable(GSGL gl) {
 			glEnable(GL_TEXTURE_2D);
 		}
 		glActiveTexture(GL_TEXTURE0);
+	}
+
+	gl->shadow = GSTrue;
+}
+
+void GSGLShadowRender(GSGL gl, int toggle){
+	if(gl->shadow_use_shader){
+		if(!gl->shadow) glUseProgram(gl->shadow_shader);
+		glUniform1f(glGetUniformLocation(gl->shadow_shader, "enable_shadow"), toggle);
+		if(!gl->shadow) glUseProgram(0);
 	}
 }
 

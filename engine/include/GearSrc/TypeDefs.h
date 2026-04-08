@@ -212,6 +212,7 @@ struct _GSGL {
 	GSNumber frustum_clip[16];
 
 	GSBool bold;
+	GSBool shadow;
 };
 
 struct _GSSkyBox {

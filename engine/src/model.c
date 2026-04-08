@@ -171,9 +171,9 @@ static void parse_obj(GSModel model, char* txt) {
 	if(l < bud) l = bud;
 	if(l < bbf) l = bbf;
 
-	model->bbox[0][0] = l;
-	model->bbox[0][1] = l;
-	model->bbox[0][2] = l;
+	model->bbox[0][0] = -l * 2;
+	model->bbox[0][1] = -l * 2;
+	model->bbox[0][2] = -l * 2;
 
 	model->bbox[1][0] = -model->bbox[0][0];
 	model->bbox[1][1] = -model->bbox[0][1];
